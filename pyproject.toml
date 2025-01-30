@@ -3,6 +3,6 @@ requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dpestool"
+name = "dpest"
 version = "0.1.0"
 description = "A Python package that automates PEST (Parameter ESTimation) file creation for calibrating DSSAT (Decision Support System for Agrotechnology Transfer) crop models using time series data. It generates template (.TPL) files for Cultivar (.CUL) and Ecotype (.ECO) parameters, instruction (.INS) files for OVERVIEW.OUT and PlantGro.OUT, and the main PEST control (.PST) file, including parameter definitions, observation groups, command lines, and input/output file associations. It also includes a utility to extend PlantGro.OUT files by adding rows when simulated crop maturity occurs before the last observation date, ensuring complete time series compatibility."

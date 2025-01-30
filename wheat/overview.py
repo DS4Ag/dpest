@@ -1,5 +1,5 @@
 import yaml
-from dpestool.functions import *
+from dpest.functions import *
 
 def overview(
     treatment = None,

@@ -1,7 +1,7 @@
 import yaml
 import pyemu
 import tempfile
-from dpestool.functions import *
+from dpest.functions import *
 
 def pst(
         cultivar_parameters=None,
