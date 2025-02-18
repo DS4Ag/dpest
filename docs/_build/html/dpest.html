@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>dpest package &#8212; dpest 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="dpest.wheat package" href="dpest.wheat.html" />
+    <link rel="prev" title="dpest" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="dpest-package">
+<h1>dpest package<a class="headerlink" href="#dpest-package" title="Link to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dpest.wheat.html">dpest.wheat package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dpest.wheat.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dpest.wheat.ceres.html">dpest.wheat.ceres package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dpest.wheat.ceres.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dpest.wheat.ceres.html#module-dpest.wheat.ceres.ceres">dpest.wheat.ceres.ceres module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dpest.wheat.ceres.html#module-dpest.wheat.ceres.cul">dpest.wheat.ceres.cul module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dpest.wheat.ceres.html#module-dpest.wheat.ceres.eco">dpest.wheat.ceres.eco module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dpest.wheat.ceres.html#module-dpest.wheat.ceres">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dpest.wheat.utils.html">dpest.wheat.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dpest.wheat.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dpest.wheat.utils.html#module-dpest.wheat.utils.uplantgro">dpest.wheat.utils.uplantgro module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dpest.wheat.utils.html#module-dpest.wheat.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dpest.wheat.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dpest.wheat.html#module-dpest.wheat.overview">dpest.wheat.overview module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dpest.wheat.html#dpest.wheat.overview.overview"><code class="docutils literal notranslate"><span class="pre">overview()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dpest.wheat.html#module-dpest.wheat.plantgro">dpest.wheat.plantgro module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dpest.wheat.html#dpest.wheat.plantgro.plantgro"><code class="docutils literal notranslate"><span class="pre">plantgro()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dpest.wheat.html#module-dpest.wheat">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="dpest-setup-module">
+<h2>dpest. setup module<a class="headerlink" href="#dpest-setup-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-dpest.functions">
+<span id="dpest-functions-module"></span><h2>dpest.functions module<a class="headerlink" href="#module-dpest.functions" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.adjust_days_dict">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">adjust_days_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">days_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#adjust_days_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.adjust_days_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Adjusts the days dictionary to calculate differences between consecutive days.</p>
+<p>Parameters:
+days_dict (dict): Dictionary mapping DOY to a list with days and variable names.</p>
+<p>Returns:
+dict: Adjusted days dictionary with differences calculated and variable names preserved.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.adjust_variable_name">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">adjust_variable_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#adjust_variable_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.adjust_variable_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.calculate_days_dict">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">calculate_days_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dates_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_first_sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#calculate_days_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.calculate_days_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates a dictionary of days from the first simulation date to each date in the dictionary.</p>
+<p>Parameters:
+dates_dict (dict): Dictionary mapping DOY values to variable names.
+date_first_sim (datetime): The first simulation date.</p>
+<p>Returns:
+dict: A dictionary mapping each date to its adjusted day count.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.clean_variable_name">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">clean_variable_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#clean_variable_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.clean_variable_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.extract_all_params">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">extract_all_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parameter_dicts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#extract_all_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.extract_all_params" title="Link to this definition">¶</a></dt>
+<dd><p>Extract all parameters from one or more dictionaries.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.extract_element_positions">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">extract_element_positions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#extract_element_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.extract_element_positions" title="Link to this definition">¶</a></dt>
+<dd><p>Extracts the first and last character positions of each element in a single line,
+including spaces between elements.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>line (str): The text line to process.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list of tuples: A list where each tuple contains the start and end positions of an element.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.extract_simulation_data">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">extract_simulation_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#extract_simulation_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.extract_simulation_data" title="Link to this definition">¶</a></dt>
+<dd><p>Extracts simulation data for each cultivar, including the experiment information, 
+and returns a DataFrame with all the data.</p>
+<p>Parameters:
+file_path (str): The path to the text file containing the growth aspects data.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the parsed data for all cultivars, including the experiment info.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.extract_treatment_info_plantgrowth">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">extract_treatment_info_plantgrowth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treatment_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#extract_treatment_info_plantgrowth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.extract_treatment_info_plantgrowth" title="Link to this definition">¶</a></dt>
+<dd><p>Extracts treatment information and their corresponding codes from a file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>file_path (str): Path to the input file.
+treatment_dict (dict): A dictionary with treatment names as keys and their line ranges as values.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: A dictionary where keys are treatment names and values are treatment codes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.filter_dataframe">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treatment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treatment_number_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.filter_dataframe" title="Link to this definition">¶</a></dt>
+<dd><p>Filters a DataFrame based on the treatment and returns a dictionary of DATE
+and variables where values are not -99.</p>
+<p>Parameters:
+dataframe (pd.DataFrame): Input DataFrame.
+treatment (str): Treatment name to filter by.
+treatment_number_name (dict): Mapping of treatments to their corresponding TRNO values.
+variables (list): List of variable names to check in the dataset.</p>
+<p>Returns:
+dict: A dictionary containing filtered data with DATE as keys and variables as values.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.find_cultivar">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">find_cultivar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cultivar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cultivar_cul_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#find_cultivar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.find_cultivar" title="Link to this definition">¶</a></dt>
+<dd><p>Find the line containing the specified cultivar in the DSSAT cultivar file.</p>
+<p>Args:
+file_content (str): The content of the DSSAT cultivar file.
+cultivar (str): The cultivar to search for (VAR# or VAR-NAME).</p>
+<p>Returns:
+int: The line number containing the cultivar if found, or a message if not found.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.find_ecotype">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">find_ecotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head_line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ecotype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ecotype_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#find_ecotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.find_ecotype" title="Link to this definition">¶</a></dt>
+<dd><p>Find the line containing the specified ecotype in the DSSAT ecotype file.</p>
+<p>Args:
+file_content (str): The content of the DSSAT ecotype file.
+head_line (str): The line that starts the header of the ecotype table.
+ecotype (str): The ecotype to search for (ECO#).
+ecotype_file (str): The name of the ecotype file.</p>
+<p>Returns:
+int: The line number containing the ecotype if found, or a message if not found.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.find_parameter_position">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">find_parameter_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#find_parameter_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.find_parameter_position" title="Link to this definition">¶</a></dt>
+<dd><p>Extracts the first and last character positions of each element in a single line,
+including spaces between elements. If a specific parameter is provided, returns
+its start and end positions.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>line (str): The text line to process.
+parameter (str, optional): The element to search for. Defaults to None.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>list of tuples or list: A list of start and end positions for all elements,</dt><dd><p>or the start and end positions of the specific parameter if provided.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.find_variable_position">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">find_variable_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header_line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#find_variable_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.find_variable_position" title="Link to this definition">¶</a></dt>
+<dd><p>Counts space groups until the specified variables.
+Count starts at 1.</p>
+<p>Arguments:
+header_line (str): The header line containing variable names.
+variables (list): A list of variable names to find.</p>
+<p>Returns:
+dict: A dictionary with variables as keys and their positions as values.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.get_header_and_first_sim">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">get_header_and_first_sim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#get_header_and_first_sim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.get_header_and_first_sim" title="Link to this definition">¶</a></dt>
+<dd><p>Reads the header line and the first simulation date from the PlantGro.OUT file.</p>
+<p>Parameters:
+file_path (str): The path to the PlantGro.OUT file.</p>
+<p>Returns:
+tuple: A header line and the first simulation date as a datetime object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.new_rows_add">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">new_rows_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PlantGro</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows_add</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#new_rows_add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.new_rows_add" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.process_treatment_file">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">process_treatment_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treatment_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">season_mapping</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#process_treatment_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.process_treatment_file" title="Link to this definition">¶</a></dt>
+<dd><p>Reads the treatment file, extracts the treatment data, and adds ‘treatment’ and ‘season’ columns.</p>
+<p>Parameters:
+- file_path: Path to the treatment file.
+- treatment_mapping: A dictionary for mapping treatment codes (e.g., ‘WW’ to ‘Well-watered’).
+- season_mapping: A dictionary for mapping season codes (e.g., ‘22’ to ‘Winter 2021-2022’).</p>
+<p>Returns:
+- DataFrame with ‘N’, ‘TNAME’, ‘CU’, ‘treatment’, and ‘season’ columns.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.process_variable_names">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">process_variable_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#process_variable_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.process_variable_names" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.read_dssat_file">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">read_dssat_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#read_dssat_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.read_dssat_file" title="Link to this definition">¶</a></dt>
+<dd><p>Function to read and print the file content</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.read_growth_file">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">read_growth_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treatment_range</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#read_growth_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.read_growth_file" title="Link to this definition">¶</a></dt>
+<dd><p>Reads a growth aspects output file and converts it into a pandas DataFrame.</p>
+<p>Arguments:
+file_path (str): The path to the text file containing the growth aspects data.
+treatment_range (tuple): A tuple containing the start and end line numbers for the treatment data.</p>
+<p>Returns:
+pd.DataFrame: A DataFrame containing the parsed data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.simulations_lines">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">simulations_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#simulations_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.simulations_lines" title="Link to this definition">¶</a></dt>
+<dd><p>Identifies and extracts the line ranges associated with specific treatments in the OVERVIEW output file.</p>
+<p>Parameters:
+file_path (str): The path to the text file containing tOVERVIEW output file.</p>
+<p>Returns:
+dict: A dictionary where the keys are TREATMENT names and the values are</p>
+<blockquote>
+<div><p>tuples containing the start and end line numbers.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.validate_file">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">validate_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#validate_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.validate_file" title="Link to this definition">¶</a></dt>
+<dd><p>Validates that the input file path exists and the file extension is correct.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.validate_file_path">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">validate_file_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#validate_file_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.validate_file_path" title="Link to this definition">¶</a></dt>
+<dd><p>Validates that the input file path exists.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.validate_marker">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">validate_marker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">marker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#validate_marker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.validate_marker" title="Link to this definition">¶</a></dt>
+<dd><p>Validate the marker delimiter for the INS files according to the specified rules.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.validate_output_path">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">validate_output_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#validate_output_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.validate_output_path" title="Link to this definition">¶</a></dt>
+<dd><p>Validates that the output file path specified by the user exists.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.functions.wht_filedata_to_dataframe">
+<span class="sig-prename descclassname"><span class="pre">dpest.functions.</span></span><span class="sig-name descname"><span class="pre">wht_filedata_to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/functions.html#wht_filedata_to_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.functions.wht_filedata_to_dataframe" title="Link to this definition">¶</a></dt>
+<dd><p>Parses a DSSAT-style TXT file and returns a DataFrame.</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>file_path (str): The path to the TXT file.</p>
+</dd>
+<dt>Returns:</dt><dd><p>pd.DataFrame: A DataFrame containing the data from the TXT file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-dpest.pst">
+<span id="dpest-pst-module"></span><h2>dpest.pst module<a class="headerlink" href="#module-dpest.pst" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dpest.pst.pst">
+<span class="sig-prename descclassname"><span class="pre">dpest.pst.</span></span><span class="sig-name descname"><span class="pre">pst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cultivar_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ecotype_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataframe_observations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_comand_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noptmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pst_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PEST_CONTROL.pst'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_output_file_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dpest/pst.html#pst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dpest.pst.pst" title="Link to this definition">¶</a></dt>
+<dd><p>Create and update a PEST control file (PST) for CERES wheat model calibration.</p>
+<dl>
+<dt>Args:</dt><dd><blockquote>
+<div><p>bounds, and groupings. It should include:</p>
+</div></blockquote>
+<dl class="simple">
+<dt>cultivar_parameters (dict): Dictionary containing model parameters with their values,</dt><dd><ul class="simple">
+<li><p>‘cultivar_parameters’: Current parameter values for the specified cultivar.</p></li>
+<li><p>‘minima_parameters’: Minima values for all parameters.</p></li>
+<li><p>‘maxima_parameters’: Maxima values for all parameters.</p></li>
+<li><p>‘parameters_grouped’: Grouping of parameters.</p></li>
+</ul>
+</dd>
+<dt>dataframe_observations (pd.DataFrame or list): DataFrame or list of DataFrames containing observations to include in the PST file.</dt><dd><p>Each DataFrame must include columns: ‘variable_name’, ‘value_measured’, and ‘group’</p>
+</dd>
+</dl>
+<p>output_path (str): Directory to save the PST file. Defaults to the current working directory if not provided.
+model_comand_line (str): Command line for running the model executable.
+noptmax (int): Maximum number of iterations for the optimization process. Default is 1000.
+pst_filename (str): The name of the PST file to create or update. Default is ‘pest_control_ceres_wheat.pst’.
+input_output_file_pairs (list): List of tuples where each tuple contains an input and output file pair.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>None: This function creates the PST file at the specified <cite>output_path</cite> with the provided name</dt><dd><p>(<cite>pst_filename</cite>). It performs validation on inputs, processes observation data,
+sets up parameters, and writes the resulting PST file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Raises:
+ValueError: If required arguments are missing or invalid values are encountered.
+FileNotFoundError: If the specified CUL file does not exist.
+Exception: For any other unexpected errors.</p>
+</dd></dl>
+
+</section>
+<section id="module-dpest">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dpest" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">dpest</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">dpest</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">dpest package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">dpest</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">dpest</a></li>
+      <li>Next: <a href="dpest.wheat.html" title="next chapter">dpest.wheat package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Luis Vargas-Rojas.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/dpest.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
