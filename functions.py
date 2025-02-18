@@ -846,7 +846,7 @@ def read_growth_file(file_path, treatment_range):
     df = pd.DataFrame(data, columns=headers)
 
     # Convert appropriate columns to numeric data types
-    df = df.apply(pd.to_numeric, errors='ignore')
+    df = df.apply(pd.to_numeric)
 
     return df
 
