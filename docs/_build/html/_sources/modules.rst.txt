@@ -4,12 +4,4 @@ dpest
 .. toctree::
    :maxdepth: 4
 
-   dpest.pst
-   dpest.wheat
-   dpest.wheat.overview
-   dpest.wheat.plantgro
-   dpest.wheat.ceres
-   dpest.wheat.ceres.cul
-   dpest.wheat.ceres.eco
-   dpest.wheat.utils
-   dpest.wheat.utils.uplantgro
+   dpest
