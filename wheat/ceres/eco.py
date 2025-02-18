@@ -21,7 +21,7 @@ def eco(
         eco_file_path (str): Full path to the ecotype .ECO file. This argument is required.
         output_path (str): Directory to save the generated TPL file. Defaults to the current working directory.
         new_template_file_extension (str): Extension for the generated template file (e.g., "tpl").
-        header_start (str): Identifier for the header row in the CUL file. Default is '@VAR#'.
+        header_start (str): Identifier for the header row in the ECO file. Default is '@VAR#'.
         tpl_first_line (str): First line to include in the TPL file. Default is 'ptf ~'.
         minima (str): Row identifier for the minima parameter values. Default is '999991'.
         maxima (str): Row identifier for the maxima parameter values. Default is '999992'.
@@ -41,7 +41,7 @@ def eco(
 
     Raises:
         ValueError: If required arguments are missing or invalid values are encountered.
-        FileNotFoundError: If the specified CUL file does not exist.
+        FileNotFoundError: If the specified ECO file does not exist.
         Exception: For any other unexpected errors.
     """
 
@@ -67,7 +67,7 @@ def eco(
         if ecotype is None:
             raise ValueError("The 'ecotype' argument is required and must be specified by the user.")
 
-        # Validate cul_file_path
+        # Validate eco_file_path
         validated_path = validate_file(eco_file_path, '.ECO')
 
         # Get the ecotype template file variables
@@ -109,7 +109,7 @@ def eco(
         header_line_number = next(idx for idx, line in enumerate(lines) if line.startswith(header_start))
         header_line = lines[header_line_number]
 
-        # Get the number of the line that contains the parameters of the specified cultivar
+        # Get the number of the line that contains the parameters of the specified ecotype
         ecotype_line_number = find_ecotype(file_content, header_start, ecotype, eco_file_path)
         if isinstance(ecotype_line_number, str):  # Error message returned
             raise ValueError(ecotype_line_number)
@@ -129,7 +129,7 @@ def eco(
                     parameter_value = lines[line_number][par_position[0]:par_position[1] + 1].strip()
                     parameter_values[parameter] = parameter_value
                 except Exception:
-                    raise ValueError(f"Parameter '{parameter}' does not exist in the header line of {cul_file_path}.")
+                    raise ValueError(f"Parameter '{parameter}' does not exist in the header line of {eco_file_path}.")
             return parameter_values
 
 
@@ -207,7 +207,7 @@ def eco(
             # Construct the variable template
             variable_template = f" ~{truncated_parameter}~"
 
-            # Extract the cultivar line to modify parameters
+            # Extract the ecotype line to modify parameters
             ecotype_line = lines[ecotype_line_number]
         
             if count == 0:

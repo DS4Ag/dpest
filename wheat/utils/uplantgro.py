@@ -4,6 +4,9 @@ def uplantgro(
         plantgro_file_path=None,
         treatment=None,
         variables=None,
+        nspaces_year_header=None,
+        nspaces_doy_header = None,
+        nspaces_columns_header = None,
 ):
     """
     Updates the PlantGro.OUT file with new rows if necessary.
@@ -19,12 +22,7 @@ def uplantgro(
     Returns:
     None
     """
-    # Define default variables:
-    nspaces_year_header = 5
-    nspaces_doy_header = 4
-    nspaces_columns_header = 6
-
-    rows_added = 0  # Initialize here
+    rows_added = 0  # Initialize
 
     try:
         # Validate plantgro_file_path
@@ -42,6 +40,22 @@ def uplantgro(
         if not variables or not all(isinstance(var, str) for var in variables):
             raise ValueError(
                 "The 'variables' should be a non-empty string or a list of strings. For example: 'LAID' or ['LAID', 'CWAD']")
+
+        # Assign default values if None and validate integer input
+        if nspaces_year_header is None:
+            nspaces_year_header = 5
+        elif not isinstance(nspaces_year_header, int):
+            raise ValueError("nspaces_year_header must be an integer.")
+
+        if nspaces_doy_header is None:
+            nspaces_doy_header = 4
+        elif not isinstance(nspaces_doy_header, int):
+            raise ValueError("nspaces_doy_header must be an integer.")
+
+        if nspaces_columns_header is None:
+            nspaces_columns_header = 6
+        elif not isinstance(nspaces_columns_header, int):
+            raise ValueError("nspaces_columns_header must be an integer.")
 
         # Get treatment range
         treatment_range = simulations_lines(plantgro_file_path)[treatment]

@@ -297,7 +297,7 @@ def pst(
 
     except ValueError as ve:
         print(f"ValueError: {ve}")
-    # except FileNotFoundError as fe:
-    #     print(f"FileNotFoundError: {fe}")
-    # except Exception as e:
-    #     print(f"An unexpected error occurred: {e}")
+    except FileNotFoundError as fe:
+        print(f"FileNotFoundError: {fe}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
