@@ -7,7 +7,7 @@ import sys
 
 import sphinx.ext.viewcode
 
-sys.path.insert(0, os.path.join('..'))
+sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
@@ -19,12 +19,13 @@ release = '1.0'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.viewcode', 'sphinx.ext.autodoc']
+extensions = ['sphinx.ext.viewcode', 'sphinx.ext.autodoc', 'sphinx.ext.autosummary']
+autosummary_generate = True
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-todo_include_todos = True
 
+autodoc_mock_imports = ["flopy", "pyemu"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
