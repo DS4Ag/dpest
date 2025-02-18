@@ -13,7 +13,7 @@
 
 ### Documentation
 
-For detailed usage instructions and module references, see the full documentation on [Read the Docs](https://dpest.readthedocs.io/en/latest/).
+For detailed usage instructions and module references, see the full documentation on: [dpest.readthedocs.io/en/latest](https://dpest.readthedocs.io/en/latest/).
 
 ## Key Features
 
