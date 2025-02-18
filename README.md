@@ -118,9 +118,10 @@ dpest.pst(
 ### Contributing
 
 Contributions to `dpest` are welcome! Please submit bug reports, feature requests, and pull requests through the project's GitHub repository or by email to:
-Diane Wang - [drwang@purdue.edu](drwang@purdue.edu)
-Luis Vargas Rojas - [lvargasr@purdue.edu](lvargasr@purdue.edu)
-Purdue University, Wang Lab [dianewanglab.com](https://www.dianewanglab.com/)
+
+    Diane Wang - [drwang@purdue.edu](drwang@purdue.edu)
+    Luis Vargas Rojas - [lvargasr@purdue.edu](lvargasr@purdue.edu)
+    Purdue University, Wang Lab [dianewanglab.com](https://www.dianewanglab.com/)
 
 ### License
 
