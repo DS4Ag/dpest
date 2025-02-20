@@ -9,13 +9,15 @@ The following steps outline the typical workflow for using `dpest`:
 
     There are two ways to import the `dpest` package:
 
-        A. Import the entire package:
+        A. **Using Fully Qualified Names:**
+
+           Import the entire package:
 
            .. code-block:: python
 
               import dpest
 
-           Now you can use the functions like this:
+           Now you can use the functions with their fully qualified names:
 
            .. code-block:: python
 
@@ -26,7 +28,9 @@ The following steps outline the typical workflow for using `dpest`:
               dpest.pst(...)
               dpest.wheat.utils.uplantgro(...)
 
-        B. Import specific modules:
+        B. **Using Locally Bound Names:**
+
+           Import specific modules or functions into your current namespace:
 
            .. code-block:: python
 
@@ -35,7 +39,7 @@ The following steps outline the typical workflow for using `dpest`:
               from dpest import pst
               from dpest.wheat.utils import uplantgro
 
-           Now you can use the functions directly:
+           Now you can use the functions directly by their locally bound names:
 
            .. code-block:: python
 
