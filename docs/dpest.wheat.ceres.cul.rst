@@ -1,23 +1,10 @@
 dpest.wheat.ceres.cul
 ----------------------------
 
-.. automodule:: dpest.wheat.ceres.cul
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. currentmodule:: dpest.wheat.ceres
 
-Required Arguments
-==================
-.. autofunction:: dpest.wheat.ceres.cul
+.. autosummary::
+   :toctree: generated
+   :recursive:
 
-Optional Arguments
-==================
-.. autofunction:: dpest.wheat.ceres.cul
-
-Returns
-=======
-.. autofunction:: dpest.wheat.ceres.cul
-
-Examples
-========
-.. autofunction:: dpest.wheat.ceres.cul
+   culn:: dpest.wheat.ceres.cul
