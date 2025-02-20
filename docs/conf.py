@@ -31,9 +31,9 @@ autodoc_mock_imports = ["flopy", "pyemu"]
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-#html_theme = 'pydata_sphinx_theme'
+html_theme = 'pydata_sphinx_theme'
 
-html_theme = 'alabaster'
+#html_theme = 'alabaster'
 #html_static_path = ['_static']
 
 # import sphinx_rtd_theme
