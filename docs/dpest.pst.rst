@@ -1,4 +1,4 @@
-dpest.pst module
+dpest.pst
 ----------------
 
 .. automodule:: dpest.pst
