@@ -1,7 +1,7 @@
-dpest.wheat.ceres.cul module
+dpest.wheat.ceres.eco
 ----------------------------
 
-.. automodule:: dpest.wheat.ceres.cul
+.. automodule:: dpest.wheat.ceres.eco
    :members:
    :undoc-members:
    :show-inheritance:
