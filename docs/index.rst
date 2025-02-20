@@ -14,6 +14,18 @@ This documentation provides a complete reference for using `dpest`.
 Table of Contents
 =================
 
+1.  Installation
+2.  Prerequisites
+3.  Basic Usage
+4.  Module Reference
+    *   dpest.wheat.ceres.cul
+    *   dpest.wheat.ceres.eco
+    *   dpest.wheat.overview
+    *   dpest.wheat.plantgro
+    *   dpest.pst
+    *   dpest.wheat.utils.uplantgro
+5.  Example: Calibrating DSSAT for Wheat (CERES Model)
+
 .. toctree::
    :maxdepth: 2
 
@@ -25,9 +37,3 @@ Table of Contents
    dpest.wheat.utils.uplantgro
    basic_usage
    example
-
-1.  `Installation <#installation>`_
-2.  `Prerequisites <#prerequisites>`_
-3.  Basic Usage
-4.  Module Reference
-5.  Example: Calibrating DSSAT for Wheat (CERES Model)

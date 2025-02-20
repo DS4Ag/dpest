@@ -1,4 +1,4 @@
-dpest.wheat.ceres.cul module
+dpest.wheat.ceres.cul
 ----------------------------
 
 .. automodule:: dpest.wheat.ceres.cul
