@@ -14,35 +14,61 @@ def cul(
     **parameters_grouped
 ):
     """
-    Create a TPL file for CERES Wheat based on a cultivar CUL file with specified parameter modifications.
+    Creates a PEST template file (.TPL) for CERES-Wheat cultivar parameters based on the DSSAT cultivar file (.CUL).
 
-    Args:
-        cultivar (str): Name of the cultivar to modify. This argument is required.
-        cul_file_path (str): Full path to the cultivar CUL file. This argument is required.
-        output_path (str): Directory to save the generated TPL file. Defaults to the current working directory.
-        new_template_file_extension (str): Extension for the generated template file (e.g., "tpl").
-        header_start (str): Identifier for the header row in the CUL file. Default is '@VAR#'.
-        tpl_first_line (str): First line to include in the TPL file. Default is 'ptf ~'.
-        minima (str): Row identifier for the minima parameter values. Default is '999991'.
-        maxima (str): Row identifier for the maxima parameter values. Default is '999992'.
-        parameters_grouped (dict): A dictionary where keys are group names and values are comma-separated
-            strings of parameter names to include in the TPL file. If not provided, defaults are loaded
-            from the configuration file.
-        mrk (str, optional): Primary marker delimiter character for the template file. Defaults to '~'.
+    This module is specific to the CERES-Wheat model and uses default values tailored for this model.
 
-    Returns:
-        dict: A dictionary containing:
-            - 'cultivar_parameters': Current parameter values for the specified cultivar.
-            - 'minima_parameters': Minima values for all parameters.
-            - 'maxima_parameters': Maxima values for all parameters.
-            - 'parameters_grouped': The grouped parameters used for template generation.
+    :param cultivar: Name or ID of the cultivar to modify. This should match either the VAR# (cultivar ID) or VAR-NAM (cultivar name) column in the DSSAT cultivar file (.CUL).
+    :type cultivar: str
+    :param cul_file_path: Full path to the DSSAT cultivar file (.CUL). Typically, this is the path to the WHCER048.CUL file, usually located at C:\DSSAT48\Genotype\WHCER048.CUL.
+    :type cul_file_path: str
+    :param output_path: Directory to save the generated PEST template file (.TPL).
+    :type output_path: str, optional
+    :param new_template_file_extension: Extension for the generated PEST template file (.TPL). This is the PEST default value and should not be changed without good reason.
+    :type new_template_file_extension: str, optional
+    :param header_start: Identifier for the header row in the DSSAT cultivar file (.CUL).
+    :type header_start: str, optional
+    :param tpl_first_line: First line to include in the PEST template file (.TPL). This is the PEST default value and should not be changed without good reason.
+    :type tpl_first_line: str, optional
+    :param minima: Row identifier for the minima parameter values.
+    :type minima: str, optional
+    :param maxima: Row identifier for the maxima parameter values.
+    :type maxima: str, optional
+    :param mrk: Primary marker delimiter character for the template file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
+    :type mrk: str, optional
+    :param parameters_grouped: Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'.
+    :type parameters_grouped: dict, optional
 
-        str: The full path to the generated TPL file (output_new_file_path).
+    :return: A tuple containing a dictionary of cultivar parameters and the full path to the generated .TPL file.
+    :rtype: tuple
 
-    Raises:
-        ValueError: If required arguments are missing or invalid values are encountered.
-        FileNotFoundError: If the specified CUL file does not exist.
-        Exception: For any other unexpected errors.
+    :Example:
+
+    Basic Usage (Required Arguments Only):
+
+    .. code-block:: python
+
+        from dpestool.wheat.ceres import cul
+
+        # Call the module with only the required arguments
+        my_cultivar_parameters, my_cultivar_tpl_path = cul(
+            cultivar = 'MANITOU',
+            cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL'
+        )
+
+    Specifying Parameter Groups:
+
+    .. code-block:: python
+
+        from dpestool.wheat.ceres import cul
+
+        # Call the module specifying parameter groups
+        cul(
+            cultivar = 'MANITOU',
+            cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL',
+            P = 'P1V, P1D',
+            G = 'G1'
+        )
     """
     # Defaul variable values
     yml_cultivar_block = 'CULTIVAR_TPL_FILE'
