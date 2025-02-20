@@ -14,63 +14,67 @@ def cul(
     **parameters_grouped
 ):
     """
-    Creates a PEST template file (.TPL) for CERES-Wheat cultivar parameters based on the DSSAT cultivar file (.CUL). This module is specific to the CERES-Wheat model and uses default values tailored for this model.
+    Creates a `PEST template file (.TPL)` for CERES-Wheat cultivar parameters based on the `DSSAT cultivar file (.CUL)`. This module is specific to the CERES-Wheat model and uses default values tailored for this model.
 
-    Required Arguments:
-        cultivar (str): Name or ID of the cultivar to modify. This should match either the VAR# (cultivar ID) or VAR-NAM (cultivar name) column in the DSSAT cultivar file (.CUL).
-        cul_file_path (str): Full path to the DSSAT cultivar file (.CUL). Typically, this is the path to the WHCER048.CUL file, usually located at C:\\DSSAT48\\Genotype\\WHCER048.CUL.
+    **Required Arguments:**
 
-    Optional Arguments:
-        output_path (str, default: current working directory): Directory to save the generated PEST template file (.TPL).
-        new_template_file_extension (str, default: ".TPL"): Extension for the generated PEST template file (.TPL). This is the PEST default value and should not be changed without good reason.
-        header_start (str, default: "@VAR#"): Identifier for the header row in the DSSAT cultivar file (.CUL).
-        tpl_first_line (str, default: "ptf"): First line to include in the PEST template file (.TPL). This is the PEST default value and should not be changed without good reason.
-        minima (str, default: "999991"): Row identifier for the minima parameter values.
-        maxima (str, default: "999992"): Row identifier for the maxima parameter values.
-        mrk (str, default: "~"): Primary marker delimiter character for the template file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
-        parameters_grouped (dict, optional): Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'. 'P', 'G', and 'PHINT' are cultivar parameter group names, and the values are the specific cultivar parameters to calibrate, using the same names as in the DSSAT cultivar file (.CUL).
+    *   **cultivar** (*str*): Name or ID of the cultivar to modify. This should match either the `VAR#` (cultivar ID) or `VAR-NAM` (cultivar name) column in the `DSSAT cultivar file (.CUL)`.
+    *   **cul_file_path** (*str*): Full path to the `DSSAT cultivar file (.CUL)`. Typically, this is the path to the `WHCER048.CUL` file, usually located at `C:\\DSSAT48\\Genotype\\WHCER048.CUL`.
 
-    Returns:
-        tuple: A tuple containing:
-            dict: A dictionary containing:
-                'parameters': Current cultivar parameter values for the specified cultivar.
-                'minima_parameters': Minima values for all cultivar parameters.
-                'maxima_parameters': Maxima values for all cultivar parameters.
-                'parameters_grouped': The grouped cultivar parameters used for template generation.
-            str: The full path to the generated .TPL file.
+    **Optional Arguments:**
 
-    Examples:
-        1. Basic Usage (Required Arguments Only):
+    *   **output_path** (*str*, *default: current working directory*): Directory to save the generated `PEST template file (.TPL)`.
+    *   **new_template_file_extension** (*str*, *default: ".TPL"*): Extension for the generated `PEST template file (.TPL)`. This is the PEST default value and should not be changed without good reason.
+    *   **header_start** (*str*, *default: "@VAR#"*): Identifier for the header row in the `DSSAT cultivar file (.CUL)`.
+    *   **tpl_first_line** (*str*, *default: "ptf"*): First line to include in the `PEST template file (.TPL)`. This is the PEST default value and should not be changed without good reason.
+    *   **minima** (*str*, *default: "999991"*): Row identifier for the minima parameter values.
+    *   **maxima** (*str*, *default: "999992"*): Row identifier for the maxima parameter values.
+    *   **mrk** (*str*, *default: "~"*): Primary marker delimiter character for the template file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
+    *   **parameters_grouped** (*dict*, *optional*): Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: `P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'`. 'P', 'G', and 'PHINT' are cultivar parameter group names, and the values are the specific cultivar parameters to calibrate, using the same names as in the `DSSAT cultivar file (.CUL)`.
 
-        .. code-block:: python
+    **Returns:**
 
-            from dpestool.wheat.ceres import cul
+    *   *tuple*: A tuple containing:
+        *   *dict*: A dictionary containing:
+            *   `'parameters'`: Current cultivar parameter values for the specified cultivar.
+            *   `'minima_parameters'`: Minima values for all cultivar parameters.
+            *   `'maxima_parameters'`: Maxima values for all cultivar parameters.
+            *   `'parameters_grouped'`: The grouped cultivar parameters used for template generation.
+        *   *str*: The full path to the generated .TPL file.
 
-            # Call the module with only the required arguments
-            my_cultivar_parameters, my_cultivar_tpl_path = cul(
-                cultivar = 'MANITOU',
-                cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL'
-            )
+    **Examples:**
 
-            # The returned tuple and path are saved in the variables, can be used in any names that the user prefer, to call them later
+    1.  **Basic Usage (Required Arguments Only):**
 
-        This example creates a PEST template file (.TPL) using only the required arguments. Note that the returned tuple (cultivar_parameters, cultivar_tpl_path) is captured. The my_cultivar_parameters dictionary will be used later to make the control file's parameter groups and parameters sections using the pst module. The cultivar_tpl_path path will be used in the input_output_file_pairs argument of the pst module to match the original cultivar file to the PEST template file (.TPL).
+    ```
+    from dpestool.wheat.ceres import cul
 
-        2. Specifying Parameter Groups (Tuple Not Saved):
+    # Call the module with only the required arguments
+    my_cultivar_parameters, my_cultivar_tpl_path = cul(
+        cultivar = 'MANITOU',
+        cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL'
+    )
 
-        .. code-block:: python
+    # The returned tuple and path are saved in the variables, can be used in any names that the user prefer, to call them later
+    ```
 
-            from dpestool.wheat.ceres import cul
+    This example creates a `PEST template file (.TPL)` using only the required arguments. Note that the returned tuple `(cultivar_parameters, cultivar_tpl_path)` is captured. The `my_cultivar_parameters` dictionary  will be used later to make the control file's parameter groups and parameters sections using the `pst` module. The `cultivar_tpl_path` path will be used in the `input_output_file_pairs` argument of the `pst` module to match the original cultivar file to the `PEST template file (.TPL)`.
 
-            # Call the module specifying parameter groups, but not saving the returned tuple
-            cul(
-                cultivar = 'MANITOU',
-                cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL',
-                P = 'P1V, P1D',
-                G = 'G1'
-            )
+    2.  **Specifying Parameter Groups (Tuple Not Saved):**
 
-        This example demonstrates how to specify the parameters_grouped argument to calibrate only specific cultivar parameters. In this case, the returned tuple is not saved, but the PEST template file (.TPL) is still created at the specified location. If you want to use the cultivar parameters and path for the pst module, the returned tuple should be saved in two variables.
+    ```
+    from dpestool.wheat.ceres import cul
+
+    # Call the module specifying parameter groups, but not saving the returned tuple
+    cul(
+        cultivar = 'MANITOU',
+        cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL',
+        P = 'P1V, P1D',
+        G = 'G1'
+    )
+    ```
+
+    This example demonstrates how to specify the `parameters_grouped` argument to calibrate only specific cultivar parameters. In this case, the returned tuple is not saved, but the `PEST template file (.TPL)` is still created at the specified location. If you want to use the cultivar parameters and path for the `pst` module, the returned tuple should be saved in two variables.
     """
     # Defaul variable values
     yml_cultivar_block = 'CULTIVAR_TPL_FILE'
