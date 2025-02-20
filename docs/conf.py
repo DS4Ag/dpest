@@ -18,8 +18,9 @@ release = '1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon','sphinx.ext.githubpages','sphinx.ext.autosummary']
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo']
+
 autosummary_generate = True
 
 templates_path = ['_templates']
