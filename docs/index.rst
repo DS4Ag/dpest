@@ -11,29 +11,16 @@ What is dpest?
 
 This documentation provides a complete reference for using `dpest`.
 
+
 Table of Contents
 =================
 
-1. Installation
-2. Prerequisites
-3. Basic Usage
-4. Module Reference
-    1. dpest.wheat.ceres.cul
-    2. dpest.wheat.ceres.eco
-    3. dpest.wheat.overview
-    4. dpest.wheat.plantgro
-    5. dpest.pst
-    6. dpest.wheat.utils.uplantgro
-5. Example: Calibrating DSSAT for Wheat (CERES Model)
-
-.. toctree::
-   :maxdepth: 2
-
-   basic_usage
-   example
-   dpest.wheat.ceres.cul
-   dpest.wheat.ceres.eco
-   dpest.wheat.overview
-   dpest.wheat.plantgro
-   dpest.pst
-   dpest.wheat.utils.uplantgro
+*  `Basic Usage <basic_usage.html>`_
+*  Module Reference
+    *  `dpest.wheat.ceres.cul <dpest.wheat.ceres.cul.html>`_
+    *  `dpest.wheat.ceres.eco <dpest.wheat.ceres.eco.html>`_
+    *  `dpest.wheat.overview <dpest.wheat.overview.html>`_
+    *  `dpest.wheat.plantgro <dpest.wheat.plantgro.html>`_
+    *  `dpest.pst <dpest.pst.html>`_
+    *  `dpest.wheat.utils.uplantgro <dpest.wheat.utils.uplantgro.html>`_
+*  `Example: Calibrating DSSAT for Wheat (CERES Model) <example.html>`_
