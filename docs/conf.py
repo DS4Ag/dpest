@@ -33,8 +33,8 @@ autodoc_mock_imports = ["flopy", "pyemu"]
 
 html_theme = 'pydata_sphinx_theme'
 
-#html_theme = 'alabaster'
-html_static_path = ['_static']
+# html_theme = 'alabaster'
+# html_static_path = ['_static']
 
 # import sphinx_rtd_theme
 # html_theme = "sphinx_rtd_theme"

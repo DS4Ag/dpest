@@ -15,12 +15,14 @@ def plantgro(
     Creates a ``PEST instruction file (.INS)``. This instruction file contains directions for PEST to read the simulated time-series values from the ``PlantGro.OUT`` file, which includes various plant growth metrics throughout the growing season. The  ``PEST instruction file (.INS)`` guides PEST in extracting specific model-generated observations for specific time points from the ``PlantGro.OUT`` file for the variables specified by the user. Additionally, this module creates a tuple containing: 1) A DataFrame with the MEASURED observations (entered by the user in the DSSAT "T file") for the specified variables, and 2) the path to the generated ``PEST instruction file (.INS)``.
 
     **Required Arguments:**
+    =======
 
         * **plantgro_file_path** (*str*): Path to the ``PlantGro.OUT`` file to read. Usually located in ``C:\DSSAT48\Wheat\PlantGro.OUT``.
         * **treatment** (*str*): The name of the treatment for which the cultivar is being calibrated. This should match exactly the treatment name as shown in the DSSAT application interface when an experiment is selected. For example, "164.0 KG N/HA IRRIG" is a treatment of the ``SWSW7501WH.WHX`` experiment.
         * **variables** (*list* or *str*): Variable(s) from the DSSAT "T file" (and thus present in the PlantGro.OUT file) that PEST will extract. The PEST instruction file will use these to read the model output. You may specify a single variable as a string (e.g., ``'LAID'``) or multiple variables as a list (e.g., ``['LAID', 'CWAD', 'T#AD']``).
 
     **Optional Arguments:**
+    =======
 
         * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
         * **variable_classifications** (*dict*): Mapping of ``variable`` names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary in the format ``{variable: variable_group, …}``.
@@ -29,12 +31,14 @@ def plantgro(
         * **smk** (*str*, *default: "!"*): Secondary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, [, ], (, ), :, space, tab, or &.
 
     **Returns:**
+    =======
 
     * *tuple*: A tuple containing:
         * *pandas.DataFrame*: A filtered DataFrame used to generate the ``PEST instruction file (.INS)``.
         * *str*: The full path to the generated ``PEST instruction file (.INS)``.
 
     **Examples:**
+    =======
 
     1. **Basic Usage (Multiple Variables):**
 

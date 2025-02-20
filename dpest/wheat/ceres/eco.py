@@ -17,11 +17,13 @@ def eco(
     Creates a ``PEST template file (.TPL)`` for CERES-Wheat ecotype parameters based on a ``DSSAT ecotype file (.ECO)``. This module is specific to the CERES-Wheat model and uses default values tailored for this model.
 
     **Required Arguments:**
+    =======
 
         * **ecotype** (*str*): Ecotype ID to modify. This should match the ``ECO#`` (ecotype ID) column in the ``DSSAT ecotype file (.ECO)``
         * **eco_file_path** (*str*): Full path to the ``DSSAT ecotype (.ECO)`` file. Typically, this is the path to the ``WHCER048.ECO`` file, usually located at ``C:\DSSAT48\Genotype\WHCER048.ECO``.
 
     **Optional Arguments:**
+    =======
 
         * **output_path** (*str*, *default: current working directory*): Directory to save the generated ``PEST template file (.TPL)``.
         * **new_template_file_extension** (*str*, *default: ".TPL"*): Extension for the generated ``PEST template file (.TPL)``. This is the PEST default value and should not be changed without good reason.
@@ -33,6 +35,7 @@ def eco(
         * **parameters_grouped** (*dict*, *optional*): Parameters to calibrate, grouped and comma-separated. If not provided, all ecotype parameters are calibrated. For example: ``PHEN='P1, P2FR1', VERN='VEFF'``. 'PHEN' and 'VERN' are ecotype parameter group names, and the values are the specific ecotype parameters to calibrate, using the same names as in the ``DSSAT ecotype file (.ECO)``.
 
     **Returns:**
+    =======
 
     * *tuple*: A tuple containing:
         * *dict*: A dictionary containing:
@@ -43,6 +46,7 @@ def eco(
         * *str*: The full path to the generated .TPL file.
 
     **Examples:**
+    =======
 
     1. **Basic Usage (Required Arguments Only):**
 

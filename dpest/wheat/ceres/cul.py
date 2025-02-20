@@ -21,13 +21,13 @@ def cul(
     Creates a ``PEST template file (.TPL)`` for CERES-Wheat cultivar parameters based on the ``DSSAT cultivar file (.CUL)``. This module is specific to the CERES-Wheat model and uses default values tailored for this model.
 
     **Required Arguments:**
-    ==================
+    =======
 
         * **cultivar** (*str*): Name or ID of the cultivar to modify. This should match either the ``VAR#`` (cultivar ID) or ``VAR-NAM`` (cultivar name) column in the ``DSSAT cultivar file (.CUL)``.
         * **cul_file_path** (*str*): Full path to the ``DSSAT cultivar file (.CUL)``. Typically, this is the path to the ``WHCER048.CUL`` file, usually located at ``C:\DSSAT48\Genotype\WHCER048.CUL``.
 
     **Optional Arguments:**
-    ==================
+    =======
 
         * **output_path** (*str*, *default: current working directory*): Directory to save the generated ``PEST template file (.TPL)``.
         * **new_template_file_extension** (*str*, *default: ".TPL"*): Extension for the generated ``PEST template file (.TPL)``. This is the PEST default value and should not be changed without good reason.
@@ -50,7 +50,7 @@ def cul(
         * *str*: The full path to the generated .TPL file.
 
     **Examples:**
-    -------------------
+    =======
 
     1. **Basic Usage (Required Arguments Only):**
 

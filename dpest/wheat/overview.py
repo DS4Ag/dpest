@@ -17,11 +17,13 @@ def overview(
     2. The path to the generated ``PEST instruction file (.INS)``.
 
     **Required Arguments:**
+    =======
 
         * **treatment** (*str*): The name of the treatment for which the cultivar is being calibrated. This should match exactly the treatment name as shown in the DSSAT application interface when an experiment is selected. For example, "164.0 KG N/HA IRRIG" is a treatment of the ``SWSW7501WH.WHX`` experiment.
         * **overview_file_path** (*str*): Path to the ``OVERVIEW.OUT`` file to read. Usually the file is in ``C:\DSSAT48\Wheat\OVERVIEW.OUT``.
 
     **Optional Arguments:**
+    =======
 
         * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
         * **variable_classifications** (*dict*): Mapping of variable names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary to define the variables from the *MAIN GROWTH AND DEVELOPMENT VARIABLES section of the ``OVERVIEW.OUT`` DSSAT file, using the format ``{variable: variable_group, …}``.
@@ -30,12 +32,14 @@ def overview(
         * **smk** (*str*, *default: "!"*) Secondary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, [, ], (, ), :, space, tab, or &.
 
     **Returns:**
+    =======
 
     * *tuple*: A tuple containing:
         * *pandas.DataFrame*: A filtered DataFrame used to generate the ``PEST instruction file (.INS)``.
         * *str*: The full path to the generated ``PEST instruction file (.INS)``.
 
     **Examples:**
+    =======
 
     1. **Basic Usage (Required Arguments Only):**
 

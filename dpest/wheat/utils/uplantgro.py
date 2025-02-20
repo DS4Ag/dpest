@@ -14,6 +14,7 @@ def uplantgro(
     This module addresses this issue by adding rows to the ``PlantGro.OUT`` file with default values (0), extending the simulation period to cover all measured observation dates.
 
     **Example Scenario:**
+    =======
 
     Suppose the ``PlantGro.OUT`` simulation results extend to the year 2022 and day of year (DOY) 102.
 
@@ -34,22 +35,26 @@ def uplantgro(
        2022  103   224     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
 
     **Required Arguments:**
+    =======
 
         * **plantgro_file_path** (*str*): Path to the ``PlantGro.OUT`` file.
         * **treatment** (*str*): The name of the treatment for which the cultivar is being calibrated. This should match exactly the treatment name as shown in the DSSAT application interface when an experiment is selected. For example, "164.0 KG N/HA IRRIG" is a treatment of the ``SWSW7501WH.WHX`` experiment.
         * **variables** (*list* or *str*): Variable(s) from the DSSAT "T file" (and thus present in the ``PlantGro.OUT file``) that PEST will extract. The PEST instruction file will use these to read the model output. You may specify a single variable as a string (e.g., ``'LAID'``) or multiple variables as a list (e.g., ``['LAID', 'CWAD', 'T#AD']``).
 
     **Optional Arguments:**
+    =======
 
         * **nspaces_year_header** (*int*, *default: 5*): Number of spaces reserved for the year header in the ``PlantGro.OUT`` file. It is unlikely that the format of the ``PlantGro.OUT`` file changes in a way that necessitates modifying this value.
         * **nspaces_doy_header** (*int*, *default: 4*): Number of spaces reserved for the day-of-year header in the ``PlantGro.OUT`` file. It is unlikely that the format of the ``PlantGro.OUT`` file changes in a way that necessitates modifying this value.
         * **nspaces_columns_header** (*int*, *default: 6*): Number of spaces reserved for other columns in the ``PlantGro.OUT`` file. It is unlikely that the format of the ``PlantGro.OUT`` file changes in a way that necessitates modifying this value.
 
     **Returns:**
+    =======
 
         * ``None``
 
     **Examples:**
+    =======
 
     1. **Basic Usage (List of variables):**
 
