@@ -15,8 +15,7 @@ def cul(
 ):
 
     """
-    Note:
-        Creates a ``PEST template file (.TPL)`` for CERES-Wheat cultivar parameters based on the ``DSSAT cultivar file (.CUL)``. This module is specific to the CERES-Wheat model and uses default values tailored for this model.
+    Creates a ``PEST template file (.TPL)`` for CERES-Wheat cultivar parameters based on the ``DSSAT cultivar file (.CUL)``. This module is specific to the CERES-Wheat model and uses default values tailored for this model.
 
     **Required Arguments:**
 
@@ -36,13 +35,13 @@ def cul(
 
     **Returns:**
 
-        *tuple*: A tuple containing:
-            *dict*: A dictionary containing:
-                'parameters': Current cultivar parameter values for the specified cultivar.
-                'minima_parameters': Minima values for all cultivar parameters.
-                'maxima_parameters': Maxima values for all cultivar parameters.
-                'parameters_grouped': The grouped cultivar parameters used for template generation.
-            ** *str*: The full path to the generated .TPL file.**
+        * *tuple*: A tuple containing:
+            * *dict*: A dictionary containing:
+                * ``'parameters'``: Current cultivar parameter values for the specified cultivar.
+                * ``'minima_parameters'``: Minima values for all cultivar parameters.
+                * ``'maxima_parameters'``: Maxima values for all cultivar parameters.
+                * ``'parameters_grouped'``: The grouped cultivar parameters used for template generation.
+            * *str*: The full path to the generated .TPL file.
 
     **Examples:**
 
