@@ -14,16 +14,20 @@ def cul(
     **parameters_grouped
 ):
     """
+    .. contents:: Table of Contents
+       :local:
+       :depth: 2
+
     Creates a ``PEST template file (.TPL)`` for CERES-Wheat cultivar parameters based on the ``DSSAT cultivar file (.CUL)``. This module is specific to the CERES-Wheat model and uses default values tailored for this model.
 
     **Required Arguments:**
-    -------------------
+    ==================
 
         * **cultivar** (*str*): Name or ID of the cultivar to modify. This should match either the ``VAR#`` (cultivar ID) or ``VAR-NAM`` (cultivar name) column in the ``DSSAT cultivar file (.CUL)``.
         * **cul_file_path** (*str*): Full path to the ``DSSAT cultivar file (.CUL)``. Typically, this is the path to the ``WHCER048.CUL`` file, usually located at ``C:\DSSAT48\Genotype\WHCER048.CUL``.
 
     **Optional Arguments:**
-    -------------------
+    ==================
 
         * **output_path** (*str*, *default: current working directory*): Directory to save the generated ``PEST template file (.TPL)``.
         * **new_template_file_extension** (*str*, *default: ".TPL"*): Extension for the generated ``PEST template file (.TPL)``. This is the PEST default value and should not be changed without good reason.
@@ -35,7 +39,7 @@ def cul(
         * **parameters_grouped** (*dict*, *optional*): Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: ``P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'``. 'P', 'G', and 'PHINT' are cultivar parameter group names, and the values are the specific cultivar parameters to calibrate, using the same names as in the ``DSSAT cultivar file (.CUL)``.
 
     **Returns:**
-    -------------------
+    =======
 
     * *tuple*: A tuple containing:
         * *dict*: A dictionary containing:

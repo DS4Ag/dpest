@@ -17,7 +17,7 @@ The following steps outline the typical workflow for using `dpest`:
 
               import dpest
 
-           Now you can use the functions with their fully qualified names:
+           Now you can use the modules with their fully qualified names:
 
            .. code-block:: python
 
@@ -30,7 +30,7 @@ The following steps outline the typical workflow for using `dpest`:
 
         B. **Using Locally Bound Names:**
 
-           Import specific modules or functions into your current namespace:
+           Import specific modules into your current namespace:
 
            .. code-block:: python
 
