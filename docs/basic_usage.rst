@@ -7,28 +7,44 @@ The following steps outline the typical workflow for using `dpest`:
 2. **Run a DSSAT Simulation:** Execute a DSSAT simulation for your chosen wheat experiment using either the CERES, NWHEAT, or CROPSIM model. This will generate the necessary output files (`OVERVIEW.OUT` and `PlantGro.OUT`), typically found in the `C:\DSSAT48\Wheat\` directory.
 3. **Import the `dpest` Package:**
 
-    *   To import the entire `dpest` package:
+    There are two ways to import the `dpest` package:
 
-    .. code-block:: python
+        A. Import the entire package:
 
-        import dpest
+           .. code-block:: python
 
-    *   To import specific modules:
+              import dpest
 
-    .. code-block:: python
+           Now you can use the functions like this:
 
-        from dpest.wheat.ceres import cul, eco
-        from dpest.wheat import overview, plantgro
-        from dpest import pst
-        from dpest.wheat.utils import uplantgro
+           .. code-block:: python
 
-        # Now you can use the functions directly:
-        cul(...)
-        eco(...)
-        overview(...)
-        plantgro(...)
-        pst(...)
-        uplantgro(...)
+              dpest.wheat.ceres.cul(...)
+              dpest.wheat.ceres.eco(...)
+              dpest.wheat.overview(...)
+              dpest.wheat.plantgro(...)
+              dpest.pst(...)
+              dpest.wheat.utils.uplantgro(...)
+
+        B. Import specific modules:
+
+           .. code-block:: python
+
+              from dpest.wheat.ceres import cul, eco
+              from dpest.wheat import overview, plantgro
+              from dpest import pst
+              from dpest.wheat.utils import uplantgro
+
+           Now you can use the functions directly:
+
+           .. code-block:: python
+
+              cul(...)
+              eco(...)
+              overview(...)
+              plantgro(...)
+              pst(...)
+              uplantgro(...)
 
 4. **Use the Modules**
 
