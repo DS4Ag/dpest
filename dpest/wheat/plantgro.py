@@ -12,30 +12,64 @@ def plantgro(
     smk = '!',
 ):
     """
-    Create a PEST instructions (.ins) file for time series data.
+    Creates a ``PEST instruction file (.INS)``. This instruction file contains directions for PEST to read the simulated time-series values from the ``PlantGro.OUT`` file, which includes various plant growth metrics throughout the growing season. The  ``PEST instruction file (.INS)`` guides PEST in extracting specific model-generated observations for specific time points from the ``PlantGro.OUT`` file for the variables specified by the user. Additionally, this module creates a tuple containing: 1) A DataFrame with the MEASURED observations (entered by the user in the DSSAT "T file") for the specified variables, and 2) the path to the generated ``PEST instruction file (.INS)``.
 
-    Args:
-        - plantgro_file_path (str): Path to the PlantGro.OUT file
-        - treatment (str): Treatment name
-        - variables (list): variable or list of variables to process
-        - output_path (str, optional): Path to save the output file. If None, uses current working directory.
-        - variable_classifications (dict, optional): Mapping of variable names to their respective categories.
-                                                   Defaults to values from the YAML configuration if not provided.
-        - plantgro_ins_first_line (str, optional): The first line of the .ins file. Defaults to the value in the YAML configuration.
-        mrk (str, optional): Primary marker delimiter character for the instruction file. Defaults to '~'.
-        smk (str, optional): Secondary marker delimiter character for the instruction file. Defaults to '!'.
+    **Required Arguments:**
 
-    Returns:
-        - pandas.DataFrame: A filtered DataFrame used to generate the .ins file.
-        - str: The path to the created .ins file.
+        * **plantgro_file_path** (*str*): Path to the ``PlantGro.OUT`` file to read. Usually located in ``C:\DSSAT48\Wheat\PlantGro.OUT``.
+        * **treatment** (*str*): The name of the treatment for which the cultivar is being calibrated. This should match exactly the treatment name as shown in the DSSAT application interface when an experiment is selected. For example, "164.0 KG N/HA IRRIG" is a treatment of the ``SWSW7501WH.WHX`` experiment.
+        * **variables** (*list* or *str*): Variable(s) from the DSSAT "T file" (and thus present in the PlantGro.OUT file) that PEST will extract. The PEST instruction file will use these to read the model output. You may specify a single variable as a string (e.g., ``'LAID'``) or multiple variables as a list (e.g., ``['LAID', 'CWAD', 'T#AD']``).
 
-    Raises:
-        ValueError: If required arguments are missing or if invalid values are encountered in the input data,
-                    such as incorrect parameter formats, missing columns in the overview_observations DataFrame,
-                    or invalid output paths.
-        FileNotFoundError: If the specified CUL file (or other necessary file paths) does not exist or is incorrect.
-        Exception: For any other unexpected errors that occur during the execution of the function, 
-                   such as issues with file writing or data processing.
+    **Optional Arguments:**
+
+        * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
+        * **variable_classifications** (*dict*): Mapping of ``variable`` names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary in the format ``{variable: variable_group, …}``.
+        * **plantgro_ins_first_line** (*str*, *default: "pif"*): First line of the ``PEST instruction file (.INS)``. This is the PEST default value and should not be changed without good reason.
+        * **mrk** (*str*, *default: "~"*): Primary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
+        * **smk** (*str*, *default: "!"*): Secondary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, [, ], (, ), :, space, tab, or &.
+
+    **Returns:**
+
+    * *tuple*: A tuple containing:
+        * *pandas.DataFrame*: A filtered DataFrame used to generate the ``PEST instruction file (.INS)``.
+        * *str*: The full path to the generated ``PEST instruction file (.INS)``.
+
+    **Examples:**
+
+    1. **Basic Usage (Multiple Variables):**
+
+       .. code-block:: python
+
+          from dpestool.wheat import plantgro
+
+          # Call the module with multiple variables
+          plantgro_observations, plantgro_ins_path = plantgro(
+              plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT',
+              treatment = '164.0 KG N/HA IRRIG',
+              variables = ['LAID', 'CWAD', 'T#AD']
+          )
+
+          # The returned tuple and path are saved in the variables, can be used with any name that the user prefer, to call them later
+
+       This example creates a ``PEST instruction file (.INS)`` for multiple variables from the ``PlantGro.OUT`` file. Note that the returned tuple ``(plantgro_observations, plantgro_ins_path)`` is captured. The ``plantgro_observations`` DataFrame will be used later to create the observations and observations group sections in the pst file (to be loaded in the ``dataframe_observations`` argument of the pst module). The ``plantgro_ins_path`` will be used in the ``input_output_file_pairs`` argument of the pst module to match the original ``PlantGro.OUT`` file to the instruction file when creating the PST control file.
+
+    2. **Single Variable Usage:**
+
+       .. code-block:: python
+
+          from dpestool.wheat import plantgro
+
+          # Call the module with a single variable
+          plantgro_observations, plantgro_ins_path = plantgro(
+              plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT',
+              treatment = '164.0 KG N/HA IRRIG',
+              variables = 'LAID',
+              variable_classifications = {
+                  'LAID': 'lai'
+              }
+          )
+
+       This example demonstrates how to use the module with a single variable. The ``variables`` argument can accept either a list of strings or a single string. Note that the returned tuple ``(plantgro_observations, plantgro_ins_path)`` is captured, which will be used later in the ``PEST control file (.PST)`` creation process.
     """
 
     # Define default variables:

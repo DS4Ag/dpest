@@ -9,18 +9,75 @@ def uplantgro(
         nspaces_columns_header = None,
 ):
     """
-    Updates the PlantGro.OUT file with new rows if necessary.
+    Extends the ``PlantGro.OUT`` file by adding rows to ensure that simulated values exist for all measured observation dates. This situation arises during the calibration process when PEST attempts to compare a measured value from the DSSAT "T file" to a corresponding simulated value in the ``PlantGro.OUT`` file. If the simulation ends *before* the date of a measured observation, PEST will terminate the calibration process due to a missing observation error. This often occurs when measurements, such as remote sensing data, are taken close to the plant's maturity phase.
 
-    Parameters:
-    plantgro_file_path (str): Path to the PlantGro.OUT file
-    treatment (str): Treatment identifier
-    variables (list): List of variables to consider
-    nspaces_year_header (int): Number of spaces for year header (default 5)
-    nspaces_doy_header (int): Number of spaces for day of year header (default 4)
-    nspaces_columns_header (int): Number of spaces for other columns (default 6)
+    This module addresses this issue by adding rows to the ``PlantGro.OUT`` file with default values (0), extending the simulation period to cover all measured observation dates.
 
-    Returns:
-    None
+    **Example Scenario:**
+
+    Suppose the ``PlantGro.OUT`` simulation results extend to the year 2022 and day of year (DOY) 102.
+
+    However, the DSSAT "T file" contains measurements for the same treatment with the following dates:
+
+    * 2022 DOY 031
+    * 2022 DOY 046
+    * 2022 DOY 060
+    * 2022 DOY 070
+    * 2022 DOY 083
+    * 2022 DOY 095
+    * 2022 DOY 109
+
+    In this case, PEST  will throw an error and terminate the calibration because the ``PlantGro.OUT`` file does not contain information for the last ``DOY`` variable. The ``dpest.wheat.utils.uplantgro`` module adds the time series for the days that do not have an observation. The last row added with some values are simmilar with:
+
+    .. code-block:: none
+
+       2022  103   224     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+    **Required Arguments:**
+
+        * **plantgro_file_path** (*str*): Path to the ``PlantGro.OUT`` file.
+        * **treatment** (*str*): The name of the treatment for which the cultivar is being calibrated. This should match exactly the treatment name as shown in the DSSAT application interface when an experiment is selected. For example, "164.0 KG N/HA IRRIG" is a treatment of the ``SWSW7501WH.WHX`` experiment.
+        * **variables** (*list* or *str*): Variable(s) from the DSSAT "T file" (and thus present in the ``PlantGro.OUT file``) that PEST will extract. The PEST instruction file will use these to read the model output. You may specify a single variable as a string (e.g., ``'LAID'``) or multiple variables as a list (e.g., ``['LAID', 'CWAD', 'T#AD']``).
+
+    **Optional Arguments:**
+
+        * **nspaces_year_header** (*int*, *default: 5*): Number of spaces reserved for the year header in the ``PlantGro.OUT`` file. It is unlikely that the format of the ``PlantGro.OUT`` file changes in a way that necessitates modifying this value.
+        * **nspaces_doy_header** (*int*, *default: 4*): Number of spaces reserved for the day-of-year header in the ``PlantGro.OUT`` file. It is unlikely that the format of the ``PlantGro.OUT`` file changes in a way that necessitates modifying this value.
+        * **nspaces_columns_header** (*int*, *default: 6*): Number of spaces reserved for other columns in the ``PlantGro.OUT`` file. It is unlikely that the format of the ``PlantGro.OUT`` file changes in a way that necessitates modifying this value.
+
+    **Returns:**
+
+        * ``None``
+
+    **Examples:**
+
+    1. **Basic Usage (List of variables):**
+
+       .. code-block:: python
+
+          from dpest.wheat.utils import uplantgro
+
+          uplantgro(
+              plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+              treatment='164.0 KG N/HA IRRIG',
+              variables=['LAID', 'CWAD', 'T#AD']
+          )
+
+       This example demonstrates the basic usage of the module with a list of variables (``LAID``, ``CWAD``, and ``T#AD``). If the simulation end date in the existing ``PlantGro.OUT`` file is earlier than the latest measurement date in the DSSAT "T file", then the ``PlantGro.OUT`` file will be extended by adding new rows. The values of all variables present in the ``PlantGro.OUT`` file will be set to ``0`` in the added rows.
+
+    2. **Basic Usage (Single variable):**
+
+       .. code-block:: python
+
+          from dpest.wheat.utils import uplantgro
+
+          uplantgro(
+              plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+              treatment='164.0 KG N/HA IRRIG',
+              variables='LAID'
+          )
+
+       This example demonstrates the basic usage of the module when only one variable (``LAID``) is specified. If the simulation end date in the existing ``PlantGro.OUT`` file is earlier than the latest measurement date in the DSSAT "T file", then the ``PlantGro.OUT`` file will be extended by adding new rows. The values of all variables present in the ``PlantGro.OUT`` file will be set to 0 in the added rows.
     """
     rows_added = 0  # Initialize
 

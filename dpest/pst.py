@@ -14,33 +14,101 @@ def pst(
         input_output_file_pairs=None
 ):
     """
-    Create and update a PEST control file (PST) for CERES wheat model calibration.
+    Creates a ``PEST control file (.PST)`` for DSSAT crop models calibration. This file guides the model calibration process by specifying input and output files, parameter bounds, and directions for PEST to extract and compare model-generated observations with experimental data. The module takes model parameters (with their values, groupings, and bounds) and observation DataFrames as inputs.
 
-    Args:
-                            bounds, and groupings. It should include:
-        cultivar_parameters (dict): Dictionary containing model parameters with their values,
-                            - 'cultivar_parameters': Current parameter values for the specified cultivar.
-                            - 'minima_parameters': Minima values for all parameters.
-                            - 'maxima_parameters': Maxima values for all parameters.
-                            - 'parameters_grouped': Grouping of parameters.
-        dataframe_observations (pd.DataFrame or list): DataFrame or list of DataFrames containing observations to include in the PST file.
-            Each DataFrame must include columns: 'variable_name', 'value_measured', and 'group'
-        output_path (str): Directory to save the PST file. Defaults to the current working directory if not provided.
-        model_comand_line (str): Command line for running the model executable.
-        noptmax (int): Maximum number of iterations for the optimization process. Default is 1000.
-        pst_filename (str): The name of the PST file to create or update. Default is 'pest_control_ceres_wheat.pst'.
-        input_output_file_pairs (list): List of tuples where each tuple contains an input and output file pair.
+    **Conditionally Required Arguments:**
 
-    Returns:
-        None: This function creates the PST file at the specified `output_path` with the provided name
-              (`pst_filename`). It performs validation on inputs, processes observation data,
-              sets up parameters, and writes the resulting PST file.
+    To properly create the ``PEST control file (.PST)``, the user must specify at least one of the following arguments:
 
+        * **cultivar_parameters** (*dict*, *optional, but required if ``ecotype_parameters`` is not specified*): Dictionary containing cultivar model parameters with their values, bounds, and groupings. It is obtained from the ``cul`` module (see ``dpest.wheat.ceres.cul``).
 
-    Raises:
-    ValueError: If required arguments are missing or invalid values are encountered.
-    FileNotFoundError: If the specified CUL file does not exist.
-    Exception: For any other unexpected errors.
+        * **ecotype_parameters** (*dict*, *optional, but required if ``cultivar_parameters`` is not specified*): Dictionary containing ecotype model parameters with their values, bounds, and groupings. This dictionary is obtained from the ``eco`` module (see ``dpest.wheat.ceres.eco``).
+
+    **Required Arguments:**
+
+        * **dataframe_observations** (``pd.DataFrame`` or ``list``): DataFrame or list of DataFrames containing observations to be used during model calibration and included in the ``PEST control file (.PST)``. It can be a single dataframe as ``dataframe_observations = dataframe``, or a list of dataframes as ``dataframe_observations = [dataframe1, dataframe2]``. These DataFrames are created by the ``dpest.wheat.overview`` and ``dpest.wheat.plantgro`` modules, and each DataFrame *must* contain columns named ``'variable_name'``, ``'value_measured'``, and ``'group'``.
+
+        * **model_comand_line** (*str*): Command line used to run the DSSAT model executable.
+
+        * **input_output_file_pairs** (``list``): List of tuples where each tuple contains an input and output file pair. The required tuples depend on the other arguments passed to this module:
+
+            * If ``cultivar_parameters`` is specified, this list *must* contain a tuple with the ``PEST template file (.TPL)`` for the cultivar and the corresponding ``DSSAT cultivar file (.CUL)``.
+
+            * If ``ecotype_parameters`` is specified, this list *must* contain a tuple with the ``PEST template file (.TPL)`` for the ecotype and the corresponding ``DSSAT ecotype file (.ECO)``.
+
+            * For *each* DataFrame specified in ``dataframe_observations``, this list *must* contain a tuple with the ``PEST instruction file (.INS)`` created by the ``overview`` or ``plantgro`` module and the corresponding ``OVERVIEW.OUT`` or ``PlantGro.OUT`` file.
+
+            Each element on the list follows this structure: ``[(input_file1, output_file1), (input_file2, output_file2)]``. The first element of each tuple is the path to either a ``PEST template file (.TPL)`` or a ``PEST instruction file (.INS)``, and the second element is the path to the corresponding DSSAT input or output file.
+
+    **Optional Arguments:**
+
+        * **output_path** (*str*, *default: current working directory*): Directory to save the ``PEST control file (.PST)``. By default, the file is created in the same directory where the script is located.
+        * **noptmax** (*int*, *default: 1000*): Maximum number of iterations for the optimization process.
+        * **pst_filename** (*str*, *default: "PEST_CONTROL.pst"*): File name for the ``PEST control file (.PST)`` to be created.
+
+    **Returns:**
+
+        * ``None``: This module creates the ``PEST control file (.PST)`` at the specified ``output_path`` (or in the script's directory by default) with the provided ``pst_filename``. It validates inputs, processes observation data, sets up parameters, and writes the resulting ``PEST control file (.PST)``.
+
+    **Examples:**
+
+    1. **Creating a PEST Control File with Cultivar and Ecotype Parameters, End-of-Season Crop Performance Metrics, and Plant Growth Dynamics:**
+
+       .. code-block:: python
+
+          from dpest import pst
+
+          pst(
+              cultivar_parameters = cultivar_parameters,
+              ecotype_parameters = ecotype_parameters,
+              dataframe_observations = [overview_observations, plantgro_observations],
+              model_comand_line = r'py "C:\pest18\run_dssat.py"',
+              input_output_file_pairs = [
+                  (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
+                  (ecotype_tpl_path, 'C://DSSAT48/Genotype/WHCER048.ECO'),
+                  (overview_ins_path, 'C://DSSAT48/Wheat/OVERVIEW.OUT'),
+                  (plantgro_ins_path, 'C://DSSAT48/Wheat/PlantGro.OUT')
+              ]
+          )
+
+       This example shows how to create a ``PEST control file (.PST)`` using both cultivar and ecotype parameters. The ``dataframe_observations`` argument is assigned a list of two DataFrames: (1) end-of-season crop performance metrics created using the ``dpest.wheat.overview`` module, and (2) plant growth dynamics data created using the ``dpest.wheat.plantgro`` module. The example specifies the model command line and lists the required input and output file pairs.
+
+    2. **Creating a PEST Control File with Only Cultivar Parameters, Model Performance Metrics, and Plant Growth Data:**
+
+       .. code-block:: python
+
+          from dpest import pst
+
+          pst(
+              cultivar_parameters = cultivar_parameters,
+              dataframe_observations = [overview_observations, plantgro_observations],
+              model_comand_line = r'py "C:\pest18\run_dssat.py"',
+              input_output_file_pairs = [
+                  (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
+                  (overview_ins_path, 'C://DSSAT48/Wheat/OVERVIEW.OUT'),
+                  (plantgro_ins_path, 'C://DSSAT48/Wheat/PlantGro.OUT')
+              ]
+          )
+
+       This example demonstrates how to create a ``PEST control file (.PST)`` using only cultivar parameters. The ``dataframe_observations`` argument uses a list of two DataFrames: one representing model performance data created by the ``dpest.wheat.overview`` module, and another containing plant growth data created by the ``dpest.wheat.plantgro`` module.
+
+    3. **Creating a PEST Control File with Cultivar Parameters and Just Plant Growth Data:**
+
+       .. code-block:: python
+
+          from dpest import pst
+
+          pst(
+              cultivar_parameters = cultivar_parameters,
+              dataframe_observations = plantgro_observations,
+              model_comand_line=r'py "C:\pest18\run_dssat.py"',
+              input_output_file_pairs = [
+                  (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
+                  (plantgro_ins_path, 'C://DSSAT48/Wheat/PlantGro.OUT')
+              ]
+          )
+
+       This example shows the use of a single ``dataframe_observations`` argument containing plant growth dynamics metrics created with the ``dpest.wheat.plantgro`` module, along with the cultivar parameters and the appropriate input and output file pairs.
     """
     # Define default variables
     yml_pst_file_block = 'PST_FILE'

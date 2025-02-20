@@ -11,28 +11,71 @@ def overview(
     smk = '!',
 ):
     """
-    Create a PEST instruction (.ins) file from an OVERVIEW.OUT file based on specified filters.
+    Creates a ``PEST instruction file (.INS)``. This instruction file contains directions for PEST to read the simulated values from the ``OVERVIEW.OUT`` file and compare them with the corresponding observed values (originally entered in the DSSAT "A file"). The ``PEST instruction file (.INS)`` guides PEST in extracting specific model-generated observations from the ``OVERVIEW.OUT`` file, which includes a list of end-of-season crop performance metrics, and critical phenological observations used for model evaluation. Additionally, this module creates a tuple containing:
 
-    Args:
-        treatment (str): The treatment to filter the data. (Required)
-        overview_file_path (str): Path to the OVERVIEW.OUT file to read. (Required)
-        output_path (str, optional): Directory where the generated .ins file will be saved.
-                                     Defaults to the current working directory if not provided.
-        variable_classifications (dict, optional): Mapping of variable names to their respective categories.
-                                                   Defaults to values from the YAML configuration if not provided.      
-        overview_ins_first_line (str, optional): The first line of the .ins file. Defaults to the value in the YAML configuration.
-        mrk (str, optional): Primary marker delimiter character for the instruction file. Defaults to '~'.
-        smk (str, optional): Secondary marker delimiter character for the instruction file. Defaults to '!'.
+    1. A DataFrame with the MEASURED observations from the ``OVERVIEW.OUT`` file (originally entered in the DSSAT "A file").
+    2. The path to the generated ``PEST instruction file (.INS)``.
 
-    Returns:
-        pandas.DataFrame: A filtered DataFrame used to generate the .ins file.
-        str: The full path to the generated TPL file (output_new_file_path).
+    **Required Arguments:**
 
-    Raises:
-        ValueError: If any required parameters are missing or invalid.
-        FileNotFoundError: If the OVERVIEW.OUT file cannot be found.
-        Exception: For any other unexpected errors.
+        * **treatment** (*str*): The name of the treatment for which the cultivar is being calibrated. This should match exactly the treatment name as shown in the DSSAT application interface when an experiment is selected. For example, "164.0 KG N/HA IRRIG" is a treatment of the ``SWSW7501WH.WHX`` experiment.
+        * **overview_file_path** (*str*): Path to the ``OVERVIEW.OUT`` file to read. Usually the file is in ``C:\DSSAT48\Wheat\OVERVIEW.OUT``.
+
+    **Optional Arguments:**
+
+        * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
+        * **variable_classifications** (*dict*): Mapping of variable names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary to define the variables from the *MAIN GROWTH AND DEVELOPMENT VARIABLES section of the ``OVERVIEW.OUT`` DSSAT file, using the format ``{variable: variable_group, …}``.
+        * **overview_ins_first_line** (*str*, *default: "pif"*): First line of the ``PEST instruction file (.INS)``. This is the PEST default value and should not be changed without good reason.
+        * **mrk** (*str*, *default: "~"*) Primary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
+        * **smk** (*str*, *default: "!"*) Secondary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, [, ], (, ), :, space, tab, or &.
+
+    **Returns:**
+
+    * *tuple*: A tuple containing:
+        * *pandas.DataFrame*: A filtered DataFrame used to generate the ``PEST instruction file (.INS)``.
+        * *str*: The full path to the generated ``PEST instruction file (.INS)``.
+
+    **Examples:**
+
+    1. **Basic Usage (Required Arguments Only):**
+
+       .. code-block:: python
+
+          from dpestool.wheat import overview
+
+          # Call the module with only the required arguments
+          overview_observations, overview_ins_path = overview(
+              treatment = '164.0 KG N/HA DRY',
+              overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT'
+          )
+
+          # The returned tuple and path are saved in the variables, can be used with any name that the user prefer, to call them later
+
+       This example creates a ``PEST instruction file (.INS)`` using only the required arguments. Note that the returned tuple ``(overview_observations, overview_ins_path)`` is captured. The ``overview_observations`` DataFrame  will be used later to create the observations and observations group sections in the pst file (loaded in the ``dataframe_observations`` argument of the pst module). The ``overview_ins_path`` will be used in the ``input_output_file_pairs`` argument of the pst module to match the original ``OVERVIEW.OUT`` file to the instruction file.
+
+    2. **Specifying Variable Classifications:**
+
+       .. code-block:: python
+
+          from dpestool.wheat import overview
+
+          # Call the module specifying variable classifications
+          overview(
+              treatment = '164.0 KG N/HA DRY',
+              overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT',
+              variable_classifications = {
+                  'Anthesis (DAP)': 'phenology',
+                  'Maturity (DAP)': 'phenology',
+                  'Product wt (kg dm/ha;no loss)': 'yield',
+                  'Maximum leaf area index': 'lai',
+                  'Canopy (tops) wt (kg dm/ha)': 'biomass',
+                  'Above-ground N (kg/ha)': 'nitrogen'
+              }
+          )
+
+       This example demonstrates how to specify the ``variable_classifications`` argument to group specific variables. In this case, the returned tuple is not saved, but the ``PEST instruction file (.INS)`` is still created at the specified location. If you want to use the cultivar parameters and path for the ``pst`` module, the returned tuple should be saved in two variables. Additionally, the example shows how the  ``variable_classifications`` optional variable should be entered as a dictionary.
     """
+
     # Define default variables:
     yml_file_block = 'OVERVIEW_FILE'
     yaml_file_variables = 'INS_FILE_VARIABLES'

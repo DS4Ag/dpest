@@ -18,19 +18,19 @@ def cul(
 
     **Required Arguments:**
 
-    * **cultivar** (*str*): Name or ID of the cultivar to modify. This should match either the ``VAR#`` (cultivar ID) or ``VAR-NAM`` (cultivar name) column in the ``DSSAT cultivar file (.CUL)``.
-    * **cul_file_path** (*str*): Full path to the ``DSSAT cultivar file (.CUL)``. Typically, this is the path to the ``WHCER048.CUL`` file, usually located at ``C:\DSSAT48\Genotype\WHCER048.CUL``.
+        * **cultivar** (*str*): Name or ID of the cultivar to modify. This should match either the ``VAR#`` (cultivar ID) or ``VAR-NAM`` (cultivar name) column in the ``DSSAT cultivar file (.CUL)``.
+        * **cul_file_path** (*str*): Full path to the ``DSSAT cultivar file (.CUL)``. Typically, this is the path to the ``WHCER048.CUL`` file, usually located at ``C:\DSSAT48\Genotype\WHCER048.CUL``.
 
     **Optional Arguments:**
 
-    * **output_path** (*str*, *default: current working directory*): Directory to save the generated ``PEST template file (.TPL)``.
-    * **new_template_file_extension** (*str*, *default: ".TPL"*): Extension for the generated ``PEST template file (.TPL)``. This is the PEST default value and should not be changed without good reason.
-    * **header_start** (*str*, *default: "@VAR#"*): Identifier for the header row in the ``DSSAT cultivar file (.CUL)``.
-    * **tpl_first_line** (*str*, *default: "ptf"*): First line to include in the ``PEST template file (.TPL)``. This is the PEST default value and should not be changed without good reason.
-    * **minima** (*str*, *default: "999991"*): Row identifier for the minima parameter values.
-    * **maxima** (*str*, *default: "999992"*): Row identifier for the maxima parameter values.
-    * **mrk** (*str*, *default: "~"*) Primary marker delimiter character for the template file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
-    * **parameters_grouped** (*dict*, *optional*): Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: ``P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'``. 'P', 'G', and 'PHINT' are cultivar parameter group names, and the values are the specific cultivar parameters to calibrate, using the same names as in the ``DSSAT cultivar file (.CUL)``.
+        * **output_path** (*str*, *default: current working directory*): Directory to save the generated ``PEST template file (.TPL)``.
+        * **new_template_file_extension** (*str*, *default: ".TPL"*): Extension for the generated ``PEST template file (.TPL)``. This is the PEST default value and should not be changed without good reason.
+        * **header_start** (*str*, *default: "@VAR#"*): Identifier for the header row in the ``DSSAT cultivar file (.CUL)``.
+        * **tpl_first_line** (*str*, *default: "ptf"*): First line to include in the ``PEST template file (.TPL)``. This is the PEST default value and should not be changed without good reason.
+        * **minima** (*str*, *default: "999991"*): Row identifier for the minima parameter values.
+        * **maxima** (*str*, *default: "999992"*): Row identifier for the maxima parameter values.
+        * **mrk** (*str*, *default: "~"*) Primary marker delimiter character for the template file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
+        * **parameters_grouped** (*dict*, *optional*): Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: ``P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'``. 'P', 'G', and 'PHINT' are cultivar parameter group names, and the values are the specific cultivar parameters to calibrate, using the same names as in the ``DSSAT cultivar file (.CUL)``.
 
     **Returns:**
 

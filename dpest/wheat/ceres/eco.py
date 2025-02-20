@@ -14,35 +14,67 @@ def eco(
     **parameters_grouped
 ):
     """
-    Create a TPL file for CERES Wheat based on a ecotype ECO file with specified parameter modifications.
+    Creates a ``PEST template file (.TPL)`` for CERES-Wheat ecotype parameters based on a ``DSSAT ecotype file (.ECO)``. This module is specific to the CERES-Wheat model and uses default values tailored for this model.
 
-    Args:
-        ecotype (str): Name of the ecotype to modify. This argument is required.
-        eco_file_path (str): Full path to the ecotype .ECO file. This argument is required.
-        output_path (str): Directory to save the generated TPL file. Defaults to the current working directory.
-        new_template_file_extension (str): Extension for the generated template file (e.g., "tpl").
-        header_start (str): Identifier for the header row in the ECO file. Default is '@VAR#'.
-        tpl_first_line (str): First line to include in the TPL file. Default is 'ptf ~'.
-        minima (str): Row identifier for the minima parameter values. Default is '999991'.
-        maxima (str): Row identifier for the maxima parameter values. Default is '999992'.
-        parameters_grouped (dict): A dictionary where keys are group names and values are comma-separated
-            strings of parameter names to include in the TPL file. If not provided, defaults are loaded
-            from the configuration file.
-        mrk (str, optional): Primary marker delimiter character for the template file. Defaults to '~'.
+    **Required Arguments:**
 
-    Returns:
-        dict: A dictionary containing:
-            - 'ecotype_parameters': Current parameter values for the specified ecotype.
-            - 'minima_parameters': Minima values for all parameters.
-            - 'maxima_parameters': Maxima values for all parameters.
-            - 'parameters_grouped': The grouped parameters used for template generation.
+        * **ecotype** (*str*): Ecotype ID to modify. This should match the ``ECO#`` (ecotype ID) column in the ``DSSAT ecotype file (.ECO)``
+        * **eco_file_path** (*str*): Full path to the ``DSSAT ecotype (.ECO)`` file. Typically, this is the path to the ``WHCER048.ECO`` file, usually located at ``C:\DSSAT48\Genotype\WHCER048.ECO``.
 
-        str: The full path to the generated TPL file (output_new_file_path).
+    **Optional Arguments:**
 
-    Raises:
-        ValueError: If required arguments are missing or invalid values are encountered.
-        FileNotFoundError: If the specified ECO file does not exist.
-        Exception: For any other unexpected errors.
+        * **output_path** (*str*, *default: current working directory*): Directory to save the generated ``PEST template file (.TPL)``.
+        * **new_template_file_extension** (*str*, *default: ".TPL"*): Extension for the generated ``PEST template file (.TPL)``. This is the PEST default value and should not be changed without good reason.
+        * **header_start** (*str*, *default: "@ECO#"*): Identifier for the header row in the ``DSSAT ecotype file (.ECO)``.
+        * **tpl_first_line** (*str*, *default: "ptf"*): First line to include in the  ``PEST template file (.TPL)``. This is the PEST default value and should not be changed without good reason.
+        * **minima** (*str*, *default: "999991"*): Row identifier for the minima ecotype parameter values.
+        * **maxima** (*str*, *default: "999992"*): Row identifier for the maxima ecotype parameter values.
+        * **mrk** (*str*, *default: "~"*) Primary marker delimiter character for the template file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
+        * **parameters_grouped** (*dict*, *optional*): Parameters to calibrate, grouped and comma-separated. If not provided, all ecotype parameters are calibrated. For example: ``PHEN='P1, P2FR1', VERN='VEFF'``. 'PHEN' and 'VERN' are ecotype parameter group names, and the values are the specific ecotype parameters to calibrate, using the same names as in the ``DSSAT ecotype file (.ECO)``.
+
+    **Returns:**
+
+    * *tuple*: A tuple containing:
+        * *dict*: A dictionary containing:
+            * ``'parameters'``: Current ecotype parameter values for the specified ecotype.
+            * ``'minima_parameters'``: Minima values for all ecotype parameters.
+            * ``'maxima_parameters'``: Maxima values for all ecotype parameters.
+            * ``'parameters_grouped'``: The grouped ecotype parameters used for template generation.
+        * *str*: The full path to the generated .TPL file.
+
+    **Examples:**
+
+    1. **Basic Usage (Required Arguments Only):**
+
+       .. code-block:: python
+
+          from dpestool.wheat.ceres import eco
+
+          # Call the module with only the required arguments
+          ecotype_parameters, ecotype_tpl_path = eco(
+              ecotype = 'CAWH01',
+              eco_file_path = 'C:/DSSAT48/Genotype/WHCER048.ECO'
+          )
+
+          # The returned tuple and path are saved in the variables, can be used with any name that the user prefer, to call them later
+
+       This example creates a template file using only the required arguments. Note that the returned tuple ``(ecotype_parameters, ecotype_tpl_path)`` is captured. The ``ecotype_parameters`` dictionary will be used later to make the control file's parameter groups and parameters sections using the ``pst`` module. The ``ecotype_tpl_path`` path will be used in the ``input_output_file_pairs`` argument of the ``pst`` module to match the original ``DSSAT ecotype file (.ECO)`` to the template file.
+
+    2. **Specifying Parameter Groups (Tuple Not Saved):**
+
+       .. code-block:: python
+
+          from dpestool.wheat.ceres import eco
+
+          # Call the module specifying parameter groups, but not saving the returned tuple
+          eco(
+              ecotype = 'CAWH01',
+              eco_file_path = 'C:/DSSAT48/Genotype/WHCER048.ECO',
+              PHEN = 'P1, P2FR1',
+              VERN = 'VEFF'
+          )
+
+       This example demonstrates how to specify the ``parameters_grouped`` argument to calibrate only specific ecotype parameters. In this case, the returned tuple is not saved, but the ``PEST template file (.TPL)`` is still created at the specified location. If you want to use the ecotype parameters and path for the ``pst`` module, the returned tuple should be saved with the names that the user prefer.
     """
 
     # Defaul variable values
