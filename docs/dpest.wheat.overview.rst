@@ -1,4 +1,4 @@
-dpest.wheat.overview module
+dpest.wheat.overview
 ---------------------------
 
 .. automodule:: dpest.wheat.overview
