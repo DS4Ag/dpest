@@ -62,7 +62,7 @@ def pst(
               cultivar_parameters = cultivar_parameters,
               ecotype_parameters = ecotype_parameters,
               dataframe_observations = [overview_observations, plantgro_observations],
-              model_comand_line = r'py "C:\pest18\run-dssat.py"',
+              model_comand_line = r'py "C:/pest18/run-dssat.py"',
               input_output_file_pairs = [
                   (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
                   (ecotype_tpl_path, 'C://DSSAT48/Genotype/WHCER048.ECO'),
@@ -82,7 +82,7 @@ def pst(
           pst(
               cultivar_parameters = cultivar_parameters,
               dataframe_observations = [overview_observations, plantgro_observations],
-              model_comand_line = r'py "C:\pest18\run-dssat.py"',
+              model_comand_line = r'py "C:/pest18/run-dssat.py"',
               input_output_file_pairs = [
                   (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
                   (overview_ins_path, 'C://DSSAT48/Wheat/OVERVIEW.OUT'),
@@ -101,7 +101,7 @@ def pst(
           pst(
               cultivar_parameters = cultivar_parameters,
               dataframe_observations = plantgro_observations,
-              model_comand_line=r'py "C:\pest18\run-dssat.py"',
+              model_comand_line=r'py "C:/pest18/run-dssat.py"',
               input_output_file_pairs = [
                   (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
                   (plantgro_ins_path, 'C://DSSAT48/Wheat/PlantGro.OUT')
