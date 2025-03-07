@@ -11,11 +11,13 @@ What is dpest?
 
 This documentation provides a complete reference for using `dpest`.
 
+
 Installation
 =================
 `dpest` can be installed via pip from `PyPI <https://pypi.org/project/dpest/>`_.
 
 .. code-block:: bash
+
    pip install dpest
 
 
