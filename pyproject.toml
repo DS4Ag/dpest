@@ -1,8 +1,32 @@
+[project]
+name = "dpest"
+version = "1.1.2"
+authors = [{ name = "Luis Vargas Rojas", email = "luisvargasrojas@gmail.com" }]
+description = "A Python package for automating PEST (Parameter ESTimation) file creation for DSSAT crop model calibration using time series data. It generates template, instruction, and control files for parameter estimation, including tools for extending time series data."
+
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
+]
+
+dependencies = [
+    "pyemu>=1.3.8",
+    "pyyaml>=6.0.2",
+    "pandas>=2.2.3",
+    "matplotlib>=3.10.1",
+    "flopy>=3.9.2"
+]
+
 [build-system]
 requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[project]
-name = "dpest"
-version = "0.1.0"
-description = "A Python package that automates PEST (Parameter ESTimation) file creation for calibrating DSSAT (Decision Support System for Agrotechnology Transfer) crop models using time series data. It generates template (.TPL) files for Cultivar (.CUL) and Ecotype (.ECO) parameters, instruction (.INS) files for OVERVIEW.OUT and PlantGro.OUT, and the main PEST control (.PST) file, including parameter definitions, observation groups, command lines, and input/output file associations. It also includes a utility to extend PlantGro.OUT files by adding rows when simulated crop maturity occurs before the last observation date, ensuring complete time series compatibility."
+[tool.setuptools.package-data]
+"dpest" = ["**/*.yml", "**/*.yaml"]
+
+[project.urls]
+Homepage = "https://github.com/DS4Ag/dpest"
+Issues = "https://github.com/DS4Ag/dpest/issues"

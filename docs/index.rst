@@ -1,4 +1,4 @@
-dpest 1.0 documentation
+dpest
 =======================
 
 What is dpest?
@@ -8,6 +8,12 @@ What is dpest?
 
 .. _PEST (Parameter Estimation and Uncertainty Analysis): https://pesthomepage.org/
 .. _DSSAT (Decision Support System for Agrotechnology Transfer): https://dssat.net/
+
+## Installation
+
+```
+pip install dpest
+```
 
 This documentation provides a complete reference for using `dpest`.
 
