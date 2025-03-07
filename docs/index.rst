@@ -12,7 +12,8 @@ What is dpest?
 This documentation provides a complete reference for using `dpest`.
 
 Installation
-=================
+------------
+
 .. grid:: 1
     :gutter: 4
 
