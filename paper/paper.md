@@ -55,3 +55,5 @@ The *dpest* package includes the following modules:
 ## Acknowledgements
 
 We acknowledge Sheela Katuwal and Rob Malone for their guidance on using PEST. LV-R was supported by a CONACYT fellowship from the Mexican government. The experimental data used for testing dpest were collected as part of a research project funded by the Heat and Drought Wheat Improvement Consortium (HedWIC) under grant #DFs-19-0000000013.
+
+## References
