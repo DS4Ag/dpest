@@ -15,9 +15,6 @@ Installation
 =================
 `dpest` can be installed via pip from `PyPI <https://pypi.org/project/dpest/>`_.
 
-.. code-block:: bash
-   pip install dpest
-
 
 Table of Contents
 =================
