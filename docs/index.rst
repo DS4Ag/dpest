@@ -13,11 +13,22 @@ This documentation provides a complete reference for using `dpest`.
 
 Installation
 =================
-To install `dpest`, run the following command:
+.. grid:: 1
+    :gutter: 4
 
-.. code-block:: python
-   pip install dpest
+    .. grid-item-card:: Install via pip
+        :class-card: install-card
+        :columns: 12
+        :padding: 3
 
+        `dpest` can be installed via pip from `PyPI <https://pypi.org/project/dpest/>`_.
+
+        ++++
+
+        .. code-block:: bash
+
+            pip install dpest
+            
 
 Table of Contents
 =================
