@@ -1,5 +1,5 @@
 ---
-title: dpest: Streamlining Creation of PEST input files for DSSAT Crop Model Calibration 
+title: 'dpest: Streamlining Creation of PEST input files for DSSAT Crop Model Calibration' 
 tags:
   - crop modeling
   - DSSAT
