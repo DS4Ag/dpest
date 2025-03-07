@@ -35,12 +35,14 @@ html_theme = 'pydata_sphinx_theme'
 
 html_show_sourcelink = True
 
-html_theme_options = {
-"use_repository_button": True, 
-"use_source_button": True, 
+html_sidebars = {
+    "**": ["sidebar-nav-bs"]
 }
 
 html_theme_options = {
     "github_url": "https://github.com/DS4Ag/dpest/",  # Replace with your GitHub repo URL
-    "use_repository_button": True
+    "use_repository_button": True,
+    "use_source_button": True,
+    "show_nav_level": 2,  # Ensure navigation is visible up to depth 2
+    "navigation_with_keys": True,  # Enable keyboard navigation
 }
