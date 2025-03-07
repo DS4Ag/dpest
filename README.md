@@ -25,6 +25,8 @@ For detailed usage instructions and module references, see the full documentatio
 
 ## Installation
 
+`dpest` can be installed via pip from [PyPI](https://pypi.org/project/dpest/).
+
 ```
 pip install dpest
 ```
