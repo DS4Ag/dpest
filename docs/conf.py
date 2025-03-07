@@ -32,3 +32,8 @@ html_theme_options = {
 "use_repository_button": True, 
 "use_source_button": True, 
 }
+
+html_theme_options = {
+    "github_url": "https://github.com/DS4Ag/dpest/",  # Replace with your GitHub repo URL
+    "use_repository_button": True
+}
