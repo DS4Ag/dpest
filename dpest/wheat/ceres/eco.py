@@ -32,7 +32,7 @@ def eco(
         * **minima** (*str*, *default: "999991"*): Row identifier for the minima ecotype parameter values.
         * **maxima** (*str*, *default: "999992"*): Row identifier for the maxima ecotype parameter values.
         * **mrk** (*str*, *default: "~"*) Primary marker delimiter character for the template file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
-        * **parameters_grouped** (*dict*, *optional*): Parameters to calibrate, grouped and comma-separated. If not provided, all ecotype parameters are calibrated. For example: ``PHEN='P1, P2FR1', VERN='VEFF'``. 'PHEN' and 'VERN' are ecotype parameter group names, and the values are the specific ecotype parameters to calibrate, using the same names as in the ``DSSAT ecotype file (.ECO)``.
+        * **parameters_grouped** (*dict*, *optional*): Parameters to calibrate, grouped and comma-separated. If not provided, all ecotype parameters are calibrated. For example: ``PHEN='P1, P2FR1', VERN='VEFF'``. 'PHEN' and 'VERN' are ecotype parameter group names, and the values are the specific ecotype parameters to calibrate, using the same names as in the ``DSSAT ecotype file (.ECO)``. Parameter group names should be less than 12 characters.
 
     **Returns:**
     =======

@@ -49,7 +49,7 @@ PLANTGRO_FILE:
     # Clasification into groups of the PlantGro file variables 
     VARIABLE_CLASSIFICATIONS:
         # Variable: group 
-        A#PD: plant_structure
+        A#PD: plant_struct
         AMLWT: biomass
         ATLWT: biomass
         BADMH: biomass
@@ -59,15 +59,15 @@ PLANTGRO_FILE:
         CDAY: phenology
         CDVD: phenology
         CFAD: yield
-        CHTD: plant_structure
-        CHTCM: plant_structure
+        CHTD: plant_struct
+        CHTCM: plant_struct
         CMDMD: biomass
         CRAD: biomass
         CRWAD: biomass
         CWAD: biomass
-        CWID: plant_structure
+        CWID: plant_struct
         CWPD: biomass
-        CWSI: stress_factors
+        CWSI: stress_fact
         DAP: phenology
         DAS: phenology
         DCCD: phenology
@@ -79,13 +79,13 @@ PLANTGRO_FILE:
         DWTCO: biomass
         DWTLO: biomass
         DWTSO: biomass
-        DYLFD: environmental_factors
-        E#AD: plant_structure
+        DYLFD: env_factors
+        E#AD: plant_struct
         EAID: lai
         EWAD: yield
-        EWSD: stress_factors
-        EY#AD: plant_structure
-        EY#UD: plant_structure
+        EWSD: stress_fact
+        EY#AD: plant_struct
+        EY#UD: plant_struct
         EYWAD: yield
         EYWUD: yield
         FHL%: biomass
@@ -98,7 +98,7 @@ PLANTGRO_FILE:
         GSTD: phenology
         GWAD: yield
         GWGD: yield
-        H#AD: plant_structure
+        H#AD: plant_struct
         HCRD: yield
         HERB: biomass
         HIAD: yield
@@ -107,19 +107,19 @@ PLANTGRO_FILE:
         HWAD: yield
         HWUD: yield
         HYAD: yield
-        KSTD: stress_factors
-        L#S1D: plant_structure
-        L#SD: plant_structure
+        KSTD: stress_fact
+        L#S1D: plant_struct
+        L#SD: plant_struct
         LAD_1: lai
         LAID: lai
         LAITD: lai
-        LAWD: plant_structure
+        LAWD: plant_struct
         LDAD: biomass
         LF%D: biomass
         LLAID: lai
         LN%D: nitrogen
-        LN_1: plant_structure
-        LNUM: plant_structure
+        LN_1: plant_struct
+        LNUM: plant_struct
         LRSD: phenology
         LWAD: biomass
         LWD_1: biomass
@@ -131,21 +131,21 @@ PLANTGRO_FILE:
         MSTMWT: biomass
         NFLF2: nitrogen
         NFTID: nitrogen
-        NSPAV: stress_factors
-        NSTD: stress_factors
+        NSPAV: stress_fact
+        NSTD: stress_fact
         NDEMD: nitrogen
         NUPRD: nitrogen
         NWAD: biomass
-        O#AD: plant_structure
+        O#AD: plant_struct
         OWAD: biomass
         OWGD: biomass
-        P#AD: plant_structure
-        PARCE: environmental_factors
+        P#AD: plant_struct
+        PARCE: env_factors
         PLA: lai
         PMWD: biomass
         PRSD: biomass
-        PS1D: stress_factors
-        PS2D: stress_factors
+        PS1D: stress_fact
+        PS2D: stress_fact
         PWAD: yield
         PWDD: yield
         PWTD: yield
@@ -154,21 +154,21 @@ PLANTGRO_FILE:
         QWAD: biomass
         QDAD: biomass
         RDAD: biomass
-        RDPD: plant_structure
+        RDPD: plant_struct
         RGRD: biomass
-        RL10D: plant_structure
-        RL1D: plant_structure
-        RL2D: plant_structure
-        RL3D: plant_structure
-        RL4D: plant_structure
-        RL5D: plant_structure
-        RL6D: plant_structure
-        RL7D: plant_structure
-        RL8D: plant_structure
-        RL9D: plant_structure
-        RL10: plant_structure
+        RL10D: plant_struct
+        RL1D: plant_struct
+        RL2D: plant_struct
+        RL3D: plant_struct
+        RL4D: plant_struct
+        RL5D: plant_struct
+        RL6D: plant_struct
+        RL7D: plant_struct
+        RL8D: plant_struct
+        RL9D: plant_struct
+        RL10: plant_struct
         RSCD: biomass
-        RSFPD: stress_factors
+        RSFPD: stress_fact
         RSPD: biomass
         RSTD: phenology
         RWAD: biomass
@@ -177,8 +177,8 @@ PLANTGRO_FILE:
         SEAD: biomass
         SH%D: yield
         SHAD: yield
-        SLAD: plant_structure
-        SLFT: stress_factors
+        SLAD: plant_struct
+        SLFT: stress_fact
         SSTKH: biomass
         STD_1: biomass
         STTD: phenology
@@ -191,39 +191,39 @@ PLANTGRO_FILE:
         SWAD: biomass
         SWD_1: biomass
         SWF_1: biomass
-        T#AD: plant_structure
-        T#SD: plant_structure
-        TCDIF: environmental_factors
-        TDIF: environmental_factors
+        T#AD: plant_struct
+        T#SD: plant_struct
+        TCDIF: env_factors
+        TDIF: env_factors
         TDRW: biomass
-        TFDD: environmental_factors
-        TKILL: environmental_factors
+        TFDD: env_factors
+        TKILL: env_factors
         TLA_1: lai
         TLAG1: lai
         TLFWT: biomass
         TLW_1: biomass
         TPLA: lai
         TPLAG: lai
-        TPSM: plant_structure
+        TPSM: plant_struct
         TRAD: biomass
         TSTMWT: biomass
         TT: phenology
-        TWUPD: stress_factors
+        TWUPD: stress_fact
         UWAD: yield
         UYAD: yield
         VCN%: nitrogen
         VMN%: nitrogen
-        VRNFD: environmental_factors
+        VRNFD: env_factors
         VWAD: biomass
-        WAVRD: stress_factors
-        WFGD: stress_factors
-        WFPD: stress_factors
-        WFTID: stress_factors
+        WAVRD: stress_fact
+        WFGD: stress_fact
+        WFPD: stress_fact
+        WFTID: stress_fact
         WLVG: biomass
-        WSGD: stress_factors
-        WSPAV: stress_factors
-        WSPD: stress_factors
-        WUPRD: stress_factors
+        WSGD: stress_fact
+        WSPAV: stress_fact
+        WSPD: stress_fact
+        WUPRD: stress_fact
         CLDD: weather
         CO2D: weather
         DAYLD: weather
@@ -250,8 +250,8 @@ PLANTGRO_FILE:
         CHWAD: yield
         CN%D: nitrogen
         CNAD: nitrogen
-        CO2FD: environmental_factors
-        DAYLF: environmental_factors
+        CO2FD: env_factors
+        DAYLF: env_factors
         DNAG: nitrogen
         DOY: phenology
         DWAG: biomass
@@ -261,7 +261,7 @@ PLANTGRO_FILE:
         HNCD: nitrogen
         HN%D: nitrogen
         HN%M: nitrogen
-        LA%D: environmental_factors
+        LA%D: env_factors
         LAIPD: lai
         LAISD: lai
         NFGD: nitrogen
@@ -269,8 +269,8 @@ PLANTGRO_FILE:
         NFSD: nitrogen
         NFTD: nitrogen
         NFUD: nitrogen
-        NSTD: stress_factors
-        PARUD: environmental_factors
+        NSTD: stress_fact
+        PARUD: env_factors
         PMAD: yield
         PTF: biomass
         PTFD: biomass
@@ -278,9 +278,9 @@ PLANTGRO_FILE:
         RNCD: nitrogen
         RS%D: biomass
         RSAD: biomass
-        RSFP: stress_factors
+        RSFP: stress_fact
         RSWAD: biomass
-        SAID: plant_structure
+        SAID: plant_struct
         SDNAD: nitrogen
         SDNCD: nitrogen
         SDWAD: biomass
@@ -300,22 +300,22 @@ PLANTGRO_FILE:
         SNW1D: biomass
         SNXD: nitrogen
         SSAD: biomass
-        TFGD: environmental_factors
-        TFGEM: environmental_factors
-        TFPD: environmental_factors
+        TFGD: env_factors
+        TFGEM: env_factors
+        TFPD: env_factors
         TNAD: nitrogen
         TRRD: biomass
-        TRWUD: stress_factors
-        TWUPD: stress_factors
+        TRWUD: stress_fact
+        TWUPD: stress_fact
         VNCD: nitrogen
         VN%D: nitrogen
         VN%LD: nitrogen
         VN%CD: nitrogen
-        VRNF: environmental_factors
-        WFGE: stress_factors
-        WFSD: stress_factors
-        WFTD: stress_factors
-        WSTD: stress_factors
+        VRNF: env_factors
+        WFGE: stress_fact
+        WFSD: stress_fact
+        WFTD: stress_fact
+        WSTD: stress_fact
         YEAR: phenology
         RCANE: phenology
         DDLMD: biomass
@@ -324,19 +324,19 @@ PLANTGRO_FILE:
         TTTOT: phenology
         BBDMD: biomass
         CSTAT: phenology
-        GLI%D: environmental_factors
-        TLI%D: environmental_factors
-        TRWUP: stress_factors
-        EOP: environmental_factors
+        GLI%D: env_factors
+        TLI%D: env_factors
+        TRWUP: stress_fact
+        EOP: env_factors
         COAD: yield
         COAM: yield
         XWAD: yield
         XO%D: yield
         HSAM: yield
-        PARID: environmental_factors
+        PARID: env_factors
         TWAD: biomass
         SNWPD: biomass
         SNWLD: biomass
         SNWSD: biomass
-        SWXD: stress_factors
+        SWXD: stress_fact
 #~~~~~~/ PLANTGRO

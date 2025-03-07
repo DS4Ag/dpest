@@ -43,6 +43,15 @@ The following steps outline the typical workflow for using `dpest`:
 
 1.  **Locate DSSAT Genotype Files:** The cultivar (`.CUL`) and ecotype (`.ECO`) files are typically included with the DSSAT installation. These are usually found in the `C:\DSSAT48\Genotype\` directory.
 2.  **Run a DSSAT Simulation:** Execute a DSSAT simulation for your chosen wheat experiment using either the CERES, NWHEAT, or CROPSIM model. This will generate the necessary output files (`OVERVIEW.OUT` and `PlantGro.OUT`), typically found in the `C:\DSSAT48\Wheat\` directory.
+
+        I.  Launch DSSAT.
+        II.  Click "Selector".
+        III.  Expand "Crops" and select "Wheat".
+        IV.  Select the experiment "SWSW7501WH N RESPONSE,SWIFT CURRENT 7FE(N)*2IR (DSSAT)".
+        V.  Click "Run".
+        VI.  Choose "CERES" as the crop model.
+        VII.  Click "OK" and wait for the simulation to finish.
+
 3.  **Import the `dpest` Package:**
 
     *   To import the entire `dpest` package:
@@ -78,16 +87,48 @@ The following steps outline the typical workflow for using `dpest`:
     *   **`uplantgro()`**: modifies the DSSAT output file (`PlantGro.OUT`) to prevent PEST errors when simulated crop maturity occurs before the final measured observation. This ensures PEST can compare all available time-series data, even when the model predicts maturity earlier than observed in the field.
 
 5.  **Create Template Files and Instruction Files:** Use the `dpest` modules to generate `PEST template files (.TPL)` for cultivar and ecotype parameters, and `PEST instruction files (.INS)` for the `OVERVIEW.OUT` and `PlantGro.OUT` files.
+
+```
+import dpest
+
+# 1. Create CULTIVAR parameters TPL file
+cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(
+    cultivar = 'MANITOU', #Cultivar name
+    cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL' #Path to the CUL file
+)
+
+# 2. Create OVERVIEW observations INS file
+overview_observations,  overview_ins_path = dpest.wheat.overview(
+    treatment = '164.0 KG N/HA IRRIG', #Treatment Name
+    overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT' #Path to the OVERVIEW.OUT file
+)
+# 3. Create PlantGro observations INS file
+plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
+    plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT', #Path to the PlantGro.OUT file
+    treatment = '164.0 KG N/HA IRRIG', #Treatment Name
+    variables = ['LAID', 'CWAD', 'T#AD'] #Variables to calibrate
+)
+
+```
 6.  **Create the PEST Control File:** Use the `dpest.pst()` module to generate the main `PEST control file (.PST)`.
+
+```
+
+# 4. Create the PST file
+dpest.pst(
+    cultivar_parameters = cultivar_parameters,
+    dataframe_observations = [overview_observations, plantgro_observations],
+    model_comand_line = r'py "C:\pest18\run_dssat.py"', #Command line to run the model
+    input_output_file_pairs = [
+        (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'), #Template file and the file to be modified
+        (overview_ins_path , 'C://DSSAT48/Wheat/OVERVIEW.OUT'), #Instruction file and the file to be modified
+        (plantgro_ins_path , 'C://DSSAT48/Wheat/PlantGro.OUT') #Instruction file and the file to be modified
+    ]
+)
+```
+
 7.  **Run PEST:** Calibrate the model using PEST.
 
-
- - *cul()*: Creates PEST template files (.TPL) for DSSAT cultivar parameters. The file is used for cultivar calibration.
- - *eco()*: Creates PEST template files (.TPL) for DSSAT ecotype parameters. The file is used for ecotype calibration.
- - *overview()*: Creates PEST instruction files (.INS) for reading observed (measured) values of key end-of-season crop performance metrics and key phenological observations from the OVERVIEW.OUT file. The instruction file tells PEST how to extract model-generated observations from the OVERVIEW.OUT file, compare them with the observations from the DSSAT A file, and adjust model parameters.
- - *plantgro()*: Creates PEST instruction files (.INS) for reading simulated plant growth values from the DSSAT PlantGro.OUT file. The .INS file guides PEST in comparing those simulated values with the time-series data measured and provided in the DSSAT T file.
- - *pst()*: Generates the main PEST control file (.PST) to guide the entire calibration process. It integrates the template (.TPL) and instruction (.INS) files, defines calibration parameters, observation groups, weights, PEST control variables and model run command.
- - *uplantgro()*: modifies the DSSAT output file (PlantGro.OUT) to prevent PEST errors when simulated crop maturity occurs before the final measured observation. This ensures PEST can compare all available time-series data, even when the model predicts maturity earlier than observed in the field.
 
 **Create Template Files and Instruction Files:**
 
@@ -127,7 +168,7 @@ dpest.pst(
 
 ### Contributing
 
-Contributions to `dpest` are welcome! Please submit bug reports, feature requests, and pull requests through the project's GitHub repository or by email to: Diane Wang - [drwang@purdue.edu](drwang@purdue.edu) or Luis Vargas Rojas - [lvargasr@purdue.edu](lvargasr@purdue.edu).
+Contributions to `dpest` are welcome! Please submit bug reports, feature requests, and pull requests through the project's GitHub repository or by email to: Luis Vargas Rojas - [lvargasr@purdue.edu](lvargasr@purdue.edu).
 
 Purdue University, Wang Lab [dianewanglab.com](https://www.dianewanglab.com/)
 

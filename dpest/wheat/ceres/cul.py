@@ -36,7 +36,7 @@ def cul(
         * **minima** (*str*, *default: "999991"*): Row identifier for the minima parameter values.
         * **maxima** (*str*, *default: "999992"*): Row identifier for the maxima parameter values.
         * **mrk** (*str*, *default: "~"*) Primary marker delimiter character for the template file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
-        * **parameters_grouped** (*dict*, *optional*): Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: ``P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'``. 'P', 'G', and 'PHINT' are cultivar parameter group names, and the values are the specific cultivar parameters to calibrate, using the same names as in the ``DSSAT cultivar file (.CUL)``.
+        * **parameters_grouped** (*dict*, *optional*): Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: ``P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'``. 'P', 'G', and 'PHINT' are cultivar parameter group names, and the values are the specific cultivar parameters to calibrate, using the same names as in the ``DSSAT cultivar file (.CUL)``. Parameter group names should be less than 12 characters.
 
     **Returns:**
     =======
