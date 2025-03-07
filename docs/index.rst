@@ -9,15 +9,14 @@ What is dpest?
 .. _PEST (Parameter Estimation and Uncertainty Analysis): https://pesthomepage.org/
 .. _DSSAT (Decision Support System for Agrotechnology Transfer): https://dssat.net/
 
+This documentation provides a complete reference for using `dpest`.
+
 Installation
 =================
+To install `dpest`, run the following command:
 
 .. code-block:: python
    pip install dpest
-
-
-This documentation provides a complete reference for using `dpest`.
-
 
 
 Table of Contents
