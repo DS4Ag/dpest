@@ -37,8 +37,6 @@ With the adoption of new data collection technologies in agriculture, plant rese
 
 ## Functionality
 
-**dpest** includes modules for:
-
 The *dpest* package includes the following modules:
 
  - *cul()*: Creates PEST template files (.TPL) for DSSAT cultivar parameters. The file is used for cultivar calibration.
