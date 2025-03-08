@@ -11,10 +11,17 @@ This example demonstrates how to use `dpest` to create the necessary files for c
     1.  Launch DSSAT.
     2.  Click "Selector".
     3.  Expand "Crops" and select "Wheat".
-    4.  Select the experiment "SWSW7501WH N RESPONSE,SWIFT CURRENT 7FE(N)*2IR (DSSAT)".
+    4.  Select the experiment "SWSW7501.WHX".
     5.  Click "Run".
     6.  Choose "CERES" as the crop model.
     7.  Click "OK" and wait for the simulation to finish.
+
+.. raw:: html
+
+    <iframe width="560" height="315" 
+            src="https://www.youtube.com/embed/dzKpvJSEXZc" 
+            frameborder="0" allowfullscreen>
+    </iframe>
 
 2. Create Template Files and Instruction Files
 ----------------------------------------------
