@@ -27,136 +27,136 @@ This example demonstrates how to use `dpest` to create the necessary files for c
 ----------------------------------------------
 For this example, we are going to calibrate the `MANITOU` wheat cultivar (Cultivar ID: `IB1500`) using the field-collected data from the `164.0 KG N/HA IRRIG` treatment of the `SWSW7501.WHX` experiment. The experiment information is found in the `C:\DSSAT48\Wheat\SWSW7501.WHX` file.  
 
-    **2.1. Import the `dpest` Package**
+**2.1. Import the `dpest` Package**
 
-    .. code-block:: python
+.. code-block:: python
 
-                  import dpest
+              import dpest
 
-    
-    **2.2. Create the Cultivar Template File**  
 
-    The first step is to create the cultivar Template File (`.TPL`) for the `MANITOU` cultivar, which is the cultivar planted in the `164.0 KG N/HA IRRIG` treatment of the `SWSW7501.WHX` experiment. To achieve this, we use the `dpest.wheat.ceres.cul()` function, as shown below:  
+**2.2. Create the Cultivar Template File**  
 
-    .. code-block:: python  
+The first step is to create the cultivar Template File (`.TPL`) for the `MANITOU` cultivar, which is the cultivar planted in the `164.0 KG N/HA IRRIG` treatment of the `SWSW7501.WHX` experiment. To achieve this, we use the `dpest.wheat.ceres.cul()` function, as shown below:  
 
-        import dpest  
-  
-        cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(  
-            cultivar='MANITOU',  # Cultivar name  
-            cul_file_path='C:/DSSAT48/Genotype/WHCER048.CUL'  # Path to the DSSAT wheat CUL file  
-        )  
+.. code-block:: python  
 
-    After running this function:  
+    import dpest  
 
-    - The `cultivar_parameters` variable stores a dictionary containing the parameter groups and sections needed to generate the `.PST` file.  
-    - The `cultivar_tpl_path` variable stores the file path of the generated `.TPL` file, which will be used in creating the `.PST` file.
+    cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(  
+        cultivar='MANITOU',  # Cultivar name  
+        cul_file_path='C:/DSSAT48/Genotype/WHCER048.CUL'  # Path to the DSSAT wheat CUL file  
+    )  
 
-    Note that the cultivar template file named `WHCER048_CUL.TPL` will be created in the current working directory. 
+After running this function:  
 
-    **2.3. Create Instructions Files**
+- The `cultivar_parameters` variable stores a dictionary containing the parameter groups and sections needed to generate the `.PST` file.  
+- The `cultivar_tpl_path` variable stores the file path of the generated `.TPL` file, which will be used in creating the `.PST` file.
 
-    For this experiment, key end-of-season crop performance metrics and phenological observations were collected and recorded in the `C:\DSSAT48\Wheat\SWSW7501.WHA` file (referred to as the `A File`). Additionally, time-series data were collected and recorded in the `C:\DSSAT48\Wheat\SWSW7501.WHT` file (referred to as the `T File`). To create the PEST instruction files, we will use the `overview()` and `plantgro()` modules. The `overview()` module will create the instruction file to compare the model simulations from the `'C:/DSSAT48/Wheat/OVERVIEW.OUT'` file with the measured data from the `A File`, while the `plantgro()` module will create the instruction file to compare the time-series model simulations from the `'C:/DSSAT48/Wheat/PlantGro.OUT'` file with the time-series measured data from the `T File`.
+Note that the cultivar template file named `WHCER048_CUL.TPL` will be created in the current working directory. 
 
-    .. code-block:: python
+**2.3. Create Instructions Files**
 
-        # Create OVERVIEW observations INS file
-        overview_observations, overview_ins_path = dpest.wheat.overview(
-            treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
-            overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT'  # Path to the OVERVIEW.OUT file
-        )
+For this experiment, key end-of-season crop performance metrics and phenological observations were collected and recorded in the `C:\DSSAT48\Wheat\SWSW7501.WHA` file (referred to as the `A File`). Additionally, time-series data were collected and recorded in the `C:\DSSAT48\Wheat\SWSW7501.WHT` file (referred to as the `T File`). To create the PEST instruction files, we will use the `overview()` and `plantgro()` modules. The `overview()` module will create the instruction file to compare the model simulations from the `'C:/DSSAT48/Wheat/OVERVIEW.OUT'` file with the measured data from the `A File`, while the `plantgro()` module will create the instruction file to compare the time-series model simulations from the `'C:/DSSAT48/Wheat/PlantGro.OUT'` file with the time-series measured data from the `T File`.
 
-        # Create PlantGro observations INS file
-        plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
-            treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
-            variables = ['LAID', 'CWAD', 'T#AD'],  # Variables to calibrate
-            plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT'  # Path to the PlantGro.OUT file
-        )
+.. code-block:: python
 
-    After running these functions:
+    # Create OVERVIEW observations INS file
+    overview_observations, overview_ins_path = dpest.wheat.overview(
+        treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
+        overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT'  # Path to the OVERVIEW.OUT file
+    )
 
-    - The `overview_observations` variable stores the DataFrame with the observations needed for the `.PST` file's observations and observation group sections.
-    - The `overview_ins_path` variable stores the path to the instruction file created by the `overview()` module, which will be used in the `input_output_file_pairs` argument of the `pst` module to match the original `OVERVIEW.OUT` file to the instruction file.
-    - The `plantgro_observations` variable stores the DataFrame with the time-series observations needed for the `.PST` file's observations and observation group sections.
-    - The `plantgro_ins_path` variable stores the path to the instruction file created by the `plantgro()` module, which will be used in the `input_output_file_pairs` argument of the `pst` module to match the original `PlantGro.OUT` file to the instruction file.
+    # Create PlantGro observations INS file
+    plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
+        treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
+        variables = ['LAID', 'CWAD', 'T#AD'],  # Variables to calibrate
+        plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT'  # Path to the PlantGro.OUT file
+    )
 
-    Note that the `OVERVIEW.INS` and `PlantGro.INS` instruction files will be created in the current working directory.
+After running these functions:
 
-    **2.4. Create the PEST Control File**
+- The `overview_observations` variable stores the DataFrame with the observations needed for the `.PST` file's observations and observation group sections.
+- The `overview_ins_path` variable stores the path to the instruction file created by the `overview()` module, which will be used in the `input_output_file_pairs` argument of the `pst` module to match the original `OVERVIEW.OUT` file to the instruction file.
+- The `plantgro_observations` variable stores the DataFrame with the time-series observations needed for the `.PST` file's observations and observation group sections.
+- The `plantgro_ins_path` variable stores the path to the instruction file created by the `plantgro()` module, which will be used in the `input_output_file_pairs` argument of the `pst` module to match the original `PlantGro.OUT` file to the instruction file.
 
-    After creating the **template file** and **instruction files** for calibrating the `MANITOU` wheat cultivar, the next step is to generate the **PEST control file (`.PST`)**. This file integrates all necessary components and guides the **calibration process**.
+Note that the `OVERVIEW.INS` and `PlantGro.INS` instruction files will be created in the current working directory.
 
-    The `.PST` file is created using the **variables** obtained in **2.2** and **2.3**. Additionally, we need to specify the **command-line instruction** to execute the DSSAT model.  
+**2.4. Create the PEST Control File**
 
-    The following Python script provides an example of how to run the **DSSAT CERES-Wheat model** using Python:
+After creating the **template file** and **instruction files** for calibrating the `MANITOU` wheat cultivar, the next step is to generate the **PEST control file (`.PST`)**. This file integrates all necessary components and guides the **calibration process**.
 
-    .. code-block:: python
+The `.PST` file is created using the **variables** obtained in **2.2** and **2.3**. Additionally, we need to specify the **command-line instruction** to execute the DSSAT model.  
 
-        import os
-        import subprocess
-        from datetime import datetime
-        import pandas as pd
-        from dpest.wheat.utils import uplantgro
+The following Python script provides an example of how to run the **DSSAT CERES-Wheat model** using Python:
 
-        def build_path(*args):
-            """
-            Construct a file path from multiple arguments.
-            """
-            return os.path.join(*args)
+.. code-block:: python
 
-        # Define DSSAT root directory and output folder
-        dssat_path = 'C://DSSAT48/'
-        output_directory = 'C://DSSAT48/Wheat/'
+    import os
+    import subprocess
+    from datetime import datetime
+    import pandas as pd
+    from dpest.wheat.utils import uplantgro
 
-        # Set the working directory to the output folder
-        os.chdir(output_directory)
+    def build_path(*args):
+        """
+        Construct a file path from multiple arguments.
+        """
+        return os.path.join(*args)
 
-        # Build the command to run DSSAT
-        main_executable = build_path(dssat_path, 'DSCSM048.EXE')
-        module = 'CSCER048'
-        switch = 'B'
-        control_file = build_path(dssat_path, 'Wheat/DSSBatch.v48')
+    # Define DSSAT root directory and output folder
+    dssat_path = 'C://DSSAT48/'
+    output_directory = 'C://DSSAT48/Wheat/'
 
-        # Create and execute the command 
-        command_line = ' '.join([main_executable, module, switch, control_file])
-        result = subprocess.run(command_line, shell=True, check=True, capture_output=True, text=True)
+    # Set the working directory to the output folder
+    os.chdir(output_directory)
 
-        # Print DSSAT execution output
-        print(result.stdout)
+    # Build the command to run DSSAT
+    main_executable = build_path(dssat_path, 'DSCSM048.EXE')
+    module = 'CSCER048'
+    switch = 'B'
+    control_file = build_path(dssat_path, 'Wheat/DSSBatch.v48')
 
-        # Use uplantgro from dpest.wheat.utils to extract and update data from PlantGro.OUT if needed
-        uplantgro(
-            plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
-            treatment='164.0 KG N/HA IRRIG',
-            variables=['LAID', 'CWAD', 'T#AD']
-        )
+    # Create and execute the command 
+    command_line = ' '.join([main_executable, module, switch, control_file])
+    result = subprocess.run(command_line, shell=True, check=True, capture_output=True, text=True)
 
-    This script should be **saved in the PEST directory** as **``run_dssat.py``**. The command to execute it will be included in the `.PST` file.
+    # Print DSSAT execution output
+    print(result.stdout)
 
-    **Generate the PEST Control File (`.PST`)**  
+    # Use uplantgro from dpest.wheat.utils to extract and update data from PlantGro.OUT if needed
+    uplantgro(
+        plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+        treatment='164.0 KG N/HA IRRIG',
+        variables=['LAID', 'CWAD', 'T#AD']
+    )
 
-    Once the script is saved, we can generate the **PEST control file** using the following function:
+This script should be **saved in the PEST directory** as **``run_dssat.py``**. The command to execute it will be included in the `.PST` file.
 
-    .. code-block:: python
+**Generate the PEST Control File (`.PST`)**  
 
-        dpest.pst(
-            cultivar_parameters = cultivar_parameters,
-            dataframe_observations = [overview_observations, plantgro_observations],
-            model_comand_line = r'py "C:\pest18\run_dssat.py"',  # Command to run the model
-            input_output_file_pairs = [
-                (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),  # Template file → Target file
-                (overview_ins_path , 'C://DSSAT48/Wheat/OVERVIEW.OUT'),  # Instruction file → Target file
-                (plantgro_ins_path , 'C://DSSAT48/Wheat/PlantGro.OUT')  # Instruction file → Target file
-            ]
-        )
+Once the script is saved, we can generate the **PEST control file** using the following function:
 
-    After running this function:
+.. code-block:: python
 
-    - The `.PST` file will be created in the working directory.
-    - The **template file** and **instruction files** will be linked to their corresponding model input and output files.
-    - The **command-line instruction** to run DSSAT is stored in the `.PST` file.
-    
-    The `.PST` file serves as the **main configuration file** for running PEST and calibrating the DSSAT model.
+    dpest.pst(
+        cultivar_parameters = cultivar_parameters,
+        dataframe_observations = [overview_observations, plantgro_observations],
+        model_comand_line = r'py "C:\pest18\run_dssat.py"',  # Command to run the model
+        input_output_file_pairs = [
+            (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),  # Template file → Target file
+            (overview_ins_path , 'C://DSSAT48/Wheat/OVERVIEW.OUT'),  # Instruction file → Target file
+            (plantgro_ins_path , 'C://DSSAT48/Wheat/PlantGro.OUT')  # Instruction file → Target file
+        ]
+    )
+
+After running this function:
+
+- The `.PST` file will be created in the working directory.
+- The **template file** and **instruction files** will be linked to their corresponding model input and output files.
+- The **command-line instruction** to run DSSAT is stored in the `.PST` file.
+
+The `.PST` file serves as the **main configuration file** for running PEST and calibrating the DSSAT model.
 
 
 ### 3. Validate the Created PEST Input Files
@@ -166,13 +166,7 @@ After generating the **PEST input files**, it is important to validate that they
 
 **3.1. Open the Command Prompt**
 
-.. code-block::
-
-    # Open the command prompt (Windows)
-    Press `Win + R`, type `cmd`, and hit Enter.
-
-    # Or open the terminal (Linux/Mac)
-    Use the terminal application or press `Ctrl + Alt + T`.
+To begin the validation process, open the Command Prompt (or terminal, if using a different operating system)
 
 **3.2. Navigate to the Working Directory**
 
@@ -211,7 +205,7 @@ If the files are correctly formatted and no errors are found, the output will co
 
 After successfully validating the **PEST input files**, the final step is to run the calibration process.
 
-### 4.1. Execute the PEST Calibration  
+**4.1. Execute the PEST Calibration**  
 
 Run the following command to start **PEST** in parameter estimation mode:
 
