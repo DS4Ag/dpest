@@ -159,7 +159,7 @@ After running this function:
 The `.PST` file serves as the **main configuration file** for running PEST and calibrating the DSSAT model.
 
 
-### 3. Validate the Created PEST Input Files
+3. Validate the Created PEST Input Files
 --------------------------------------------
 
 After generating the **PEST input files**, it is important to validate that they were created correctly. This is done using PEST’s built-in validation tools.
