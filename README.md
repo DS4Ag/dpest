@@ -104,9 +104,9 @@ overview_observations,  overview_ins_path = dpest.wheat.overview(
 )
 # 3. Create PlantGro observations INS file
 plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
-    plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT', #Path to the PlantGro.OUT file
     treatment = '164.0 KG N/HA IRRIG', #Treatment Name
     variables = ['LAID', 'CWAD', 'T#AD'] #Variables to calibrate
+    plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT', #Path to the PlantGro.OUT file
 )
 
 ```
@@ -128,43 +128,6 @@ dpest.pst(
 ```
 
 7.  **Run PEST:** Calibrate the model using PEST.
-
-
-**Create Template Files and Instruction Files:**
-
-```
-import dpest
-
-# 1. Create CULTIVAR parameters TPL file
-cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(
-    cultivar = 'MANITOU', #Cultivar name
-    cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL' #Path to the CUL file
-)
-
-# 2. Create OVERVIEW observations INS file
-overview_observations,  overview_ins_path = dpest.wheat.overview(
-    treatment = '164.0 KG N/HA IRRIG', #Treatment Name
-    overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT' #Path to the OVERVIEW.OUT file
-)
-# 3. Create PlantGro observations INS file
-plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
-    plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT', #Path to the PlantGro.OUT file
-    treatment = '164.0 KG N/HA IRRIG', #Treatment Name
-    variables = ['LAID', 'CWAD', 'T#AD'] #Variables to calibrate
-)
-
-# 4. Create the PST file
-dpest.pst(
-    cultivar_parameters = cultivar_parameters,
-    dataframe_observations = [overview_observations, plantgro_observations],
-    model_comand_line = r'py "C:\pest18\run_dssat.py"', #Command line to run the model
-    input_output_file_pairs = [
-        (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'), #Template file and the file to be modified
-        (overview_ins_path , 'C://DSSAT48/Wheat/OVERVIEW.OUT'), #Instruction file and the file to be modified
-        (plantgro_ins_path , 'C://DSSAT48/Wheat/PlantGro.OUT') #Instruction file and the file to be modified
-    ]
-)
-```
 
 ### Contributing
 
