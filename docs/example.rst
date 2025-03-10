@@ -159,68 +159,52 @@ For this example, we are going to calibrate the `MANITOU` wheat cultivar (Cultiv
     The `.PST` file serves as the **main configuration file** for running PEST and calibrating the DSSAT model.
 
 
-3. Validate the Created PEST Input Files  
-----------------------------------------
+### 3. Validate the Created PEST Input Files
+--------------------------------------------
 
 After generating the **PEST input files**, it is important to validate that they were created correctly. This is done using PEST’s built-in validation tools.
 
-### 3.1. Navigate to the Working Directory  
+**3.1. Open the Command Prompt**
 
-Open the **Command Prompt** and move to the directory where the **PEST input files** were created:
+.. code-block::
 
-.. code-block:: console
+    # Open the command prompt (Windows)
+    Press `Win + R`, type `cmd`, and hit Enter.
 
-    C:\Users\luizv> cd \wht_manitou_cal
+    # Or open the terminal (Linux/Mac)
+    Use the terminal application or press `Ctrl + Alt + T`.
 
-### 3.2. Validate the PEST Control File (`.PST`)  
+**3.2. Navigate to the Working Directory**
 
-Run the following command to check the **PEST control file**:
+Once the Command Prompt (or terminal) is open, navigate to the directory where the **PEST input files** were created. Use the following command to change to the working directory (replace with your actual path):
 
-.. code-block:: console
+.. code-block::
 
-    C:\wht_manitou_cal> pestchek.exe PEST_CONTROL.pst
+    cd path_to_your_directory
 
-If the file is correctly formatted, the output will indicate **"No errors encountered."**  
+**3.3. Validate PEST Files**
 
-### 3.3. Validate the Instruction Files (`.INS`)  
+Run the following commands to validate the different PEST input files. Each validation command checks a specific file. The instructions are provided as comments next to each command:
 
-Next, verify that the **instruction files (`.INS`)** were correctly generated.
+.. code-block::
 
-Check the **`OVERVIEW.INS`** file:
+    # Validate the PEST Control File (.PST)
+    pestchek.exe PEST_CONTROL.pst  # Check the main control file for formatting errors
 
-.. code-block:: console
+    # Validate the Overview Instruction File (.INS)
+    inschek.exe OVERVIEW.ins C://DSSAT48/Wheat/OVERVIEW.OUT  # Ensure the Overview instruction file is correct
 
-    C:\wht_manitou_cal> inschek.exe OVERVIEW.ins C://DSSAT48/Wheat/OVERVIEW.OUT  
+    # Validate the PlantGro Instruction File (.INS)
+    inschek.exe PlantGro.ins C://DSSAT48/Wheat/PlantGro.OUT  # Check the PlantGro instruction file
 
-Then check the **`PlantGro.INS`** file:
+    # Final check of the PEST Control File (.PST) after validating instruction files
+    pestchek.exe PEST_CONTROL.pst  # Ensure no issues after validating instruction files
 
-.. code-block:: console
+    # Validate the Template File (.TPL)
+    tempchek.exe WHCER048_CUL.TPL  # Check the template file for correct parameter identification
 
-    C:\wht_manitou_cal> inschek.exe PlantGro.ins C://DSSAT48/Wheat/PlantGro.OUT  
+If the files are correctly formatted and no errors are found, the output will confirm this (e.g., "No errors encountered").
 
-If the instruction files are correct, the validation output will confirm that **no errors were found** and that the expected observations were identified.
-
-### 3.4. Perform a Final Check of the PEST Control File  
-
-Run `pestchek.exe` again to ensure that no issues were introduced after validating the instruction files:
-
-.. code-block:: console
-
-    C:\wht_manitou_cal> pestchek.exe PEST_CONTROL.pst
-
-A properly formatted file will again display **"No errors encountered."**
-
-### 3.5. Validate the Template File (`.TPL`)  
-
-Finally, check the **template file (`.TPL`)**, which defines the parameters for calibration:
-
-.. code-block:: console
-
-    C:\wht_manitou_cal> tempchek.exe WHCER048_CUL.TPL
-
-If the template file was created correctly, the validation output will confirm that all parameters were successfully identified.
-
----
 
 4. Run the Calibration  
 ----------------------
@@ -234,4 +218,3 @@ Run the following command to start **PEST** in parameter estimation mode:
 .. code-block:: console
 
     C:\wht_manitou_cal> PEST.exe PEST_CONTROL.pst
-
