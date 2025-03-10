@@ -42,9 +42,12 @@ The first step is to create the cultivar Template File (``.TPL``) for the ``MANI
 
     import dpest  
 
-    cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(  
-        cultivar='MANITOU',  # Cultivar name  
-        cul_file_path='C:/DSSAT48/Genotype/WHCER048.CUL'  # Path to the DSSAT wheat CUL file  
+    cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(
+        P = 'P1D, P5', 
+        G = 'G1, G2, G3', 
+        PHINT = 'PHINT',
+        cultivar = 'MANITOU',
+        cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL'
     )  
 
 After running this function:  
@@ -94,8 +97,6 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
 
     import os
     import subprocess
-    from datetime import datetime
-    import pandas as pd
     from dpest.wheat.utils import uplantgro
 
     def build_path(*args):

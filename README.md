@@ -5,7 +5,6 @@
 [![Python version](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Documentation Status](https://readthedocs.org/projects/dpest/badge/?version=latest)](https://dpest.readthedocs.io/en/latest/?badge=latest)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1234567.svg)](https://doi.org/10.5281/zenodo.1234567)
 
 ## What is dpest?
 
@@ -39,18 +38,20 @@ pip install dpest
 
 ## Basic Usage
 
-The following steps outline the typical workflow for using `dpest`:
+
+The following steps provide a brief overview of how to use `dpest`. For a **detailed, step-by-step example**, please refer to the official documentation:  
+👉 [Complete Example on Read the Docs](https://dpest.readthedocs.io/en/latest/example.html)  
 
 1.  **Locate DSSAT Genotype Files:** The cultivar (`.CUL`) and ecotype (`.ECO`) files are typically included with the DSSAT installation. These are usually found in the `C:\DSSAT48\Genotype\` directory.
 2.  **Run a DSSAT Simulation:** Execute a DSSAT simulation for your chosen wheat experiment using either the CERES, NWHEAT, or CROPSIM model. This will generate the necessary output files (`OVERVIEW.OUT` and `PlantGro.OUT`), typically found in the `C:\DSSAT48\Wheat\` directory.
 
-        I.  Launch DSSAT.
-        II.  Click "Selector".
-        III.  Expand "Crops" and select "Wheat".
-        IV.  Select the experiment "SWSW7501WH N RESPONSE,SWIFT CURRENT 7FE(N)*2IR (DSSAT)".
-        V.  Click "Run".
-        VI.  Choose "CERES" as the crop model.
-        VII.  Click "OK" and wait for the simulation to finish.
+    2.1. Launch DSSAT.
+    2.2. Click "Selector".
+    2.3. Expand "Crops" and select "Wheat".
+    2.4. In the "Data" panel select the "SWSW7501.WHX" experiment.
+    2.5. Click "Run" button in the toolbar.
+    2.6. In the "Simulation" popup window, choose "CERES" as the crop model.
+    2.7. Click "Run Model" and wait for the simulation to finish.
 
 3.  **Import the `dpest` Package:**
 
@@ -93,8 +94,11 @@ import dpest
 
 # 1. Create CULTIVAR parameters TPL file
 cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(
-    cultivar = 'MANITOU', #Cultivar name
-    cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL' #Path to the CUL file
+    P = 'P1D, P5', # How the user should enter the parameters
+    G = 'G1, G2, G3', 
+    PHINT = 'PHINT',
+    cultivar = 'MANITOU',
+    cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL'
 )
 
 # 2. Create OVERVIEW observations INS file
