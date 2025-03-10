@@ -45,14 +45,13 @@ The following steps provide a brief overview of how to use `dpest`. For a **deta
 1.  **Locate DSSAT Genotype Files:** The cultivar (`.CUL`) and ecotype (`.ECO`) files are typically included with the DSSAT installation. These are usually found in the `C:\DSSAT48\Genotype\` directory.
 2.  **Run a DSSAT Simulation:** Execute a DSSAT simulation for your chosen wheat experiment using either the CERES, NWHEAT, or CROPSIM model. This will generate the necessary output files (`OVERVIEW.OUT` and `PlantGro.OUT`), typically found in the `C:\DSSAT48\Wheat\` directory.
 
-
-    2.1. Launch DSSAT.
-    2.2. Click "Selector".
-    2.3. Expand "Crops" and select "Wheat".
-    2.4. In the "Data" panel select the "SWSW7501.WHX" experiment.
-    2.5. Click "Run" button in the toolbar.
-    2.6. In the "Simulation" popup window, choose "CERES" as the crop model.
-    2.7. Click "Run Model" and wait for the simulation to finish.
+        2.1. Launch DSSAT.
+        2.2. Click "Selector".
+        2.3. Expand "Crops" and select "Wheat".
+        2.4. In the "Data" panel select the "SWSW7501.WHX" experiment.
+        2.5. Click "Run" button in the toolbar.
+        2.6. In the "Simulation" popup window, choose "CERES" as the crop model.
+        2.7. Click "Run Model" and wait for the simulation to finish.
 
 
 3.  **Import the `dpest` Package:**
