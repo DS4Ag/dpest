@@ -55,7 +55,7 @@ def overview(
 
           # The returned tuple and path are saved in the variables, can be used with any name that the user prefer, to call them later
 
-       This example creates a ``PEST instruction file (.INS)`` using only the required arguments. Note that the returned tuple ``(overview_observations, overview_ins_path)`` is captured. The ``overview_observations`` dataframe  will be used later to create the observations and observations group sections in the pst file (loaded in the ``dataframe_observations`` argument of the pst module). The ``overview_ins_path`` will be used in the ``input_output_file_pairs`` argument of the pst module to match the original ``OVERVIEW.OUT`` file to the instruction file.
+       This example creates a ``PEST instruction file (.INS)`` using only the required arguments. Note that the returned tuple ``(overview_observations, overview_ins_path)`` is captured. The ``overview_observations`` DataFrame  will be used later to create the observations and observations group sections in the pst file (loaded in the ``dataframe_observations`` argument of the pst module). The ``overview_ins_path`` will be used in the ``input_output_file_pairs`` argument of the pst module to match the original ``OVERVIEW.OUT`` file to the instruction file.
 
     2. **Specifying Variable Classifications:**
 

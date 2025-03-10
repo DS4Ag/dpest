@@ -55,7 +55,7 @@ def plantgro(
 
           # The returned tuple and path are saved in the variables, can be used with any name that the user prefer, to call them later
 
-       This example creates a ``PEST instruction file (.INS)`` for multiple variables from the ``PlantGro.OUT`` file. Note that the returned tuple ``(plantgro_observations, plantgro_ins_path)`` is captured. The ``plantgro_observations`` dataframe will be used later to create the observations and observations group sections in the pst file (to be loaded in the ``dataframe_observations`` argument of the pst module). The ``plantgro_ins_path`` will be used in the ``input_output_file_pairs`` argument of the pst module to match the original ``PlantGro.OUT`` file to the instruction file when creating the PST control file.
+       This example creates a ``PEST instruction file (.INS)`` for multiple variables from the ``PlantGro.OUT`` file. Note that the returned tuple ``(plantgro_observations, plantgro_ins_path)`` is captured. The ``plantgro_observations`` DataFrame will be used later to create the observations and observations group sections in the pst file (to be loaded in the ``dataframe_observations`` argument of the pst module). The ``plantgro_ins_path`` will be used in the ``input_output_file_pairs`` argument of the pst module to match the original ``PlantGro.OUT`` file to the instruction file when creating the PST control file.
 
     2. **Single Variable Usage:**
 
