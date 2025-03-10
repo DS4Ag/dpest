@@ -27,7 +27,7 @@ This example demonstrates how to use ``dpest`` to create the necessary files for
 ----------------------------------------------
 For this example, we are going to calibrate the ``MANITOU`` wheat cultivar (Cultivar ID: ``IB1500``) using the field-collected data from the ``164.0 KG N/HA IRRIG`` treatment of the ``SWSW7501.WHX`` experiment. The experiment information is found in the ``C:/DSSAT48/Wheat/SWSW7501.WHX`` file.  
 
-**2.1. Import the ``dpest`` Package**
+**2.1. Import the dpest Package**
 
 .. code-block:: python
 
@@ -134,7 +134,7 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
 
 This script should be ``saved in the PEST directory`` as ``run_dssat.py``. The command to execute it will be included in the ``.PST`` file.
 
-**Generate the PEST Control File (``.PST``)**  
+**Generate the PEST Control File (.PST)**  
 
 Once the script is saved, we can generate the ``PEST control file`` using the following function:
 
