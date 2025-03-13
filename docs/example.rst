@@ -132,7 +132,7 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
-This script should be ``saved in the PEST directory`` as ``run_dssat.py``. The command to execute it will be included in the ``.PST`` file.
+This script should be saved in the PEST installation directory (e.g., ``C:\pest18``) as ``run_dssat.py``. The command to execute this script (``py "C:\pest18\run_dssat.py"``) will be included in the ``.PST`` file.
 
 **Generate the PEST Control File (.PST)**  
 
