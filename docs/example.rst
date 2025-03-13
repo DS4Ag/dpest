@@ -87,7 +87,7 @@ Note that the ``OVERVIEW.INS`` and ``PlantGro.INS`` instruction files will be cr
 
 **2.4. Create the PEST Control File**
 
-After creating the ``template file`` and ``instruction files`` for calibrating the ``MANITOU`` wheat cultivar, the next step is to generate the ``PEST control file (``.PST``)``. This file integrates all necessary components and guides the ``calibration process``.
+After creating the ``template file`` and ``instruction files`` for calibrating the ``MANITOU`` wheat cultivar, the next step is to generate the ``PEST control file (.PST``). This file integrates all necessary components and guides the ``calibration process``.
 
 The ``.PST`` file is created using the ``variables`` obtained in ``2.2`` and ``2.3``. Additionally, we need to specify the ``command-line instruction`` to execute the DSSAT model.  
 
