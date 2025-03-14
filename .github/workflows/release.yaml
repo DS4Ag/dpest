@@ -35,3 +35,10 @@ jobs:
       with:
         user: __token__  # The username to authenticate with, set to __token__ for token-based authentication
         password: ${{ secrets.PYPI_API_TOKEN }}  # Your PyPI token stored as a secret in GitHub
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/*  # Upload the distribution files from dist/
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # The GitHub token to authenticate with
