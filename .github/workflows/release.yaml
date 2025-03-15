@@ -29,16 +29,33 @@ jobs:
     - name: Build package
       run: python -m build  # Build the Python package (it will create the distribution)
 
-    - name: Publish package to PyPI
-      uses: pypa/gh-action-pypi-deploy@v1  # Publish the package to PyPI
+    # - name: Publish package to PyPI
+    #   uses: pypa/gh-action-pypi-publish@release/v1  # Publish the package to PyPI
 
-      with:
-        user: __token__  # The username to authenticate with, set to __token__ for token-based authentication
-        password: ${{ secrets.PYPI_API_TOKEN }}  # Your PyPI token stored as a secret in GitHub
+    #   with:
+    #     user: __token__  # The username to authenticate with, set to __token__ for token-based authentication
+    #     password: ${{ secrets.PYPI_API_TOKEN }}  # Your PyPI token stored as a secret in GitHub
+    #     packages_dir: dist  
+
+    # - name: Create GitHub Release
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   run: |
+    #     gh release create "${GITHUB_REF_NAME}" --generate-notes --title "${GITHUB_REF_NAME}"
+
+    - name: Publish package to PyPI
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        python -m pip install --upgrade pip
+        pip install twine
+        twine upload dist/*
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: dist/*  # Upload the distribution files from dist/
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # The GitHub token to authenticate with
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh release create "${GITHUB_REF_NAME}" --generate-notes --title "${GITHUB_REF_NAME}"
+    run: |
+      gh release create "${GITHUB_REF_NAME}" --generate-notes --title "${GITHUB_REF_NAME}"
