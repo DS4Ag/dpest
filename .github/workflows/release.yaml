@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'  # Trigger on version tags like v1.2.0, v1.3.0, etc.
 
 permissions:
-  contents: read  # Allow read access to the repository's contents
+  contents: write  # Allow read access to the repository's contents
 
 jobs:
   build-and-publish:
@@ -52,6 +52,11 @@ jobs:
         pip install twine
         twine upload dist/*
 
+    - name: Create GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh release create "${GITHUB_REF_NAME}" --generate-notes --title "${GITHUB_REF_NAME}"
     - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
