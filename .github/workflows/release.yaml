@@ -30,7 +30,7 @@ jobs:
       run: python -m build  # Build the Python package (it will create the distribution)
 
     - name: Publish package to PyPI
-      uses: pypa/gh-action-pypi-publish@v1.0.0  # Publish the package to PyPI
+      uses: pypa/gh-action-pypi-publish@v1  # Publish the package to PyPI
 
       with:
         user: __token__  # The username to authenticate with, set to __token__ for token-based authentication
