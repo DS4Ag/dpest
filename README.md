@@ -142,4 +142,4 @@ Purdue University, Wang Lab [dianewanglab.com](https://www.dianewanglab.com/)
 
 ### License
 
-`dpest` is released under the [GPL-3.0 license](LICENSE).
+`dpest` is released under the [GNU General Public License v3.0 only](https://www.gnu.org/licenses/gpl-3.0.html).
