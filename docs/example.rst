@@ -183,20 +183,17 @@ Run the following commands to validate the different PEST input files. Each vali
 
 .. code-block::
 
-    # Validate the PEST Control File (.PST)
-    pestchek.exe PEST_CONTROL.pst  # Check the main control file for formatting errors
+    # Validate the Template File (.TPL)
+    tempchek.exe WHCER048_CUL.TPL 
 
     # Validate the Overview Instruction File (.INS)
-    inschek.exe OVERVIEW.ins C://DSSAT48/Wheat/OVERVIEW.OUT  # Ensure the Overview instruction file is correct
+    inschek.exe OVERVIEW.ins C://DSSAT48/Wheat/OVERVIEW.OUT  
 
     # Validate the PlantGro Instruction File (.INS)
-    inschek.exe PlantGro.ins C://DSSAT48/Wheat/PlantGro.OUT  # Check the PlantGro instruction file
+    inschek.exe PlantGro.ins C://DSSAT48/Wheat/PlantGro.OUT 
 
-    # Final check of the PEST Control File (.PST) after validating instruction files
-    pestchek.exe PEST_CONTROL.pst  # Ensure no issues after validating instruction files
-
-    # Validate the Template File (.TPL)
-    tempchek.exe WHCER048_CUL.TPL  # Check the template file for correct parameter identification
+    # Validate the PEST Control File (.PST)
+    pestchek.exe PEST_CONTROL.pst  
 
 If the files are correctly formatted and no errors are found, the output will confirm this (e.g., "No errors encountered").
 
