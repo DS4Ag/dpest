@@ -5,7 +5,8 @@ def overview(
     treatment = None,
     overview_file_path = None,
     output_path = None,
-    variable_classifications = None,
+    variables = None,
+    variables_classification = None,
     overview_ins_first_line = None,
     mrk = '~',
     smk = '!',
@@ -26,7 +27,8 @@ def overview(
     =======
 
         * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
-        * **variable_classifications** (*dict*): Mapping of variable names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary to define the variables from the *MAIN GROWTH AND DEVELOPMENT VARIABLES section of the ``OVERVIEW.OUT`` DSSAT file, using the format ``{variable: variable_group, …}``. Variables group names should be less than 12 characters.
+        * **variables** (*list* or *str*): Variable(s) from the ``OVERVIEW.OUT`` file that PEST will extract in case the user does not want to use all the variables present in the DSSAT “A file” for the calibration. The PEST instruction file will use these to read the model output. You may specify a single variable as a string (e.g., 'Anthesis (DAP)') or multiple variables as a list (e.g., ['Anthesis (DAP)', 'Maturity (DAP)', 'Product wt (kg dm/ha;no loss)', 'Maximum leaf area index',  'Canopy (tops) wt (kg dm/ha)', 'Above-ground N (kg/ha)']).
+        * **variables_classification** (*dict*): Mapping of variable names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary to define the variables from the *MAIN GROWTH AND DEVELOPMENT VARIABLES section of the ``OVERVIEW.OUT`` DSSAT file, using the format ``{variable: variable_group, …}``. Variables group names should be less than 12 characters.
         * **overview_ins_first_line** (*str*, *default: "pif"*): First line of the ``PEST instruction file (.INS)``. This is the PEST default value and should not be changed without good reason.
         * **mrk** (*str*, *default: "~"*) Primary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
         * **smk** (*str*, *default: "!"*) Secondary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, [, ], (, ), :, space, tab, or &.
@@ -67,7 +69,14 @@ def overview(
           overview(
               treatment = '164.0 KG N/HA DRY',
               overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT',
-              variable_classifications = {
+              variables = [
+                  'Anthesis (DAP)', 'Maturity (DAP)',
+                  'Product wt (kg dm/ha;no loss)',
+                  'Maximum leaf area index',
+                  'Canopy (tops) wt (kg dm/ha)',
+                  'Above-ground N (kg/ha)'
+              ]
+              variables_classification = {
                   'Anthesis (DAP)': 'phenology',
                   'Maturity (DAP)': 'phenology',
                   'Product wt (kg dm/ha;no loss)': 'yield',
@@ -77,13 +86,13 @@ def overview(
               }
           )
 
-       This example demonstrates how to specify the ``variable_classifications`` argument to group specific variables. In this case, the returned tuple is not saved, but the ``PEST instruction file (.INS)`` is still created at the specified location. If you want to use the cultivar parameters and path for the ``pst`` module, the returned tuple should be saved in two variables. Additionally, the example shows how the  ``variable_classifications`` optional variable should be entered as a dictionary.
+       This example demonstrates how to use the ``variables`` argument to create an instruction file for specific variables from the ``OVERVIEW.OUT`` file. Additionally, the ``variables_classification`` argument groups these variables under the specified category names. In this case the returned tuple is not saved, but the ``PEST instruction file (.INS)`` is still created at the specified location. If you want to use the cultivar parameters and path for the ``pst`` module, the returned tuple should be saved in two variables. Additionally, the example shows how the  ``variables_classification`` optional variable should be entered as a dictionary.
     """
 
     # Define default variables:
     yml_file_block = 'OVERVIEW_FILE'
     yaml_file_variables = 'INS_FILE_VARIABLES'
-    yaml_variable_classifications = 'VARIABLE_CLASSIFICATIONS'
+    yaml_variables_classification = 'VARIABLES_CLASSIFICATION'
 
     try:
         ## Get the yaml_data
@@ -102,9 +111,6 @@ def overview(
         if treatment is None:
             raise ValueError("The 'treatment' argument is required and must be specified by the user.")
 
-        # Validate overview_file_path using the validate_file() function
-        validated_path = validate_file(overview_file_path, '.OUT')
-
         # Validate marker delimiters using the validate_marker() function
         mrk = validate_marker(mrk, "mrk")
         smk = validate_marker(smk, "smk")
@@ -117,11 +123,24 @@ def overview(
             function_arguments = yaml_data[yml_file_block][yaml_file_variables]
             overview_ins_first_line = function_arguments['first_line']
 
-        if variable_classifications is None:
-            variable_classifications = yaml_data[yml_file_block][yaml_variable_classifications]
+        if variables is not None:
+            # Convert 'variables' to a list if it's not already a list
+            if not isinstance(variables, list):
+                variables = [variables]
+
+            # Validate that 'variables' is a non-empty list of strings
+            if not variables or not all(isinstance(var, str) for var in variables):
+                raise ValueError(
+                    "The 'variables' should be a non-empty string or a list of strings. For example: 'Maturity (DAP)' or ['Emergence (DAP)', 'Maturity (DAP)', 'Product wt (kg dm/ha;no loss)']")
+
+        if variables_classification is None:
+            variables_classification = yaml_data[yml_file_block][yaml_variables_classification]
+
+        # Validate overview_file_path using the validate_file() function
+        validated_path = validate_file(overview_file_path, '.OUT')
 
         # Read and parse the overview file
-        overview_df, header_line = extract_simulation_data(overview_file_path)
+        overview_df, header_line = extract_simulation_data(validated_path)
 
         # Filter the DataFrame for the specified treatment and cultivar
         filtered_df = overview_df.loc[
@@ -134,10 +153,14 @@ def overview(
                 f"No data found for treatment '{treatment}'. Please check if the treatment exists in the OVERVIEW.OUT file.")
 
         # Map variables to their respective groups
-        filtered_df['group'] = filtered_df['variable'].map(variable_classifications)
+        filtered_df['group'] = filtered_df['variable'].map(variables_classification)
 
         # Remove rows where 'value_measured' column contains NaN values
         filtered_df = filtered_df.dropna(subset=['value_measured'])
+
+        # Filter variables if a list of variables was provided by the user
+        if variables is not None:
+            filtered_df = filtered_df[filtered_df['variable'].isin(variables)]
 
         # Adjust the 'position' column to create 'position_adjusted'
         filtered_df['position_adjusted'] = filtered_df['position'] - filtered_df['position'].shift(1)
@@ -175,7 +198,7 @@ def overview(
 
     except ValueError as ve:
         print(f"ValueError: {ve}")
-    # except FileNotFoundError as fe:
-    #     print(f"FileNotFoundError: {fe}")
-    # except Exception as e:
-    #     print(f"An unexpected error occurred: {e}")
+    except FileNotFoundError as fe:
+        print(f"FileNotFoundError: {fe}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")

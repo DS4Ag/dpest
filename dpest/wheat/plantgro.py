@@ -6,7 +6,7 @@ def plantgro(
     treatment = None, 
     variables = None, 
     output_path = None,
-    variable_classifications = None,
+    variables_classification = None,
     plantgro_ins_first_line = None,
     mrk = '~',
     smk = '!',
@@ -25,7 +25,7 @@ def plantgro(
     =======
 
         * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
-        * **variable_classifications** (*dict*): Mapping of ``variable`` names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary in the format ``{variable: variable_group, …}``. Variables group names should be less than 12 characters.
+        * **variables_classification** (*dict*): Mapping of ``variable`` names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary in the format ``{variable: variable_group, …}``. Variables group names should be less than 12 characters.
         * **plantgro_ins_first_line** (*str*, *default: "pif"*): First line of the ``PEST instruction file (.INS)``. This is the PEST default value and should not be changed without good reason.
         * **mrk** (*str*, *default: "~"*): Primary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
         * **smk** (*str*, *default: "!"*): Secondary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, [, ], (, ), :, space, tab, or &.
@@ -68,7 +68,7 @@ def plantgro(
               plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT',
               treatment = '164.0 KG N/HA IRRIG',
               variables = 'LAID',
-              variable_classifications = {
+              variables_classification = {
                   'LAID': 'lai'
               }
           )
@@ -79,7 +79,7 @@ def plantgro(
     # Define default variables:
     yml_file_block = 'PLANTGRO_FILE'
     yaml_file_variables = 'INS_FILE_VARIABLES'
-    yaml_variable_classifications = 'VARIABLE_CLASSIFICATIONS'
+    yaml_variables_classification = 'VARIABLES_CLASSIFICATION'
 
     try:
         ## Get the yaml_data
@@ -93,9 +93,6 @@ def plantgro(
         # Load YAML configuration
         with open(arguments_file, 'r') as yml_file:
             yaml_data = yaml.safe_load(yml_file)
-
-        # Validate plantgro_file_path
-        validate_file(plantgro_file_path, '.OUT')
 
         # Validate treatment
         if not treatment or not isinstance(treatment, str):
@@ -121,23 +118,26 @@ def plantgro(
         if mrk == smk:
             raise ValueError("mrk and smk must be different characters.")
 
-        # Validate variable_classifications
-        if variable_classifications is None:
-            variable_classifications = yaml_data[yml_file_block][yaml_variable_classifications]
+        # Validate variables_classification
+        if variables_classification is None:
+            variables_classification = yaml_data[yml_file_block][yaml_variables_classification]
 
         if plantgro_ins_first_line is None:
             # Load default arguments from the YAML file if not provided
             function_arguments = yaml_data[yml_file_block][yaml_file_variables]
             plantgro_ins_first_line = function_arguments['first_line']
 
+        # Validate plantgro_file_path
+        validated_path = validate_file(plantgro_file_path, '.OUT')
+
         # Get treatment number
-        treatment_dict = simulations_lines(plantgro_file_path)
+        treatment_dict = simulations_lines(validated_path)
 
         # Get dictionaries with treatment name and treatement number, and treatment and experiment code
-        treatment_number_name, treatment_experiment_name = extract_treatment_info_plantgrowth(plantgro_file_path, treatment_dict)
+        treatment_number_name, treatment_experiment_name = extract_treatment_info_plantgrowth(validated_path, treatment_dict)
 
         # Make the path for the WHT file
-        wht_file_path = os.path.join(os.path.dirname(plantgro_file_path),  treatment_experiment_name.get(treatment) + '.WHT')
+        wht_file_path = os.path.join(os.path.dirname(validated_path),  treatment_experiment_name.get(treatment) + '.WHT')
 
         # Get the dataframe from the WHT file data
         wht_df = wht_filedata_to_dataframe(wht_file_path)
@@ -150,7 +150,7 @@ def plantgro(
             raise ValueError(f"No valid data found for treatment '{treatment}' with variables {variables}")
 
         # Get the header and first simulation date
-        header_line, date_first_sim = get_header_and_first_sim(plantgro_file_path)
+        header_line, date_first_sim = get_header_and_first_sim(validated_path)
 
         # Calculate days dictionary and adjust it
         days_dict = calculate_days_dict(dates_variable_values_dict, date_first_sim)
@@ -177,7 +177,7 @@ def plantgro(
         output_path = validate_output_path(output_path)
 
         # Create output text file
-        plantgro_ins_filename = os.path.basename(plantgro_file_path).replace('.OUT', '.ins')
+        plantgro_ins_filename = os.path.basename(validated_path).replace('.OUT', '.ins')
         plantgro_ins_file_path = os.path.join(output_path, plantgro_ins_filename)
 
         # Construct the content for the new .ins file
@@ -199,7 +199,7 @@ def plantgro(
         dates_variable_values_df = pd.DataFrame(dates_variable_values_data)
 
         # Map variables to their respective groups
-        dates_variable_values_df['group'] = dates_variable_values_df['variable'].map(variable_classifications)
+        dates_variable_values_df['group'] = dates_variable_values_df['variable'].map(variables_classification)
 
         # Convert 'value_measured' column to float
         dates_variable_values_df['value_measured'] = dates_variable_values_df['value_measured'].astype(float)

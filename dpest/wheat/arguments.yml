@@ -7,7 +7,7 @@ OVERVIEW_FILE:
         first_line: pif
 
     # Classification into groups of the OVERVIEW file variables
-    VARIABLE_CLASSIFICATIONS:
+    VARIABLES_CLASSIFICATION:
         # Variable: group 
         Emergence (DAP): phenology
         Anthesis (DAP): phenology
@@ -35,9 +35,9 @@ OVERVIEW_FILE:
         Vegetative N (kg/ha): nitrogen
         Product N harvest index (ratio): yield
         Vegetative N (%): nitrogen
-        Leaf+stem wtanthesis (kg dm/ha): biomass
-        Leaf+stem Nanthesis (kg/ha): nitrogen
-        Leaf Nanthesis (%): nitrogen
+        Leaf+stem wt,anthesis (kg dm/ha): biomass
+        Leaf+stem N,anthesis (kg/ha): nitrogen
+        Leaf N,anthesis (%): nitrogen
 
 #~~~~~~/ OVERVIEW
 
@@ -47,7 +47,7 @@ PLANTGRO_FILE:
         first_line: pif
 
     # Clasification into groups of the PlantGro file variables 
-    VARIABLE_CLASSIFICATIONS:
+    VARIABLES_CLASSIFICATION:
         # Variable: group 
         A#PD: plant_struct
         AMLWT: biomass
