@@ -246,7 +246,7 @@ def extract_simulation_data(file_path):
     treatment_dict = simulations_lines(file_path)
 
     # Initialize an empty DataFrame to store all the data
-    all_data = pd.DataFrame(columns=['TREATMENT','cultivar', 'VARIABLE', 'SIMULATED', 'MEASURED', 'EXPERIMENT', 'POSITION'])
+    all_data = pd.DataFrame(columns=['TREATMENT','cultivar', 'VARIABLE', 'VALUE_SIMULATED', 'VALUE_MEASURED', 'EXPERIMENT', 'POSITION'])
 
     with open(file_path, 'r') as file:
         lines = file.readlines()
