@@ -6,6 +6,7 @@ def plantgro(
     treatment = None, 
     variables = None, 
     output_path = None,
+    output_filename = None,
     variables_classification = None,
     plantgro_ins_first_line = None,
     mrk = '~',
@@ -25,6 +26,7 @@ def plantgro(
     =======
 
         * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
+         * **output_filename** (*str*, *default: same as the filename from `plantgro_file_path`*): Name of the ``PEST instruction file (.INS)`` to be created. If not provided, the filename (without extension) from the ``plantgro_file_path`` is used, and ``.ins`` is appended. Use this argument to customize the output filename when generating multiple instruction files or to prevent overwriting existing files.
         * **variables_classification** (*dict*): Mapping of ``variable`` names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary in the format ``{variable: variable_group, …}``. Variables group names should be less than 12 characters.
         * **plantgro_ins_first_line** (*str*, *default: "pif"*): First line of the ``PEST instruction file (.INS)``. This is the PEST default value and should not be changed without good reason.
         * **mrk** (*str*, *default: "~"*): Primary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
@@ -66,6 +68,7 @@ def plantgro(
           # Call the module with a single variable
           plantgro_observations, plantgro_ins_path = plantgro(
               plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT',
+              output_filename = 'plantgro_trt1',
               treatment = '164.0 KG N/HA IRRIG',
               variables = 'LAID',
               variables_classification = {
@@ -73,7 +76,7 @@ def plantgro(
               }
           )
 
-       This example demonstrates how to use the module with a single variable. The ``variables`` argument can accept either a list of strings or a single string. Note that the returned tuple ``(plantgro_observations, plantgro_ins_path)`` is captured, which will be used later in the ``PEST control file (.PST)`` creation process.
+       This example demonstrates how to use the module with a single variable. The ``variables`` argument can accept either a list of strings or a single string. It saves the new file using the name provided by the user in the ``output_filename`` argument. Note that the returned tuple ``(plantgro_observations, plantgro_ins_path)`` is captured, which will be used later in the ``PEST control file (.PST)`` creation process.
     """
 
     # Define default variables:
@@ -176,9 +179,21 @@ def plantgro(
         # Validate output_path
         output_path = validate_output_path(output_path)
 
+        # Determine and validate output_filename
+        if output_filename is not None:
+            # Ensure it's just a name, no directory parts
+            if os.path.basename(output_filename) != output_filename:
+                raise ValueError("The 'output_filename' must be a valid file name without directory paths.")
+
+            # Ensure it ends with '.ins'
+            if not output_filename.lower().endswith('.ins'):
+                output_filename += '.ins'
+        else:
+            # Default behavior if output_filename not provided
+            output_filename = os.path.basename(validated_path).replace('.OUT', '.ins')
+
         # Create output text file
-        plantgro_ins_filename = os.path.basename(validated_path).replace('.OUT', '.ins')
-        plantgro_ins_file_path = os.path.join(output_path, plantgro_ins_filename)
+        plantgro_ins_file_path = os.path.join(output_path, output_filename)
 
         # Construct the content for the new .ins file
         ins_file_content = f"{plantgro_ins_first_line} {mrk}\n{mrk}{treatment}{mrk}\n{mrk}{header_line[1:].strip()}{mrk}\n{output_text}"

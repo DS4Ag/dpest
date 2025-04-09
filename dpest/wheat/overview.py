@@ -5,6 +5,7 @@ def overview(
     treatment = None,
     overview_file_path = None,
     output_path = None,
+    output_filename = None,
     variables = None,
     variables_classification = None,
     overview_ins_first_line = None,
@@ -27,6 +28,7 @@ def overview(
     =======
 
         * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
+        * **output_filename** (*str*, *default: same as the filename from `overview_file_path`*): Name of the ``PEST instruction file (.INS)`` to be created. If not provided, the filename (without extension) from the ``overview_file_path`` is used, and ``.ins`` is appended. Use this argument to customize the output filename when generating multiple instruction files or to prevent overwriting existing files.
         * **variables** (*list* or *str*): Variable(s) from the ``OVERVIEW.OUT`` file that PEST will extract in case the user does not want to use all the variables present in the DSSAT “A file” for the calibration. The PEST instruction file will use these to read the model output. You may specify a single variable as a string (e.g., 'Anthesis (DAP)') or multiple variables as a list (e.g., ['Anthesis (DAP)', 'Maturity (DAP)', 'Product wt (kg dm/ha;no loss)', 'Maximum leaf area index',  'Canopy (tops) wt (kg dm/ha)', 'Above-ground N (kg/ha)']).
         * **variables_classification** (*dict*): Mapping of variable names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary to define the variables from the *MAIN GROWTH AND DEVELOPMENT VARIABLES section of the ``OVERVIEW.OUT`` DSSAT file, using the format ``{variable: variable_group, …}``. Variables group names should be less than 12 characters.
         * **overview_ins_first_line** (*str*, *default: "pif"*): First line of the ``PEST instruction file (.INS)``. This is the PEST default value and should not be changed without good reason.
@@ -69,13 +71,14 @@ def overview(
           overview(
               treatment = '164.0 KG N/HA DRY',
               overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT',
+              output_filename = 'OVERVIEW_trt1',
               variables = [
                   'Anthesis (DAP)', 'Maturity (DAP)',
                   'Product wt (kg dm/ha;no loss)',
                   'Maximum leaf area index',
                   'Canopy (tops) wt (kg dm/ha)',
                   'Above-ground N (kg/ha)'
-              ]
+              ],
               variables_classification = {
                   'Anthesis (DAP)': 'phenology',
                   'Maturity (DAP)': 'phenology',
@@ -86,7 +89,7 @@ def overview(
               }
           )
 
-       This example demonstrates how to use the ``variables`` argument to create an instruction file for specific variables from the ``OVERVIEW.OUT`` file. Additionally, the ``variables_classification`` argument groups these variables under the specified category names. In this case the returned tuple is not saved, but the ``PEST instruction file (.INS)`` is still created at the specified location. If you want to use the cultivar parameters and path for the ``pst`` module, the returned tuple should be saved in two variables. Additionally, the example shows how the  ``variables_classification`` optional variable should be entered as a dictionary.
+       This example demonstrates how to use the ``variables`` argument to create an instruction file for specific variables from the ``OVERVIEW.OUT`` file. It saves the new file using the name provided by the user in the ``output_filename`` argument. Additionally, the ``variables_classification`` argument groups these variables under the specified category names. In this case the returned tuple is not saved, but the ``PEST instruction file (.INS)`` is still created at the specified location. If you want to use the cultivar parameters and path for the ``pst`` module, the returned tuple should be saved in two variables. Additionally, the example shows how the  ``variables_classification`` optional variable should be entered as a dictionary.
     """
 
     # Define default variables:
@@ -182,8 +185,20 @@ def overview(
         # Validate output_path
         output_path = validate_output_path(output_path)
 
+        # Determine and validate output_filename
+        if output_filename is not None:
+            # Ensure it's just a name, no directory parts
+            if os.path.basename(output_filename) != output_filename:
+                raise ValueError("The 'output_filename' must be a valid file name without directory paths.")
+
+            # Ensure it ends with '.ins'
+            if not output_filename.lower().endswith('.ins'):
+                output_filename += '.ins'
+        else:
+            # Default behavior if output_filename not provided
+            output_filename = os.path.basename(validated_path).replace('.OUT', '.ins')
+
         # Create the path and file name for the new file
-        output_filename = os.path.basename(overview_file_path).replace('.OUT', '.ins')
         output_new_file_path = os.path.join(output_path, output_filename)
 
         # Write the generated content to the .ins file
