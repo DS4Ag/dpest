@@ -26,7 +26,7 @@ def plantgro(
     =======
 
         * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
-         * **output_filename** (*str*, *default: same as the filename from `plantgro_file_path`*): Name of the ``PEST instruction file (.INS)`` to be created. If not provided, the filename (without extension) from the ``plantgro_file_path`` is used, and ``.ins`` is appended. Use this argument to customize the output filename when generating multiple instruction files or to prevent overwriting existing files.
+        * **output_filename** (*str*, *default: same as the filename from `plantgro_file_path`*): Name of the ``PEST instruction file (.INS)`` to be created. If not provided, the filename (without extension) from the ``plantgro_file_path`` is used, and ``.ins`` is appended. Use this argument to customize the output filename when generating multiple instruction files or to prevent overwriting existing files.
         * **variables_classification** (*dict*): Mapping of ``variable`` names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary in the format ``{variable: variable_group, …}``. Variables group names should be less than 12 characters.
         * **plantgro_ins_first_line** (*str*, *default: "pif"*): First line of the ``PEST instruction file (.INS)``. This is the PEST default value and should not be changed without good reason.
         * **mrk** (*str*, *default: "~"*): Primary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
