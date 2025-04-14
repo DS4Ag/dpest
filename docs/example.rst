@@ -163,7 +163,7 @@ The ``.PST`` file serves as the ``main configuration file`` for running PEST and
 3. Validate the Created PEST Input Files
 --------------------------------------------
 
-After generating the ``PEST input files``, it is important to validate that they were created correctly. This is done using PEST’s built-in validation tools.
+After generating the ``PEST input files``, it is important to validate that they were created correctly. To ensure that all input files are correctly formatted before running PEST, use TEMPCHEK, INSCHEK and PESTCHEK utilities provided by PEST:
 
 **3.1. Open the Command Prompt**
 

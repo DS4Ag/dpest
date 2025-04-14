@@ -5,7 +5,7 @@ def overview(
     treatment = None,
     overview_file_path = None,
     output_path = None,
-    output_filename = None,
+    suffix = None,
     variables = None,
     variables_classification = None,
     overview_ins_first_line = None,
@@ -28,7 +28,7 @@ def overview(
     =======
 
         * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
-        * **output_filename** (*str*, *default: same as the filename from `overview_file_path`*): Name of the ``PEST instruction file (.INS)`` to be created. If not provided, the filename (without extension) from the ``overview_file_path`` is used, and ``.ins`` is appended. Use this argument to customize the output filename when generating multiple instruction files or to prevent overwriting existing files.
+        * **suffix** (*str*, *default: ""*): Suffix to append to the output filename and variable names in the .INS file. This short code (e.g., TRT1, TRT2, TRT3) identifies different treatments used for calibrating the same cultivar (or ecotype) in the same calibration process. It must be 1–4 characters long, containing only uppercase letters and/or numbers. For example, if `suffix="TRT1"`, the output file will be named `OVERVIEW_TRT1.ins` and variable markers will include the suffix (e.g., `!Anthesis_DAP_TRT1!`). This ensures that PEST can distinguish between variables from different treatments, as PEST does not allow variables with the same name.
         * **variables** (*list* or *str*): Variable(s) from the ``OVERVIEW.OUT`` file that PEST will extract in case the user does not want to use all the variables present in the DSSAT “A file” for the calibration. The PEST instruction file will use these to read the model output. You may specify a single variable as a string (e.g., 'Anthesis (DAP)') or multiple variables as a list (e.g., ['Anthesis (DAP)', 'Maturity (DAP)', 'Product wt (kg dm/ha;no loss)', 'Maximum leaf area index',  'Canopy (tops) wt (kg dm/ha)', 'Above-ground N (kg/ha)']).
         * **variables_classification** (*dict*): Mapping of variable names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary to define the variables from the *MAIN GROWTH AND DEVELOPMENT VARIABLES section of the ``OVERVIEW.OUT`` DSSAT file, using the format ``{variable: variable_group, …}``. Variables group names should be less than 12 characters.
         * **overview_ins_first_line** (*str*, *default: "pif"*): First line of the ``PEST instruction file (.INS)``. This is the PEST default value and should not be changed without good reason.
@@ -96,6 +96,7 @@ def overview(
     yml_file_block = 'OVERVIEW_FILE'
     yaml_file_variables = 'INS_FILE_VARIABLES'
     yaml_variables_classification = 'VARIABLES_CLASSIFICATION'
+    MAX_VAR_LENGTH = 20  # In PEST, the variable names should not exceed 20 characters
 
     try:
         ## Get the yaml_data
@@ -174,6 +175,24 @@ def overview(
         # Transform the variable names from the OVERVIEW file fit the max 20 characters required by PEST
         filtered_df = process_variable_names(filtered_df)
 
+        # Validate suffix if provided
+        if suffix is not None:
+            if not isinstance(suffix, str):
+                raise ValueError("Suffix must be a string.")
+            if not suffix.isalnum():
+                raise ValueError("Suffix must only contain letters and numbers.")
+            if len(suffix) > 4:
+                raise ValueError("Suffix must be at most 4 characters long.")
+            suffix = '_' + suffix  # only add underscore *after* validation
+
+            # Create a dictionary to add the treatment suffix to the variable_name using the add_suffix_to_variables() function
+            replace_dict = add_suffix_to_variables(
+                filtered_df['variable_name'], suffix, MAX_VAR_LENGTH
+            )
+
+            # Update the 'variable_name' column in the DataFrame using the replace_dict
+            filtered_df['variable_name'] = filtered_df['variable_name'].map(replace_dict)
+
         # Generate the .ins file content
         output_text = ""
         for _, row in filtered_df.iterrows():
@@ -186,10 +205,9 @@ def overview(
         output_path = validate_output_path(output_path)
 
         # Determine and validate output_filename
-        if output_filename is not None:
-            # Ensure it's just a name, no directory parts
-            if os.path.basename(output_filename) != output_filename:
-                raise ValueError("The 'output_filename' must be a valid file name without directory paths.")
+        if suffix:
+            # Extract the file name
+            output_filename = os.path.basename(validated_path).replace('.OUT', f'{suffix}.ins')
 
             # Ensure it ends with '.ins'
             if not output_filename.lower().endswith('.ins'):

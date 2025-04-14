@@ -36,6 +36,7 @@ Table of Contents
    dpest.pst
    dpest.wheat.utils.uplantgro
    example
+   example_multiple_trts
 
 *  `Basic Usage <basic_usage.html>`_
 *  Module Reference
@@ -46,3 +47,4 @@ Table of Contents
     *  `dpest.pst <dpest.pst.html>`_
     *  `dpest.wheat.utils.uplantgro <dpest.wheat.utils.uplantgro.html>`_
 *  `Example: Calibrating DSSAT for Wheat (CERES Model) <example.html>`_
+*  `Example: Calibrating a Cultivar Using Multiple Treatments <example_multiple_trts.html>`_

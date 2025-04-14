@@ -6,12 +6,13 @@ def plantgro(
     treatment = None, 
     variables = None, 
     output_path = None,
-    output_filename = None,
+    suffix = None,
     variables_classification = None,
     plantgro_ins_first_line = None,
     mrk = '~',
     smk = '!',
 ):
+
     """
     Creates a ``PEST instruction file (.INS)``. This instruction file contains directions for PEST to read the simulated time-series values from the ``PlantGro.OUT`` file, which includes various plant growth metrics throughout the growing season. The  ``PEST instruction file (.INS)`` guides PEST in extracting specific model-generated observations for specific time points from the ``PlantGro.OUT`` file for the variables specified by the user. Additionally, this module creates a tuple containing: 1) A DataFrame with the MEASURED observations (entered by the user in the DSSAT "T file") for the specified variables, and 2) the path to the generated ``PEST instruction file (.INS)``.
 
@@ -26,7 +27,7 @@ def plantgro(
     =======
 
         * **output_path** (*str*, *default: current working directory*): Directory where the generated ``PEST instruction file (.INS)`` will be saved.
-        * **output_filename** (*str*, *default: same as the filename from `plantgro_file_path`*): Name of the ``PEST instruction file (.INS)`` to be created. If not provided, the filename (without extension) from the ``plantgro_file_path`` is used, and ``.ins`` is appended. Use this argument to customize the output filename when generating multiple instruction files or to prevent overwriting existing files.
+        * **suffix** (*str*, *default: ""*): Suffix to append to the output filename and variable names in the .INS file. This short code (e.g., TRT1, TRT2, TRT3) identifies different treatments used for calibrating the same cultivar (or ecotype) in the same calibration process. It must be 1–4 characters long, containing only uppercase letters and/or numbers. For example, if `suffix="TRT1"`, the output file will be named `PlantGro_TRT1.ins` and variable markers will include the suffix (e.g., `!LAID_75167_TRT1!`). This ensures that PEST can distinguish between variables from different treatments, as PEST does not allow variables with the same name.
         * **variables_classification** (*dict*): Mapping of ``variable`` names to their respective categories. If not provided, defaults to a pre-configured classification scheme defined in the package. Users can override this by providing their own dictionary in the format ``{variable: variable_group, …}``. Variables group names should be less than 12 characters.
         * **plantgro_ins_first_line** (*str*, *default: "pif"*): First line of the ``PEST instruction file (.INS)``. This is the PEST default value and should not be changed without good reason.
         * **mrk** (*str*, *default: "~"*): Primary marker delimiter character for the instruction file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
@@ -83,6 +84,7 @@ def plantgro(
     yml_file_block = 'PLANTGRO_FILE'
     yaml_file_variables = 'INS_FILE_VARIABLES'
     yaml_variables_classification = 'VARIABLES_CLASSIFICATION'
+    MAX_VAR_LENGTH = 20  # In PEST, the variable names should not exceed 20 characters
 
     try:
         ## Get the yaml_data
@@ -155,35 +157,58 @@ def plantgro(
         # Get the header and first simulation date
         header_line, date_first_sim = get_header_and_first_sim(validated_path)
 
-        # Calculate days dictionary and adjust it
+        # Calculate days dictionary days after first simulation
         days_dict = calculate_days_dict(dates_variable_values_dict, date_first_sim)
 
+        # adjust the days after first simulation
         adjusted_days_dict = adjust_days_dict(days_dict)
+
+        # Validate suffix if provided
+        if suffix is not None:
+            if not suffix.isalnum():
+                raise ValueError("Suffix must only contain letters and numbers.")
+            if len(suffix) > 4:
+                raise ValueError("Suffix must be at most 4 characters long.")
+            suffix = '_' + suffix
 
         # Process each variable and generate output text
         output_text = ""
 
-        for date, (days, variables) in adjusted_days_dict.items():
-            positions = find_variable_position(header_line, variables)
-            line = f"l{days}"
-            current_position = 1  # Start at position 1 after 'l{days}'
+        if suffix is not None:
+            for date, (days, variables) in adjusted_days_dict.items():
+                positions = find_variable_position(header_line, variables)
+                line = f"l{days}"
+                current_position = 1  # Start at position 1 after 'l{days}'
 
-            for variable in sorted(positions, key=positions.get):
-                position = positions[variable]
-                w_count = position - current_position
-                line += ' w' * w_count + f" {smk}{variable}_{date}{smk}"
-                current_position = position + 1  # Move to next position after this variable
+                for variable in sorted(positions, key=positions.get):
+                    position = positions[variable]
+                    w_count = position - current_position
+                    line += ' w' * w_count + f" {smk}{variable}_{date}{suffix}{smk}"
+                    current_position = position + 1  # Move to next position after this variable
 
-            output_text += line + "\n"
+                output_text += line + "\n"
+
+        else:
+            for date, (days, variables) in adjusted_days_dict.items():
+                positions = find_variable_position(header_line, variables)
+                line = f"l{days}"
+                current_position = 1  # Start at position 1 after 'l{days}'
+
+                for variable in sorted(positions, key=positions.get):
+                    position = positions[variable]
+                    w_count = position - current_position
+                    line += ' w' * w_count + f" {smk}{variable}_{date}{smk}"
+                    current_position = position + 1  # Move to next position after this variable
+
+                output_text += line + "\n"
 
         # Validate output_path
         output_path = validate_output_path(output_path)
 
         # Determine and validate output_filename
-        if output_filename is not None:
-            # Ensure it's just a name, no directory parts
-            if os.path.basename(output_filename) != output_filename:
-                raise ValueError("The 'output_filename' must be a valid file name without directory paths.")
+        if suffix:
+            # Extract the file name
+            output_filename = os.path.basename(validated_path).replace('.OUT', f'{suffix}.ins')
 
             # Ensure it ends with '.ins'
             if not output_filename.lower().endswith('.ins'):
@@ -218,6 +243,10 @@ def plantgro(
 
         # Convert 'value_measured' column to float
         dates_variable_values_df['value_measured'] = dates_variable_values_df['value_measured'].astype(float)
+
+        # Add the siffix to the variable_name
+        if suffix is not None:
+            dates_variable_values_df['variable_name'] = dates_variable_values_df['variable_name'] + suffix
 
         # Select and reorder the columns
         result_df = dates_variable_values_df[['variable_name', 'value_measured', 'group']]

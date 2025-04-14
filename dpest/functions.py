@@ -900,3 +900,23 @@ def new_rows_add(PlantGro, rows_add):
         new_rows.append(new_row)
 
     return new_rows
+
+def add_suffix_to_variables(variable_names, suffix, max_length):
+    """
+    Append a suffix to each variable name, ensuring the final name does not exceed max_length.
+
+    Parameters:
+        variable_names (iterable): List or Series of original variable names.
+        suffix (str): Suffix to append (assumed already validated).
+        max_length (int): Maximum allowed length of the final variable name.
+
+    Returns:
+        dict: Mapping from original variable name to suffixed (and possibly truncated) name.
+    """
+    updated_names = {}
+    for var_name in variable_names:
+        new_name = var_name + suffix
+        if len(new_name) > max_length:
+            new_name = var_name[:max_length - len(suffix)] + suffix
+        updated_names[var_name] = new_name
+    return updated_names
