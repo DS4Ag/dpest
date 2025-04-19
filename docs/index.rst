@@ -25,7 +25,7 @@ Table of Contents
 =================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Basic usage
 
    Basic_usage
