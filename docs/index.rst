@@ -33,8 +33,9 @@ Table of Contents
    dpest.wheat.ceres.eco
    dpest.wheat.overview
    dpest.wheat.plantgro
-   dpest.pst
    dpest.wheat.utils.uplantgro
+   dpest.pst
+   dpest.utils.unoptmax
    example
    example_multiple_trts
 
