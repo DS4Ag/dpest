@@ -26,30 +26,30 @@ Table of Contents
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
+   :caption: dpest.wheat
 
-   basic_usage
    dpest.wheat.ceres.cul
    dpest.wheat.ceres.eco
    dpest.wheat.overview
    dpest.wheat.plantgro
    dpest.wheat.utils.uplantgro
+
+.. toctree::
+   :maxdepth: 2
+   :caption: dpest.pst
+
    dpest.pst
    dpest.utils.unoptmax
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Examples
+
    example
    example_multiple_trts
 
-*  `Basic Usage <basic_usage.html>`_
-*  Create the imput files using the ceres wheat model
-    *  `dpest.wheat.ceres.cul <dpest.wheat.ceres.cul.html>`_
-    *  `dpest.wheat.ceres.eco <dpest.wheat.ceres.eco.html>`_
-    *  `dpest.wheat.overview <dpest.wheat.overview.html>`_
-    *  `dpest.wheat.plantgro <dpest.wheat.plantgro.html>`_
-    * Utils 
-      *  `dpest.wheat.utils.uplantgro <dpest.wheat.utils.uplantgro.html>`_
-*  Create the PEST control file
-    *  `dpest.pst <dpest.pst.html>`_
-    * Utils 
-      *  `dpest.pst <dpest.utils.unoptmax.html>`_
-*  `Example: Calibrating DSSAT for Wheat (CERES Model) <example.html>`_
-*  `Example: Calibrating a Cultivar Using Multiple Treatments <example_multiple_trts.html>`_
+.. toctree::
+   :maxdepth: 1
+   :caption: Basic
+
+   basic_usage
