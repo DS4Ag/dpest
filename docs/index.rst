@@ -25,8 +25,14 @@ Table of Contents
 =================
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Basic usage
+
+   Basic_usage
+
+.. toctree::
    :maxdepth: 2
-   :caption: dpest.wheat
+   :caption: Wheat (PEST input files)
 
    dpest.wheat.ceres.cul
    dpest.wheat.ceres.eco
@@ -36,7 +42,7 @@ Table of Contents
 
 .. toctree::
    :maxdepth: 2
-   :caption: dpest.pst
+   :caption: PEST control file
 
    dpest.pst
    dpest.utils.unoptmax
@@ -47,9 +53,3 @@ Table of Contents
 
    example
    example_multiple_trts
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Basic
-
-   basic_usage
