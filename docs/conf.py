@@ -35,8 +35,16 @@ html_theme = 'pydata_sphinx_theme'
 
 html_show_sourcelink = True
 
+# html_sidebars = {
+#     "**": ["sidebar-nav-bs"]
+# }
+
 html_sidebars = {
-    "**": ["sidebar-nav-bs"]
+    '**': [
+        'globaltoc.html',
+        'relations.html',  # optional: previous/next links
+        'searchbox.html',
+    ]
 }
 
 html_theme_options = {

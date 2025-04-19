@@ -32,6 +32,13 @@ Table of Contents
 
 .. toctree::
    :maxdepth: 2
+   :caption: PEST control file
+
+   dpest.pst
+   dpest.utils.unoptmax
+
+.. toctree::
+   :maxdepth: 2
    :caption: Wheat (PEST input files)
 
    dpest.wheat.ceres.cul
@@ -39,13 +46,6 @@ Table of Contents
    dpest.wheat.overview
    dpest.wheat.plantgro
    dpest.wheat.utils.uplantgro
-
-.. toctree::
-   :maxdepth: 2
-   :caption: PEST control file
-
-   dpest.pst
-   dpest.utils.unoptmax
 
 .. toctree::
    :maxdepth: 2
