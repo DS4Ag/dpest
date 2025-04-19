@@ -25,9 +25,10 @@ Table of Contents
 =================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Basic usage
 
+   self
    Basic_usage
 
 .. toctree::
