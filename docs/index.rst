@@ -35,12 +35,9 @@ Table of Contents
    :maxdepth: 2
    :caption: PEST control file
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Control File Update Utilities
+   dpest.pst
+   utils
 
-   utils  
-   
 .. toctree::
    :maxdepth: 2
    :caption: Wheat (PEST input files)

@@ -1,12 +1,13 @@
+.. currentmodule:: dpest.utils
+
 Control File Update Utilities
 ===========
 
 This subpackage contains utility functions to modify the control data section of PEST input files.
 
-.. autosummary::
-   :toctree: utils_modules
-   :recursive:
-   :template: module.rst
+.. toctree::
+   :maxdepth: 1
+   :caption: Utility modules
 
    dpest.utils.urstfle
    dpest.utils.upestmode
