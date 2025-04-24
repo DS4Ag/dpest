@@ -37,7 +37,7 @@ Table of Contents
 
 .. toctree::
    :maxdepth: 2
-   :caption: Control File Update Utilities 
+   :caption: Control File Update Utilities
 
    dpest.utils
 
