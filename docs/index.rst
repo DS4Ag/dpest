@@ -35,8 +35,11 @@ Table of Contents
    :maxdepth: 2
    :caption: PEST control file
 
-   dpest.pst
-   dpest.utils.unoptmax
+   .. toctree::
+      :maxdepth: 2
+      :caption: API Reference
+
+      utils
 
 .. toctree::
    :maxdepth: 2
