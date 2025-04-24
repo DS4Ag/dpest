@@ -162,7 +162,7 @@ from dpest.utils import unoptmax, rmv_splitcols
 pst_file_path = './ENTRY1/PEST_CONTROL.pst'
 
 # Increase the number of optimization iterations (NOPTMAX) in a .pst file
-unoptmax(pst_file_path, new_value = 10000)
+unoptmax(pst_file_path, new_value = 50)
 
 # Remove SPLITTHRESH/SPLITRELDIFF/SPLITACTION columns from a .pst file parameter groups section
 rmv_splitcols(“PEST_CONTROL.pst”)
