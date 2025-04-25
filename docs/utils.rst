@@ -8,6 +8,7 @@ This subpackage contains utility functions to modify the control data section of
 .. toctree::
    :maxdepth: 1
    :caption: Utility modules
+
    dpest.utils.rstfle
    dpest.utils.pestmode
    dpest.utils.rlambda1
