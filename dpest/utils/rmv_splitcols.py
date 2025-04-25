@@ -15,11 +15,11 @@ def rmv_splitcols(pst_path):
     **Example:**
     =======
 
-        code-block:: python
+    code-block:: python
 
-            from dpest.utils import uphiratsuf
+        from dpest.utils import phiratsuf
 
-            rmv_splitcols("PEST_CONTROL.pst")
+        rmv_splitcols("PEST_CONTROL.pst")
     """
     # Map column names to their 0-based indices in PEST's parameter groups section
     COLUMN_MAP = {

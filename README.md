@@ -156,13 +156,13 @@ This makes them ideal for **quickly tuning optimization settings** or **cleaning
 
 ```python
 # Load the dpest.utils
-from dpest.utils import unoptmax, rmv_splitcols
+from dpest.utils import noptmax, rmv_splitcols
 
 # Path to the .pst file
 pst_file_path = './ENTRY1/PEST_CONTROL.pst'
 
 # Increase the number of optimization iterations (NOPTMAX) in a .pst file
-unoptmax(pst_file_path, new_value = 50)
+noptmax(pst_file_path, new_value=50)
 
 # Remove SPLITTHRESH/SPLITRELDIFF/SPLITACTION columns from a .pst file parameter groups section
 rmv_splitcols(“PEST_CONTROL.pst”)

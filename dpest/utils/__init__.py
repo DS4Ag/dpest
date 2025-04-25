@@ -1,23 +1,23 @@
-from .urstfle import urstfle
-from .upestmode import upestmode
+from .rstfle import rstfle
+from .pestmode import pestmode
 
-from .urlambda1 import urlambda1
-from .urlamfac import urlamfac
-from .uphiratsuf import uphiratsuf
-from .uphiredlam import uphiredlam
-from .unumlam import unumlam
+from .rlambda1 import rlambda1
+from .rlamfac import rlamfac
+from .phiratsuf import phiratsuf
+from .phiredlam import phiredlam
+from .numlam import numlam
 
-from .urelparmax import urelparmax
-from .ufacparmax import ufacparmax
-from .ufacorig import ufacorig
+from .relparmax import relparmax
+from .facparmax import facparmax
+from .facorig import facorig
 
-from .uphiredswh import uphiredswh
+from .phiredswh import phiredswh
 
-from .unoptmax import unoptmax
-from .uphiredstp import uphiredstp
-from .unphistp import unphistp
-from .unphinored import unphinored
-from .urelparstp import urelparstp
-from .unrelpar import unrelpar
+from .noptmax import noptmax
+from .phiredstp import phiredstp
+from .nphistp import nphistp
+from .nphinored import nphinored
+from .relparstp import relparstp
+from .nrelpar import nrelpar
 
 from .rmv_splitcols import rmv_splitcols
