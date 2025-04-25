@@ -8,22 +8,22 @@ This subpackage contains utility functions to modify the control data section of
 .. toctree::
    :maxdepth: 1
    :caption: Utility modules
-
-   dpest.utils.urstfle
-   dpest.utils.upestmode
-   dpest.utils.urlambda1
-   dpest.utils.urlamfac
-   dpest.utils.uphiratsuf
-   dpest.utils.uphiredlam
-   dpest.utils.unumlam
-   dpest.utils.urelparmax
-   dpest.utils.ufacparmax
-   dpest.utils.ufacorig
-   dpest.utils.uphiredswh
-   dpest.utils.unoptmax
-   dpest.utils.uphiredstp
-   dpest.utils.unphistp
-   dpest.utils.unphinored
-   dpest.utils.urelparstp
-   dpest.utils.unrelpar
+   dpest.utils.rstfle
+   dpest.utils.pestmode
+   dpest.utils.rlambda1
+   dpest.utils.rlamfac
+   dpest.utils.phiratsuf
+   dpest.utils.phiredlam
+   dpest.utils.numlam
+   dpest.utils.relparmax
+   dpest.utils.facparmax
+   dpest.utils.facorig
+   dpest.utils.phiredswh
+   dpest.utils.noptmax
+   dpest.utils.phiredstp
+   dpest.utils.nphistp
+   dpest.utils.nphinored
+   dpest.utils.relparstp
+   dpest.utils.nrelpar
+   dpest.utils.lsqr.rst
    dpest.utils.rmv_splitcols
