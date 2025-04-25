@@ -16,14 +16,16 @@ def ufacparmax(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
-    
-    .. code-block:: python
 
-         from dpest.utils import ufacparmax
+    **Set FACPARMAX  to 2.0:**
 
-        ufacparmax("PEST_CONTROL.pst", 2.0)
+        .. code-block:: python
+
+             from dpest.utils import ufacparmax
+
+            ufacparmax("PEST_CONTROL.pst", 2.0)
     """
     try:
         # Validate input

@@ -17,10 +17,14 @@ def upestmode(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
-    
+
+    **Set PESTMODE to "prediction"**
+
     .. code-block:: python
+
+        from dpest.utils import upestmode
 
         upestmode("PEST_CONTROL.pst", "prediction")
     """

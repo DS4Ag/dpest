@@ -16,13 +16,16 @@ def uphiredswh(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
-    
-    .. code-block:: python
 
-        from dpest.utils import uphiredswh
-        uphiredswh("PEST_CONTROL.pst", 0.1)
+    **Set PHIREDSWH to 0.1:**
+
+        .. code-block:: python
+
+            from dpest.utils import uphiredswh
+
+            uphiredswh("PEST_CONTROL.pst", 0.1)
     """
     try:
         # Validate input

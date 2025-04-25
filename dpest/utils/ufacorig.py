@@ -16,14 +16,16 @@ def ufacorig(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
-    
-    .. code-block:: python
 
-        from dpest.utils import ufacorig
+     **Set FACORIG to 01:**
 
-        ufacorig("PEST_CONTROL.pst", 0.1)
+        .. code-block:: python
+
+            from dpest.utils import ufacorig
+
+            ufacorig("PEST_CONTROL.pst", 0.1)
     """
     try:
         # Validate input

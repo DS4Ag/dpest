@@ -17,14 +17,16 @@ def unrelpar(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
-    
-    .. code-block:: python
 
-        from dpest.utils import unrelpar
+    **Set NRELPAR to 3:**
 
-        unrelpar("PEST_CONTROL.pst", 3)
+        .. code-block:: python
+
+            from dpest.utils import unrelpar
+
+            unrelpar("PEST_CONTROL.pst", 3)
     """
     try:
         # Validate input

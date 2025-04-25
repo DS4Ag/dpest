@@ -17,14 +17,16 @@ def unphistp(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
+
+    **Set NPHISTP to 3:**
     
-    .. code-block:: python
+        .. code-block:: python
 
-        from dpest.utils import unphistp
+            from dpest.utils import unphistp
 
-        unphistp("PEST_CONTROL.pst", 3)
+            unphistp("PEST_CONTROL.pst", 3)
     """
     try:
         # Validate input

@@ -17,14 +17,16 @@ def unphinored(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
+
+    **Set NPHINORED to 5:**
     
-    .. code-block:: python
+        .. code-block:: python
 
-        from dpest.utils import unphinored
+            from dpest.utils import unphinored
 
-        unphinored("PEST_CONTROL.pst", 5)
+            unphinored("PEST_CONTROL.pst", 5)
     """
     try:
         # Validate input

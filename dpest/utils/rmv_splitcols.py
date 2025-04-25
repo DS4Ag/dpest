@@ -12,8 +12,8 @@ def rmv_splitcols(pst_path):
 
         * ``None``
 
-    =======
     **Example:**
+    =======
 
         code-block:: python
 

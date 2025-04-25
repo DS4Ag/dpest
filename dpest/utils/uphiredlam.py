@@ -16,10 +16,10 @@ def uphiredlam(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
 
-    1. **Set PHIREDLAM to 0.03:**
+    **Set PHIREDLAM to 0.03:**
     
        .. code-block:: python
 

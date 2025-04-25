@@ -16,10 +16,10 @@ def urlamfac(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
     
-    1. **Set RLAMFAC to 2.0:**
+    **Set RLAMFAC to 2.0:**
 
        .. code-block:: python
 

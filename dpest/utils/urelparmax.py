@@ -16,14 +16,16 @@ def urelparmax(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
+
+    **Set RELPARMAX to 0.2:**
     
-    .. code-block:: python
+        .. code-block:: python
 
-        from dpest.utils import urelparmax
+            from dpest.utils import urelparmax
 
-        urelparmax("PEST_CONTROL.pst", 0.2)
+            urelparmax("PEST_CONTROL.pst", 0.2)
     """
     try:
         # Validate input

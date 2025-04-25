@@ -19,10 +19,10 @@ def unumlam(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
 
-    1. **Set NUMLAM to 10:**
+    **Set NUMLAM to 10:**
     
        .. code-block:: python
 

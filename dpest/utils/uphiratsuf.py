@@ -17,14 +17,16 @@ def uphiratsuf(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
 
-    .. code-block:: python
-    
-        from dpest.utils import uphiratsuf
+    **Set PHIRATSUF to 0.3**
 
-        uphiratsuf("PEST_CONTROL.pst", 0.3)
+        .. code-block:: python
+
+            from dpest.utils import uphiratsuf
+
+            uphiratsuf("PEST_CONTROL.pst", 0.3)
     """
     try:
         # Convert to float and validate range

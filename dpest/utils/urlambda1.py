@@ -16,10 +16,10 @@ def urlambda1(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
     
-    1. **Set RLAMBDA1 to 5.0:**
+    **Set RLAMBDA1 to 5.0:**
 
        .. code-block:: python
 

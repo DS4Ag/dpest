@@ -17,14 +17,16 @@ def urelparstp(pst_path, new_value):
     =======
         * ``None``
 
-    **Examples:**
+    **Example:**
     =======
-    
-    .. code-block:: python
 
-        from dpest.utils import urelparstp
+    **Set RELPARSTP to 0.01:**
 
-        urelparstp("PEST_CONTROL.pst", 0.01)
+        .. code-block:: python
+
+            from dpest.utils import urelparstp
+
+            urelparstp("PEST_CONTROL.pst", 0.01)
     """
     try:
         # Validate input
