@@ -36,14 +36,14 @@ def unoptmax(pst_path, new_value=0):
           pst_file_path = 'PEST_CONTROL.pst'
           unoptmax(pst_file_path)
 
-    2. **Set NOPTMAX to 10000 (iterative optimization):**
+    2. **Set NOPTMAX to 50 (iterative optimization):**
 
        .. code-block:: python
 
           from dpest.utils import unoptmax
 
           pst_file_path = './ENTRY1/PEST_CONTROL.pst'
-          unoptmax(pst_file_path, new_value = 10000)
+          unoptmax(pst_file_path, new_value = 50)
     """
     try:
         # Validation for NOPTMAX value

@@ -18,7 +18,9 @@ def uphiredlam(pst_path, new_value):
 
     **Examples:**
     =======
+
     1. **Set PHIREDLAM to 0.03:**
+    
        .. code-block:: python
 
           from dpest.utils import uphiredlam

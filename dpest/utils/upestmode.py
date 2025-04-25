@@ -19,6 +19,7 @@ def upestmode(pst_path, new_value):
 
     **Examples:**
     =======
+    
     .. code-block:: python
 
         upestmode("PEST_CONTROL.pst", "prediction")

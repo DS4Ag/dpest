@@ -18,13 +18,16 @@ def urlamfac(pst_path, new_value):
 
     **Examples:**
     =======
+    
     1. **Set RLAMFAC to 2.0:**
+
        .. code-block:: python
 
           from dpest.utils import urlamfac
 
           pst_file_path = 'PEST_CONTROL.pst'
           urlamfac(pst_file_path, 2.0)
+
     """
     try:
         # Validate input

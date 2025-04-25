@@ -18,7 +18,9 @@ def urlambda1(pst_path, new_value):
 
     **Examples:**
     =======
+    
     1. **Set RLAMBDA1 to 5.0:**
+
        .. code-block:: python
 
           from dpest.utils import urlambda1

@@ -21,7 +21,9 @@ def unumlam(pst_path, new_value):
 
     **Examples:**
     =======
+
     1. **Set NUMLAM to 10:**
+    
        .. code-block:: python
 
           from dpest.utils import unumlam

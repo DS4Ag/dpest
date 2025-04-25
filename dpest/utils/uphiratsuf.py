@@ -19,7 +19,9 @@ def uphiratsuf(pst_path, new_value):
 
     **Examples:**
     =======
+
     .. code-block:: python
+    
         from dpest.utils import uphiratsuf
 
         uphiratsuf("PEST_CONTROL.pst", 0.3)

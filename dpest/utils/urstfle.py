@@ -19,6 +19,7 @@ def urstfle(pst_path, new_value):
     **Examples:**
     =======
     1. **Set RSTFLE to "restart":**
+
        .. code-block:: python
 
           from dpest.utils import urstfle
@@ -27,12 +28,14 @@ def urstfle(pst_path, new_value):
           urstfle(pst_file_path, "restart")
 
     2. **Set RSTFLE to "norestart":**
+
        .. code-block:: python
 
           from dpest.utils import urstfle
 
           pst_file_path = './ENTRY1/PEST_CONTROL.pst'
           urstfle(pst_file_path, "norestart")
+
     """
     allowed = {"restart", "norestart"}
     try:
