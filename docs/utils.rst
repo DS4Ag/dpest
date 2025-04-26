@@ -27,4 +27,5 @@ This subpackage contains utility functions to modify the control data section of
    dpest.utils.relparstp
    dpest.utils.nrelpar
    dpest.utils.lsqr.rst
+   dpest.utils.svd.rst
    dpest.utils.rmv_splitcols

@@ -1,4 +1,4 @@
-def ulqsr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
+def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
           lsqr_conlim=None, lsqr_itnlim=None, lsqrwrite=None):
     """
     Adds or updates the LSQR section in a PEST control (.pst) file.
@@ -38,14 +38,14 @@ def ulqsr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
 
     **Examples:**
     =======
-    
+
     1. **Adding an LSQR Section to a PEST Control File with Default Parameters:**
 
        .. code-block:: python
 
-          from dpest.utils import ulqsr
+          from dpest.utils import lsqr
 
-          ulqsr(
+          lsqr(
               pst_path = "PEST_CONTROL.pst"
           )
 
@@ -55,9 +55,9 @@ def ulqsr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
 
        .. code-block:: python
 
-          from dpest.utils import ulqsr
+          from dpest.utils import lsqr
 
-          ulqsr(
+          lsqr(
               pst_path = "PEST_CONTROL.pst",
               lsqr_atol = 1e-6,
               lsqr_btol = 1e-6,
@@ -70,9 +70,9 @@ def ulqsr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
 
        .. code-block:: python
 
-          from dpest.utils import ulqsr
+          from dpest.utils import lsqr
 
-          ulqsr(
+          lsqr(
               pst_path = "PEST_CONTROL.pst",
               lsqrmode = 0
           )
@@ -99,6 +99,21 @@ def ulqsr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
         # Read the PST file
         with open(pst_path, 'r') as f:
             lines = f.readlines()
+
+        # Find the end of the control data section
+        control_data_end_idx = None
+        for i, line in enumerate(lines):
+            if line.strip().lower().startswith('* control data'):
+                # Find the end of control data section
+                j = i + 1
+                while j < len(lines) and not lines[j].strip().startswith('*'):
+                    j += 1
+                control_data_end_idx = j
+                break
+
+        if control_data_end_idx is None:
+            raise ValueError(
+                "This file does not contain a '* control data' section and is not a valid PEST control file.")
 
         # Check if LSQR section exists and extract current values
         existing_lsqr = {key: defaults[key] for key in defaults}
@@ -180,25 +195,18 @@ def ulqsr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
             # Replace existing section
             lines[lsqr_start_idx:lsqr_start_idx + 4] = lsqr_section
         else:
-            # Find where to insert the LSQR section (after SVD section)
-            insert_idx = None
+            # Check for existing SVD section
+            svd_exists = False
             for i, line in enumerate(lines):
                 if line.strip().startswith('* singular value decomposition'):
-                    # Find the end of SVD section
-                    j = i + 1
-                    while j < len(lines) and not lines[j].strip().startswith('*'):
-                        j += 1
-                    insert_idx = j
+                    svd_exists = True
+                    # If user is enabling LSQR (mode=1), warn about SVD incompatibility
+                    if lsqr_values["lsqrmode"] == 1:
+                        print("Warning: LSQR and SVD cannot be used together. Adding LSQR will make SVD inactive.")
                     break
 
-            if insert_idx is None:
-                # If we couldn't find SVD section, just append LSQR at the end
-                lines.append('\n')  # Add a blank line for readability
-                lines.extend(lsqr_section)
-            else:
-                # Insert LSQR section with a blank line before it
-                lines.insert(insert_idx, '\n')
-                lines[insert_idx + 1:insert_idx + 1] = lsqr_section
+            # Insert LSQR section after control data section
+            lines[control_data_end_idx :control_data_end_idx ] = lsqr_section
 
         # Write updated file
         with open(pst_path, 'w') as f:

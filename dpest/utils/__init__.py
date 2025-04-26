@@ -23,3 +23,4 @@ from .nrelpar import nrelpar
 from .rmv_splitcols import rmv_splitcols
 
 from .lsqr import lsqr
+from .svd import svd
