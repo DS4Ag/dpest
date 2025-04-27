@@ -24,3 +24,5 @@ from .rmv_splitcols import rmv_splitcols
 
 from .lsqr import lsqr
 from .svd import svd
+from .rmv_lsqr import rmv_lsqr
+from .rmv_svd import rmv_svd
