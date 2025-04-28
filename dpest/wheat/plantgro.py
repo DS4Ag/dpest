@@ -14,7 +14,10 @@ def plantgro(
 ):
 
     """
-    Creates a ``PEST instruction file (.INS)``. This instruction file contains directions for PEST to read the simulated time-series values from the ``PlantGro.OUT`` file, which includes various plant growth metrics throughout the growing season. The  ``PEST instruction file (.INS)`` guides PEST in extracting specific model-generated observations for specific time points from the ``PlantGro.OUT`` file for the variables specified by the user. Additionally, this module creates a tuple containing: 1) A DataFrame with the MEASURED observations (entered by the user in the DSSAT "T file") for the specified variables, and 2) the path to the generated ``PEST instruction file (.INS)``.
+    Creates a ``PEST instruction file (.INS)``. This instruction file contains directions for PEST to read the simulated time-series values from the ``PlantGro.OUT`` file, which includes various plant growth metrics throughout the growing season. The  ``PEST instruction file (.INS)`` guides PEST in extracting specific model-generated observations for specific time points from the ``PlantGro.OUT`` file for the variables specified by the user. Additionally, this module creates a tuple containing:
+
+    1) A DataFrame with the MEASURED observations (entered by the user in the DSSAT "T file") for the specified variables, and
+    2) the path to the generated ``PEST instruction file (.INS)``.
 
     **Required Arguments:**
     =======
@@ -37,6 +40,7 @@ def plantgro(
     =======
 
     * *tuple*: A tuple containing:
+
         * *pandas.DataFrame*: A filtered DataFrame used to generate the ``PEST instruction file (.INS)``.
         * *str*: The full path to the generated ``PEST instruction file (.INS)``.
 
