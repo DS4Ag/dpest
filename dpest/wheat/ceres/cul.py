@@ -36,7 +36,7 @@ def cul(
         * **minima** (*str*, *default: "999991"*): Row identifier for the minima parameter values.
         * **maxima** (*str*, *default: "999992"*): Row identifier for the maxima parameter values.
         * **mrk** (*str*, *default: "~"*) Primary marker delimiter character for the template file. Must be a single character and cannot be A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.
-        * **parameters_grouped** (*dict*, *optional*): Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: ``P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'``. 'P', 'G', and 'PHINT' are cultivar parameter group names, and the values are the specific cultivar parameters to calibrate, using the same names as in the ``DSSAT cultivar file (.CUL)``. Parameter group names should be less than 12 characters.
+        * **parameters_grouped** (*dict*, *optional*): Cultivar parameters to calibrate, grouped and comma-separated. If not provided, all cultivar parameters are calibrated. For example: ``P='P1V, P1D, P5', G='G1, G2, G3', PHINT='PHINT'``. Where, `P`, `G`, and `PHINT` are cultivar parameter group names, and the values are the specific cultivar parameters to calibrate, using the same names as in the ``DSSAT cultivar file (.CUL)``. Parameter group names should be less than 12 characters.
 
     **Returns:**
     =======
@@ -78,8 +78,8 @@ def cul(
           cul(
               cultivar = 'MANITOU',
               cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL',
-              P = 'P1V, P1D,
-              G = 'G1
+              P = 'P1V, P1D',
+              G = 'G1'
           )
 
        This example demonstrates how to specify the ``parameters_grouped`` argument to calibrate only specific cultivar parameters. In this case, the returned tuple is not saved, but the ``PEST template file (.TPL)`` is still created at the specified location. If you want to use the cultivar parameters and path for the ``pst`` module, the returned tuple should be saved in two variables.
