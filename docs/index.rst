@@ -1,4 +1,4 @@
-dpest
+Index
 =======================
 
 What is dpest?
@@ -28,7 +28,6 @@ Table of Contents
    :maxdepth: 1
    :caption: Index
 
-   self
    Index
 
 .. toctree::
