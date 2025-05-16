@@ -28,7 +28,6 @@ Table of Contents
    :maxdepth: 1
    :caption: Home
 
-   self
    Home
 
 .. toctree::
