@@ -42,13 +42,13 @@ html_show_sourcelink = True
 html_sidebars = {
     '**': [
         'globaltoc.html',
-        'relations.html',  # optional: previous/next links
+        'relations.html',  # previous/next links
         'searchbox.html',
     ]
 }
 
 html_theme_options = {
-    "github_url": "https://github.com/DS4Ag/dpest/",  # Replace with your GitHub repo URL
+    "github_url": "https://github.com/DS4Ag/dpest/",
     "use_repository_button": True,
     "use_source_button": True,
     "show_nav_level": 2,  # Ensure navigation is visible up to depth 2
