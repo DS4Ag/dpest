@@ -50,27 +50,13 @@ html_sidebars = {
     ]
 }
 
-# html_theme_options = {
-#     "github_url": "https://github.com/DS4Ag/dpest/",
-#     "use_repository_button": True,
-#     "use_source_button": True,
-#     "show_nav_level": 2,
-#     "navigation_with_keys": True,
-#     "navbar_center": [],
-#     "navbar_end": ["search-field.html"],
-#     "navbar_persistent": [],  # <--- This removes the default search button
-# }
-
 html_theme_options = {
-    "logo": {
-        "text": "Home",
-    },
-    "navbar_start": ["navbar-logo"],
-    "navbar_center": [],
-    # Do NOT set navbar_end or navbar_persistent
     "github_url": "https://github.com/DS4Ag/dpest/",
     "use_repository_button": True,
     "use_source_button": True,
     "show_nav_level": 2,
     "navigation_with_keys": True,
+    "navbar_center": [],
+    "navbar_end": [],
+    "navbar_persistent": [],  # <--- This removes the default search button
 }
