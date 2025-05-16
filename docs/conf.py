@@ -56,5 +56,7 @@ html_theme_options = {
     "use_source_button": True,
     "show_nav_level": 2,  # Ensure navigation is visible up to depth 2
     "navigation_with_keys": True,  # Enable keyboard navigation
-    "navbar_end": [],
+    "navbar_start": [],
+    "navbar_center": [],
+    "navbar_end": ["search-field.html"],  # <-- This puts the search box on the right
 }
