@@ -172,12 +172,16 @@ rmv_splitcols(“PEST_CONTROL.pst”)
 **Full List of Utility Functions:**  
 For the complete reference of available utility functions and their descriptions, see the [dpest ReadTheDocs Utils page](https://dpest.readthedocs.io/en/latest/utils.html).
 
-### Contributing
-
-Contributions to `dpest` are welcome! Please submit bug reports, feature requests, and pull requests through the project's GitHub repository or by email to: Luis Vargas Rojas - [lvargasr@purdue.edu](lvargasr@purdue.edu).
-
-Purdue University, Wang Lab [dianewanglab.com](https://www.dianewanglab.com/)
-
 ### License
 
 `dpest` is released under the [GNU General Public License v3.0 only](https://www.gnu.org/licenses/gpl-3.0.html).
+
+### Community Guidelines
+
+We welcome contributions from the community!
+
+- To report issues or request features, please use [GitHub Issues](https://github.com/DS4Ag/dpest/issues).
+- To contribute code, fork the repository, create a branch, and submit a pull request.
+- For questions or support, open an issue or participate in [GitHub Discussions](https://github.com/DS4Ag/dpest/discussions) if enabled.
+- All participants are expected to follow our Code of Conduct.
+- For detailed instructions on how to contribute, please see our [contribution guidelines](CONTRIBUTING.md).
