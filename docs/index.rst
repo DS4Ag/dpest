@@ -28,13 +28,13 @@ Table of Contents
    :maxdepth: 1
    :caption: Home
 
+   self
    Home
 
 .. toctree::
    :maxdepth: 2
    :caption: PEST control file
 
-   self
    dpest.pst
    utils
 
