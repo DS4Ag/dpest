@@ -183,5 +183,5 @@ We welcome contributions from the community!
 - To report issues or request features, please use [GitHub Issues](https://github.com/DS4Ag/dpest/issues).
 - To contribute code, fork the repository, create a branch, and submit a pull request.
 - For questions or support, open an issue or participate in [GitHub Discussions](https://github.com/DS4Ag/dpest/discussions) if enabled.
-- All participants are expected to follow our Code of Conduct.
+- All participants are expected to follow the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/0/code_of_conduct/)
 - For detailed instructions on how to contribute, please see our [contribution guidelines](CONTRIBUTING.md).
