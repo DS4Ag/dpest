@@ -40,6 +40,7 @@ html_show_sourcelink = True
 # }
 
 html_sidebars = {
+    'index': [],
     '**': [
         'globaltoc.html',
         'relations.html',  # previous/next links
