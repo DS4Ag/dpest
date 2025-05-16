@@ -56,7 +56,6 @@ html_theme_options = {
     "use_source_button": True,
     "show_nav_level": 2,
     "navigation_with_keys": True,
-    "navbar_start": [],
     "navbar_center": [],
     "navbar_end": ["search-field.html"],
     "navbar_persistent": [],  # <--- This removes the default search button
