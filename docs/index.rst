@@ -1,4 +1,4 @@
-Index
+Home
 =======================
 
 What is dpest?
@@ -26,14 +26,15 @@ Table of Contents
 
 .. toctree::
    :maxdepth: 1
-   :caption: Index
+   :caption: Home
 
-   Index
+   Home
 
 .. toctree::
    :maxdepth: 2
    :caption: PEST control file
 
+   self
    dpest.pst
    utils
 
