@@ -5,25 +5,25 @@ import pytest
 
 def test_cul_template_generation(tmp_path):
     """Test generation of cultivar template files"""
-    # Correct path setup
-    repo_root = Path(__file__).parent.parent  # Move up to root directory
+    # Setup paths
+    repo_root = Path(__file__).parent.parent
     input_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
 
-    # Verify the input file exists
+    # Verify input file exists
     assert input_file.exists(), f"Input file not found: {input_file}"
 
     # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Call the function
+    # Call the function with CORRECT parameter name
     params, tpl_path = dpest.wheat.ceres.cul(
         P='P1D, P5',
         G='G1, G2, G3',
         PHINT='PHINT',
         cultivar='MANITOU',
         cul_file_path=str(input_file),
-        output_dir=str(output_dir)
+        output_path=str(output_dir)
     )
 
     # Verify outputs
