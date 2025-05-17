@@ -7,7 +7,7 @@ def test_cul_template_generation(tmp_path):
     """Test generation of cultivar template files"""
     # Setup tests environment
     test_data_dir = Path(__file__).parent / "test_data"
-    input_file = test_data_dir / "DSSAT48_data/Genotype/WHCER048.CUL"
+    input_file = "./DSSAT48_data/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
 
     # Create tests output directory
