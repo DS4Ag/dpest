@@ -22,8 +22,8 @@ def test_cul_template_generation(tmp_path):
         G='G1, G2, G3',
         PHINT='PHINT',
         cultivar='MANITOU',
-        cul_file_path=input_file,
-        output_path=output_dir
+        cul_file_path=str(input_file),
+        output_path=str(output_dir)
     )
 
     assert result is not None, "Function returned None"
