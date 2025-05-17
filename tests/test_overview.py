@@ -18,8 +18,8 @@ def test_overview_instruction_generation(tmp_path):
     # Call the dpest.wheat.overview function
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=input_file,
-        output_path=output_dir
+        overview_file_path=str(input_file),
+        output_path=str(output_dir)
     )
 
     # 1. Validate result is not None
@@ -35,9 +35,14 @@ def test_overview_instruction_generation(tmp_path):
     ins_path = Path(ins_path)
     assert ins_path.exists(), f"Instruction file not created: {ins_path}"
 
-    # 5. Confirm that the first element is a pandas DataFrame
+    # 5. Confirm the first line of the instruction file starts with 'ptf'
+    with open(ins_path, 'r') as file:
+        first_line = file.readline().strip().lower()
+        assert first_line.startswith('pif'), f"Instruction file must start with 'ptf', but got: {first_line}"
+
+    # 6. Confirm that the first element is a pandas DataFrame
     assert isinstance(df, pd.DataFrame), "Expected first return value to be a pandas DataFrame"
 
-    # 6. Check that the DataFrame has the expected columns
+    # 7. Check that the DataFrame has the expected columns
     expected_columns = {'variable_name', 'value_measured', 'group'}
     assert expected_columns.issubset(df.columns), f"Missing expected columns in DataFrame: {expected_columns - set(df.columns)}"

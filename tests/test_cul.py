@@ -37,6 +37,11 @@ def test_cul_template_generation(tmp_path):
     tpl_path = Path(tpl_path)  # Convert str to Path for file checking
     assert tpl_path.exists(), f"Template file not created: {tpl_path}"
 
+    # 5. Confirm the first line of the instruction file starts with 'ptf'
+    with open(tpl_path, 'r') as file:
+        first_line = file.readline().strip().lower()
+        assert first_line.startswith('ptf'), f"Instruction file must start with 'ptf', but got: {first_line}"
+
     # 5. Check that `params` is a dictionary
     assert isinstance(params, dict), "Expected `params` to be a dictionary"
 

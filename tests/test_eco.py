@@ -36,9 +36,14 @@ def test_eco_template_generation(tmp_path):
     tpl_path = Path(tpl_path)
     assert tpl_path.exists(), f"Template file not created: {tpl_path}"
 
-    # 5. Check that `params` is a dictionary
+    # 5. Confirm the first line of the instruction file starts with 'ptf'
+    with open(tpl_path, 'r') as file:
+        first_line = file.readline().strip().lower()
+        assert first_line.startswith('ptf'), f"Instruction file must start with 'ptf', but got: {first_line}"
+
+    # 6. Check that `params` is a dictionary
     assert isinstance(params, dict), "Expected `params` to be a dictionary"
 
-    # 6. Check that the dictionary has the expected nested keys
+    # 7. Check that the dictionary has the expected nested keys
     expected_keys = {'parameters', 'minima_parameters', 'maxima_parameters', 'parameters_grouped'}
     assert expected_keys.issubset(params), f"Missing expected keys in params: {expected_keys - set(params)}"
