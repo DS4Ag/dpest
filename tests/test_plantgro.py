@@ -19,7 +19,7 @@ def test_overview_instruction_generation(tmp_path):
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD'],
-        overview_file_path=str(input_file),
+        plantgro_file_path=str(input_file),
         output_path=str(output_dir)
     )
 
