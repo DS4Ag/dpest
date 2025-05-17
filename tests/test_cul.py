@@ -42,9 +42,9 @@ def test_cul_template_generation(tmp_path):
         first_line = file.readline().strip().lower()
         assert first_line.startswith('ptf'), f"Instruction file must start with 'ptf', but got: {first_line}"
 
-    # 5. Check that `params` is a dictionary
+    # 6. Check that `params` is a dictionary
     assert isinstance(params, dict), "Expected `params` to be a dictionary"
 
-    # 6. Check that the dictionary has the expected nested keys
+    # 7. Check that the dictionary has the expected nested keys
     expected_keys = {'parameters', 'minima_parameters', 'maxima_parameters', 'parameters_grouped'}
     assert expected_keys.issubset(params), f"Missing expected keys in params: {expected_keys - set(params)}"

@@ -47,3 +47,4 @@ def test_eco_template_generation(tmp_path):
     # 7. Check that the dictionary has the expected nested keys
     expected_keys = {'parameters', 'minima_parameters', 'maxima_parameters', 'parameters_grouped'}
     assert expected_keys.issubset(params), f"Missing expected keys in params: {expected_keys - set(params)}"
+
