@@ -19,8 +19,8 @@ def test_eco_template_generation(tmp_path):
         PHEN='P1, P2FR1',
         VERN='VEFF',
         ecotype='CAWH01',
-        eco_file_path=str(input_file),     # Ensure it's a string
-        output_path=str(output_dir)        # Ensure it's a string
+        eco_file_path=str(input_file),
+        output_path=str(output_dir)
     )
 
     # 1. Validate result is not None

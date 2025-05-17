@@ -20,8 +20,8 @@ def test_cul_template_generation(tmp_path):
         G='G1, G2, G3',
         PHINT='PHINT',
         cultivar='MANITOU',
-        cul_file_path=str(input_file),     # Ensure it's a string
-        output_path=str(output_dir)        # Ensure it's a string
+        cul_file_path=str(input_file),
+        output_path=str(output_dir)
     )
 
     # 1. Validate result is not None

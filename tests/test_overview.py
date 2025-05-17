@@ -18,8 +18,8 @@ def test_overview_instruction_generation(tmp_path):
     # Call the dpest.wheat.overview function
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(input_file),  # Ensure it's a string
-        output_path=str(output_dir)          # Optional, in case your function supports this
+        overview_file_path=input_file,
+        output_path=output_dir
     )
 
     # 1. Validate result is not None
