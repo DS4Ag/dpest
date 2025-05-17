@@ -5,15 +5,15 @@ import pytest
 
 def test_cul_template_generation(tmp_path):
     """Test generation of cultivar template files"""
-    # Setup test environment
+    # Setup tests environment
     test_data_dir = Path(__file__).parent / "test_data"
     input_file = test_data_dir / "DSSAT48_data/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
 
-    # Create test output directory
+    # Create tests output directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Call the function under test
+    # Call the function under tests
     params, tpl_path = dpest.wheat.ceres.cul(
         P='P1D, P5',
         G='G1, G2, G3',
