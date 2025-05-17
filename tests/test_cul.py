@@ -8,6 +8,7 @@ def test_cul_template_generation(tmp_path):
     # Setup tests environment
     test_data_dir = Path(__file__).parent / "test_data"  # Relative to test file
     input_file = test_data_dir / "DSSAT48_data/Genotype/WHCER048.CUL"
+    output_dir = tmp_path / "output"
 
     # Create tests output directory
     output_dir.mkdir(parents=True, exist_ok=True)
