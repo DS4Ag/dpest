@@ -6,8 +6,8 @@ import pytest
 def test_cul_template_generation(tmp_path):
     """Test generation of cultivar template files"""
     # Setup tests environment
-    input_file = Path("test/DSSAT48_data/Genotype/WHCER048.CUL")
-    output_dir = tmp_path / "output"
+    test_data_dir = Path(__file__).parent / "test_data"  # Relative to test file
+    input_file = test_data_dir / "DSSAT48_data/Genotype/WHCER048.CUL"
 
     # Create tests output directory
     output_dir.mkdir(parents=True, exist_ok=True)
