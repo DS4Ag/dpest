@@ -1,4 +1,4 @@
-dimport dpest.wheat.utils as utils
+import dpest.wheat.utils as utils
 
 def test_uplantgro_runs():
     # Just verify that the function runs without raising an error
