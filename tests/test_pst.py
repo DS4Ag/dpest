@@ -17,16 +17,17 @@ def test_pst_file_creation(tmp_path):
     assert overview_file.exists(), f"Missing: {overview_file}"
     assert plantgro_file.exists(), f"Missing: {plantgro_file}"
 
-    # Create output directory for all generated files
-    output_dir = tmp_path / "pest_output"
+    # Create the output directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Step 1: Generate parameter dicts using cul/eco functions
     cul_tpl_path, cultivar_parameters = dpest.wheat.ceres.cul(
-        treatment='164.0 KG N/HA IRRIG',
-        variables=['LAID', 'CWAD', 'T#AD'],
-        plantgro_file_path=str(cul_file),
-        output_path=output_dir
+        P='P1D, P5',
+        G='G1, G2, G3',
+        PHINT='PHINT',
+        cultivar='MANITOU',
+        cul_file_path=str(input_file),
+        output_path=str(output_dir)
     )
 
     eco_tpl_path, ecotype_parameters = dpest.wheat.ceres.eco(
