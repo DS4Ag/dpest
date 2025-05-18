@@ -1,18 +1,22 @@
 def test_uplantgro(tmp_path):
     import shutil
+    from pathlib import Path
     from dpest.wheat.utils import uplantgro
 
-    # Setup test environment
+    # Locate repo root and test data file
+    repo_root = Path(__file__).parent.parent
+    original_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    # Setup isolated temp directory
     test_dir = tmp_path / "dssat_test"
     test_dir.mkdir()
-    original_file = Path('./tests/data/PlantGro_sample.OUT')
     test_file = test_dir / "PlantGro.OUT"
     shutil.copyfile(original_file, test_file)
 
     # Read original content
     original = test_file.read_text()
 
-    # Run function and capture result message
+    # Run the function
     result = uplantgro(
         plantgro_file=str(test_file),
         trno='164.0 KG N/HA IRRIG',
@@ -22,7 +26,7 @@ def test_uplantgro(tmp_path):
     # Read updated content
     updated = test_file.read_text()
 
-    # Assert based on result message
+    # Assert based on message
     if "No update required" in result:
         assert original == updated, "File should not be modified when no update is required."
     else:
