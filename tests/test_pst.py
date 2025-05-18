@@ -27,7 +27,7 @@ def test_pst_file_creation(tmp_path):
         G='G1, G2, G3',
         PHINT='PHINT',
         cultivar='MANITOU',
-        cul_file_path=str(input_file),
+        cul_file_path=str(cul_file),
         output_path=str(output_dir)
     )
 
