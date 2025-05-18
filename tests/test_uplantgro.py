@@ -18,8 +18,8 @@ def test_uplantgro(tmp_path):
 
     # Run the function
     result = uplantgro(
-        plantgro_file=str(test_file),
-        trno='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(test_file),
+        treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
