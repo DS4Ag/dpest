@@ -1,6 +1,5 @@
 import dpest
 from pathlib import Path
-import pandas as pd
 
 def test_pst_file_creation(tmp_path):
     """Test creation of a PEST control file (.PST) with all required inputs."""
@@ -18,30 +17,38 @@ def test_pst_file_creation(tmp_path):
     assert overview_file.exists(), f"Missing: {overview_file}"
     assert plantgro_file.exists(), f"Missing: {plantgro_file}"
 
+    # Create output directory for all generated files
+    output_dir = tmp_path / "pest_output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     # Step 1: Generate parameter dicts using cul/eco functions
     cul_tpl_path, cultivar_parameters = dpest.wheat.ceres.cul(
-        cul_file_path=str(cul_file),
-        cultivar_code="048",
-        parameters=["P1V", "P1D", "P5", "PHINT"]
+        treatment='164.0 KG N/HA IRRIG',
+        variables=['LAID', 'CWAD', 'T#AD'],
+        plantgro_file_path=str(cul_file),
+        output_path=output_dir
     )
 
     eco_tpl_path, ecotype_parameters = dpest.wheat.ceres.eco(
+        PHEN='P1, P2FR1',
+        VERN='VEFF',
+        ecotype='CAWH01',
         eco_file_path=str(eco_file),
-        ecotype_code="048",
-        parameters=["G1", "G2", "G3", "G4"]
+        output_path=output_dir
     )
 
     # Step 2: Generate observations using overview and plantgro
     overview_obs, overview_ins_path = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
-        treatment="164.0 KG N/HA IRRIG",
-        variables=["CWAM", "HWAM"]
+        output_path=output_dir
     )
 
     plantgro_obs, plantgro_ins_path = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        variables=['LAID', 'CWAD', 'T#AD'],
         plantgro_file_path=str(plantgro_file),
-        treatment="164.0 KG N/HA IRRIG",
-        variables=["LAID", "CWAD", "T#AD"]
+        output_path=output_dir
     )
 
     # Step 3: Define model command and file pairs
@@ -54,9 +61,6 @@ def test_pst_file_creation(tmp_path):
     ]
 
     # Step 4: Create .PST file
-    output_dir = tmp_path / "pest_output"
-    output_dir.mkdir(parents=True, exist_ok=True)
-
     dpest.pst(
         cultivar_parameters=cultivar_parameters,
         ecotype_parameters=ecotype_parameters,
@@ -75,6 +79,7 @@ def test_pst_file_creation(tmp_path):
     with open(pst_file, 'r') as file:
         lines = file.readlines()
         assert lines[0].strip().lower().startswith("pcf"), "PEST file must start with 'pcf'"
+        content = ''.join(lines).lower()
         required_sections = [
             '* control data',
             '* parameter groups',
