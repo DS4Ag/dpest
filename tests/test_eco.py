@@ -5,7 +5,7 @@ def test_eco_template_generation(tmp_path):
     """Test generation of ecotype template files."""
     # Setup paths
     repo_root = Path(__file__).parent.parent
-    input_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
 
     # Ensure the input file exists
@@ -14,13 +14,17 @@ def test_eco_template_generation(tmp_path):
     # Create the output directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    # Convert paths to strings
+    eco_file = str(eco_file)
+    output_dir = str(output_dir)
+
     # Call the dpest.wheat.ceres.eco function
     result = dpest.wheat.ceres.eco(
         PHEN='P1, P2FR1',
         VERN='VEFF',
         ecotype='CAWH01',
-        eco_file_path=str(input_file),
-        output_path=str(output_dir)
+        eco_file_path=eco_file,
+        output_path=output_dir
     )
 
     # 1. Validate result is not None

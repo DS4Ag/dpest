@@ -6,7 +6,7 @@ def test_overview_instruction_generation(tmp_path):
     """Test generation of instruction file and observations from PlantGro.OUT."""
     # Setup paths
     repo_root = Path(__file__).parent.parent
-    input_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
     output_dir = tmp_path / "output"
 
     # Ensure the input file exists
@@ -15,11 +15,15 @@ def test_overview_instruction_generation(tmp_path):
     # Create the output directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    # Convert paths to strings
+    plantgro_file = str(plantgro_file)
+    output_dir = str(output_dir)
+
     # Call the dpest.wheat.overview function
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD'],
-        plantgro_file_path=str(input_file),
+        plantgro_file_path=plantgro_file,
         output_path=str(output_dir)
     )
 
