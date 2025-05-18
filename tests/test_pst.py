@@ -63,7 +63,7 @@ def test_pst_file_creation(tmp_path):
     model_command = r'py "C:\pest18\run_dssat.py"'
     input_output_pairs = [
         (str(cul_tpl_path), cul_file),
-        (str(eco_tpl_path), eco_file)),
+        (str(eco_tpl_path), eco_file),
         (str(overview_ins_path), overview_file),
         (str(plantgro_ins_path), plantgro_file)
     ]
