@@ -1,7 +1,7 @@
 import dpest
 from pathlib import Path
 
-def test_eco_template_generation(tmp_path):
+def test_eco(tmp_path):
     """Test generation of ecotype template files."""
     # Setup paths
     repo_root = Path(__file__).parent.parent

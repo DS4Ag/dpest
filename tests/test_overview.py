@@ -2,7 +2,7 @@ import dpest
 from pathlib import Path
 import pandas as pd
 
-def test_overview_instruction_generation(tmp_path):
+def test_overview(tmp_path):
     """Test generation of instruction file and observations from OVERVIEW.OUT."""
     # Setup paths
     repo_root = Path(__file__).parent.parent

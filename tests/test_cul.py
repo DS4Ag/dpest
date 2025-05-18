@@ -1,7 +1,7 @@
 import dpest
 from pathlib import Path
 
-def test_cul_template_generation(tmp_path):
+def test_cul(tmp_path):
     """Test generation of cultivar template files."""
     # Setup paths
     repo_root = Path(__file__).parent.parent

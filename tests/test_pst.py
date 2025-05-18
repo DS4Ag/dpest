@@ -1,7 +1,7 @@
 import dpest
 from pathlib import Path
 
-def test_pst_file_creation(tmp_path):
+def test_pst(tmp_path):
     """Test creation of a PEST control file (.PST) with all required inputs."""
 
     # Define test file paths
