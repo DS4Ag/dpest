@@ -1,4 +1,4 @@
-ef test_uplantgro(tmp_path, capsys):
+def test_uplantgro(tmp_path, capsys):
     import shutil
     from pathlib import Path
     from dpest.wheat.utils import uplantgro
