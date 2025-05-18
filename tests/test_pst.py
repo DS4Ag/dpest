@@ -17,15 +17,16 @@ def test_pst_file_creation(tmp_path):
     assert overview_file.exists(), f"Missing: {overview_file}"
     assert plantgro_file.exists(), f"Missing: {plantgro_file}"
 
-    # Convert paths to strings after checks
+    # Create the output directory
+    output_dir = tmp_path / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Convert paths to strings
     cul_file = str(cul_file)
     eco_file = str(eco_file)
     overview_file = str(overview_file)
     plantgro_file = str(plantgro_file)
-
-    # Create the output directory
-    output_dir = tmp_path / "output"
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = str(output_dir)
 
     # Step 1: Generate parameter dicts using cul/eco functions
     cultivar_parameters, cul_tpl_path = dpest.wheat.ceres.cul(
@@ -34,7 +35,7 @@ def test_pst_file_creation(tmp_path):
         PHINT='PHINT',
         cultivar='MANITOU',
         cul_file_path=cul_file,
-        output_path=str(output_dir)
+        output_path=output_dir
     )
 
     ecotype_parameters, eco_tpl_path = dpest.wheat.ceres.eco(
@@ -90,7 +91,7 @@ def test_pst_file_creation(tmp_path):
         content = ''.join(lines).lower()
         required_sections = [
             '* control data',
-            '* lsqr'
+            '* lsqr',
             '* parameter groups',
             '* parameter data',
             '* observation groups',
