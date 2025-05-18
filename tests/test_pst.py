@@ -26,7 +26,7 @@ def test_pst_file_creation(tmp_path):
     eco_file = str(eco_file)
     overview_file = str(overview_file)
     plantgro_file = str(plantgro_file)
-    output_dir = str(output_dir)
+    output_dir_str = str(output_dir)
 
     # Step 1: Generate parameter dicts using cul/eco functions
     cultivar_parameters, cul_tpl_path = dpest.wheat.ceres.cul(
@@ -35,7 +35,7 @@ def test_pst_file_creation(tmp_path):
         PHINT='PHINT',
         cultivar='MANITOU',
         cul_file_path=cul_file,
-        output_path=output_dir
+        output_path=output_dir_str
     )
 
     ecotype_parameters, eco_tpl_path = dpest.wheat.ceres.eco(
@@ -43,21 +43,21 @@ def test_pst_file_creation(tmp_path):
         VERN='VEFF',
         ecotype='CAWH01',
         eco_file_path=eco_file,
-        output_path=str(output_dir)
+        output_path=output_dir_str
     )
 
     # Step 2: Generate observations using overview and plantgro
     overview_obs, overview_ins_path = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=overview_file,
-        output_path=str(output_dir)
+        output_path=output_dir_str
     )
 
     plantgro_obs, plantgro_ins_path = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD'],
         plantgro_file_path=plantgro_file,
-        output_path=str(output_dir)
+        output_path=output_dir_str
     )
 
     # Step 3: Define model command and file pairs
@@ -76,7 +76,7 @@ def test_pst_file_creation(tmp_path):
         dataframe_observations=[overview_obs, plantgro_obs],
         model_comand_line=model_command,
         input_output_file_pairs=input_output_pairs,
-        output_path=str(output_dir),
+        output_path=output_dir_str,
         pst_filename="PEST_CONTROL.pst"
     )
 
