@@ -18,6 +18,7 @@ def test_pst_file_creation(tmp_path):
     assert plantgro_file.exists(), f"Missing: {plantgro_file}"
 
     # Create the output directory
+    output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Step 1: Generate parameter dicts using cul/eco functions
