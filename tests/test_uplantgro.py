@@ -1,4 +1,4 @@
-def test_uplantgro(tmp_path):
+ef test_uplantgro(tmp_path, capsys):
     import shutil
     from pathlib import Path
     from dpest.wheat.utils import uplantgro
@@ -17,17 +17,17 @@ def test_uplantgro(tmp_path):
     original = test_file.read_text()
 
     # Run the function
-    result = uplantgro(
+    uplantgro(
         plantgro_file_path=str(test_file),
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
-    # Read updated content
+    # Capture stdout and check message
+    captured = capsys.readouterr()
     updated = test_file.read_text()
 
-    # Assert based on message
-    if "No update required" in result:
+    if "No update required" in captured.out:
         assert original == updated, "File should not be modified when no update is required."
     else:
         assert original != updated, "File should be modified when an update is required."
