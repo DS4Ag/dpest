@@ -9,7 +9,7 @@ def test_eco_template_generation(tmp_path):
     output_dir = tmp_path / "output"
 
     # Ensure the input file exists
-    assert input_file.exists(), f"Input file not found: {input_file}"
+    assert eco_file.exists(), f"Input file not found: {eco_file}"
 
     # Create the output directory
     output_dir.mkdir(parents=True, exist_ok=True)

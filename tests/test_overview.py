@@ -10,7 +10,7 @@ def test_overview_instruction_generation(tmp_path):
     output_dir = tmp_path / "output"
 
     # Ensure the input file exists
-    assert input_file.exists(), f"Input file not found: {input_file}"
+    assert overview_file.exists(), f"Input file not found: {overview_filee}"
 
     # Create the output directory
     output_dir.mkdir(parents=True, exist_ok=True)
