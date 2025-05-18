@@ -36,21 +36,21 @@ def test_pst_file_creation(tmp_path):
         VERN='VEFF',
         ecotype='CAWH01',
         eco_file_path=str(eco_file),
-        output_path=output_dir
+        output_path=str(output_dir)
     )
 
     # Step 2: Generate observations using overview and plantgro
     overview_obs, overview_ins_path = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
-        output_path=output_dir
+        output_path=str(output_dir)
     )
 
     plantgro_obs, plantgro_ins_path = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD'],
         plantgro_file_path=str(plantgro_file),
-        output_path=output_dir
+        output_path=str(output_dir)
     )
 
     # Step 3: Define model command and file pairs
