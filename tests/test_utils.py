@@ -1,10 +1,10 @@
 from pathlib import Path
 from dpest.utils import *
 
-# Get repo root
+# Setup path
 repo_root = Path(__file__).parent.parent
-# Set full path to the .pst file in dpest_out
-pst_file_path = repo_root / "tests/dpest_out/PEST_CONTROL.pst"
+pst_file_path = repo_root / "tests/dpest_out/WHCER048.ECO"
+
 
 # Set RSTFLE to “restart”
 rstfle(pst_file_path, "restart")
