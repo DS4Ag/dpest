@@ -3,7 +3,7 @@ from dpest.utils import *
 
 # Setup path
 repo_root = Path(__file__).parent.parent
-pst_file_path = repo_root / "tests/dpest_out/WHCER048.ECO"
+pst_file_path = repo_root / "tests/dpest_out/PEST_CONTROL.pst"
 
 
 # Set RSTFLE to “restart”
