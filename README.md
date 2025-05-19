@@ -36,11 +36,18 @@ pip install dpest
 2.  **DSSAT Experiment Data:** You'll need a DSSAT experiment to work with. The example below uses the `SWSW7501WH N RESPONSE` wheat experiment.
 3.  **PEST Software:** You’ll need to have [PEST (version 18)](https://pesthomepage.org/) installed.
 
-## Basic Usage
+## How to Use dpest?
+
+### Jupyter notebook example
+We provide a Jupyter notebook example ([usage_example.ipynb](https://github.com/DS4Ag/dpest/blob/main/examples/wheat/ceres/usage_example.ipynb)) that demonstrates all package functions in a practical workflow and includes steps for using PEST’s “check” functions to validate the generated input files.
 
 
-The following steps provide a brief overview of how to use `dpest`. For a **detailed, step-by-step example**, please refer to the official documentation:  
+### Read the Docs
+For a **detailed, step-by-step example**, please refer to the official documentation:  
 [Complete Example on Read the Docs](https://dpest.readthedocs.io/en/latest/example.html)  
+
+### Basic Usage
+The following steps provide a brief overview of how to use `dpest`. 
 
 1.  **Locate DSSAT Genotype Files:** The cultivar (`.CUL`) and ecotype (`.ECO`) files are typically included with the DSSAT installation. These are usually found in the `C:\DSSAT48\Genotype\` directory.
 2.  **Run a DSSAT Simulation:** Execute a DSSAT simulation for your chosen wheat experiment using the CERES model. This will generate the necessary output files (`OVERVIEW.OUT` and `PlantGro.OUT`), typically found in the `C:\DSSAT48\Wheat\` directory.
