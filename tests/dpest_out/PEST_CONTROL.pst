@@ -1,0 +1,77 @@
+pcf
+* control data
+             restart          estimation
+         9        32         5         0         6
+         2         2              single               point         1         0         0
+   1.000000E+01  -3.000000E+00   3.000000E-01   1.000000E-02        10
+   1.000000E+01   1.000000E+01   1.000000E-03
+   1.000000E-01
+      50   1.000000E-02   3   3   1.000000E-02   3
+         1         1         1
+* lsqr
+  1
+  0.0001  0.0001  28.0  28
+  0
+* parameter groups
+P  relative  1.0000000000E-02  0.0001  switch  2.0000000000E+00  parabolic
+G  relative  1.0000000000E-02  0.0001  switch  2.0000000000E+00  parabolic
+PHINT  relative  1.0000000000E-02  0.0001  switch  2.0000000000E+00  parabolic
+PHEN  relative  1.0000000000E-02  0.0001  switch  2.0000000000E+00  parabolic
+VERN  relative  1.0000000000E-02  0.0001  switch  2.0000000000E+00  parabolic
+* parameter data
+G1                    none                  relative              1.2110000000E+01      1.0000000000E+01      5.0000000000E+01      G                     1.0000000000E+00      0.0000000000E+00      1          
+G2                    none                  relative              6.3480000000E+01      1.0000000000E+01      8.0000000000E+01      G                     1.0000000000E+00      0.0000000000E+00      1          
+G3                    none                  relative              2.2140000000E+00      5.0000000000E-01      8.0000000000E+00      G                     1.0000000000E+00      0.0000000000E+00      1          
+P1                    none                  relative              3.6200000000E+02      1.0000000000E+02      5.0000000000E+02      PHEN                  1.0000000000E+00      0.0000000000E+00      1          
+P1D                   none                  relative              1.3120000000E+01      0.0000000000E+00      2.0000000000E+02      P                     1.0000000000E+00      0.0000000000E+00      1          
+P2F                   none                  relative              2.5000000000E-01      0.0000000000E+00      6.0000000000E-01      PHEN                  1.0000000000E+00      0.0000000000E+00      1          
+P5                    none                  relative              3.3140000000E+02      1.0000000000E+02      9.9900000000E+02      P                     1.0000000000E+00      0.0000000000E+00      1          
+PHI                   none                  relative              8.6000000000E+01      3.0000000000E+01      1.5000000000E+02      PHINT                 1.0000000000E+00      0.0000000000E+00      1          
+VEF                   none                  relative              5.0000000000E-01      0.0000000000E+00      1.0000000000E+00      VERN                  1.0000000000E+00      0.0000000000E+00      1          
+* observation groups
+phenology            
+yield                
+lai                  
+biomass              
+nitrogen             
+plant_struct         
+* observation data
+Anthesis_DAP          5.9000000000E+01      1.0000000000E+00      phenology            
+Maturity_DAP          8.8000000000E+01      1.0000000000E+00      phenology            
+Productwtkgdmhanolos  4.8830000000E+03      1.0000000000E+00      yield                
+Productunitweightgdm  2.3000000000E-02      1.0000000000E+00      yield                
+Product_number_nom2   2.0769000000E+04      1.0000000000E+00      yield                
+Productnumbernogroup  2.4300000000E+01      1.0000000000E+00      yield                
+Productharvestindexr  4.8000000000E-01      1.0000000000E+00      yield                
+Maximumleafareaindex  3.2000000000E+00      1.0000000000E+00      lai                  
+Finalshootnumberm2    8.5500000000E+02      1.0000000000E+00      yield                
+Canopytopswtkgdmha    1.0142000000E+04      1.0000000000E+00      biomass              
+Vegetativewtkgdmha    5.2590000000E+03      1.0000000000E+00      biomass              
+Aboveground_N_kgha    1.6580000000E+02      1.0000000000E+00      nitrogen             
+Vegetative_N_kgha     3.3500000000E+01      1.0000000000E+00      nitrogen             
+Product_N_kgha        1.3230000000E+02      1.0000000000E+00      yield                
+ProductNharvestindex  8.0000000000E-01      1.0000000000E+00      yield                
+Product_N_            2.7000000000E+00      1.0000000000E+00      yield                
+Vegetative_N_         6.0000000000E-01      1.0000000000E+00      nitrogen             
+LAID_75167            1.7000000000E-01      1.0000000000E+00      lai                  
+CWAD_75167            4.9000000000E+01      1.0000000000E+00      biomass              
+T#AD_75167            1.6400000000E+02      1.0000000000E+00      plant_struct         
+LAID_75174            9.9000000000E-01      1.0000000000E+00      lai                  
+CWAD_75174            5.1500000000E+02      1.0000000000E+00      biomass              
+T#AD_75174            7.0700000000E+02      1.0000000000E+00      plant_struct         
+LAID_75192            3.2300000000E+00      1.0000000000E+00      lai                  
+CWAD_75192            3.3050000000E+03      1.0000000000E+00      biomass              
+T#AD_75192            1.2170000000E+03      1.0000000000E+00      plant_struct         
+LAID_75204            1.8700000000E+00      1.0000000000E+00      lai                  
+CWAD_75204            6.9380000000E+03      1.0000000000E+00      biomass              
+T#AD_75204            8.5500000000E+02      1.0000000000E+00      plant_struct         
+LAID_75233            0.0000000000E+00      1.0000000000E+00      lai                  
+CWAD_75233            1.0412000000E+04      1.0000000000E+00      biomass              
+T#AD_75233            8.5500000000E+02      1.0000000000E+00      plant_struct         
+* model command line
+py "C:\pest18\run_dssat.py"
+* model input/output
+"C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest\examples\wheat\ceres\WHCER048_CUL.TPL" ./DSSAT48_data/Genotype/WHCER048.CUL
+"C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest\examples\wheat\ceres\WHCER048_ECO.TPL" ./DSSAT48_data/Genotype/WHCER048.ECO
+"C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest\examples\wheat\ceres\OVERVIEW.ins" ./DSSAT48_data/Wheat/OVERVIEW.OUT
+"C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest\examples\wheat\ceres\PlantGro.ins" ./DSSAT48_data/Wheat/PlantGro.OUT
