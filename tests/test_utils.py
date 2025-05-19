@@ -34,7 +34,7 @@ relparmax(pst_file_path, 0.2)
 facparmax(pst_file_path, 2.0)
 
 # Set FACORIG to 01
-facorig(, 0.1)
+facorig(test_file_path, 0.1)
 
 # Set PHIREDSWH to 0.1
 phiredswh(pst_file_path, 0.1)
