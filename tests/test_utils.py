@@ -4,7 +4,7 @@ from dpest.utils import *
 # Get repo root
 repo_root = Path(__file__).parent.parent
 # Set full path to the .pst file in dpest_out
-pst_file_path = repo_root / "dpest_out/PEST_CONTROL.pst"
+pst_file_path = repo_root / "tests/dpest_out/PEST_CONTROL.pst"
 
 # Set RSTFLE to “restart”
 rstfle(pst_file_path, "restart")
@@ -34,7 +34,7 @@ relparmax(pst_file_path, 0.2)
 facparmax(pst_file_path, 2.0)
 
 # Set FACORIG to 01
-facorig(test_file_path, 0.1)
+facorig(pst_file_path, 0.1)
 
 # Set PHIREDSWH to 0.1
 phiredswh(pst_file_path, 0.1)
