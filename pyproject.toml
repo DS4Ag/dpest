@@ -5,7 +5,7 @@ authors = [{ name = "Luis Vargas Rojas", email = "luisvargasrojas@gmail.com" }]
 description = "A Python package for automating PEST (Parameter ESTimation) file creation for DSSAT crop model calibration using time series data. It generates template, instruction, and control files for parameter estimation, including tools for extending time series data."
 
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -30,3 +30,7 @@ build-backend = "setuptools.build_meta"
 [project.urls]
 Homepage = "https://github.com/DS4Ag/dpest"
 Issues = "https://github.com/DS4Ag/dpest/issues"
+[dependency-groups]
+dev = [
+    "pytest>=8.4.0",
+]
