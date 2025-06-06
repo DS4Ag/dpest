@@ -179,11 +179,72 @@ rmv_splitcols(“PEST_CONTROL.pst”)
 **Full List of Utility Functions:**  
 For the complete reference of available utility functions and their descriptions, see the [dpest ReadTheDocs Utils page](https://dpest.readthedocs.io/en/latest/utils.html).
 
-### License
+## Developer and Tester Setup Instructions for dpest
 
-`dpest` is released under the [GNU General Public License v3.0 only](https://www.gnu.org/licenses/gpl-3.0.html).
+These instructions will guide you through setting up your environment, installing dependencies, and running tests for the `dpest` package.
 
-### Community Guidelines
+### Prerequisites
+
+- Python 3.10 or higher installed
+- Git installed
+
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/DS4Ag/dpest.git
+cd dpest
+```
+
+### Step 2: Create and Activate a Virtual Environment
+
+**On Windows:**
+```powershell
+py -3.10 -m venv .venv
+.\.venv\Scripts\activate
+```
+
+**On macOS/Linux:**
+```bash
+python3.10 -m venv .venv
+source .venv/bin/activate
+```
+
+### Step 3: Install PDM (Python Development Master)
+
+PDM is a modern Python package and dependency manager recommended for development and testing.
+
+**Install PDM using pipx (recommended):**
+```bash
+python -m pip install --user pipx
+pipx ensurepath
+pipx install pdm
+```
+
+**Or install PDM using pip:**
+```bash
+pip install --user pdm
+```
+
+### Step 4: Install Project Dependencies
+
+```bash
+pdm install
+```
+
+### Step 5: Install Development Dependencies (for testing)
+
+```bash
+pdm install --dev
+```
+
+### Step 6: Run the Test Suite
+
+```bash
+pdm run pytest tests/ -v
+```
+
+## Community Guidelines
 
 We welcome contributions from the community!
 
@@ -192,3 +253,7 @@ We welcome contributions from the community!
 - For questions or support, open an issue or participate in [GitHub Discussions](https://github.com/DS4Ag/dpest/discussions) if enabled.
 - All participants are expected to follow the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/0/code_of_conduct/)
 - For detailed instructions on how to contribute, please see our [contribution guidelines](CONTRIBUTING.md).
+
+## License
+
+`dpest` is released under the [GNU General Public License v3.0 only](https://www.gnu.org/licenses/gpl-3.0.html).
