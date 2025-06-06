@@ -25,7 +25,8 @@ jobs:
           pdm run coverage run -m pytest
           pdm run coverage xml
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.xml
+      - name: Upload coverage reports to Codecov
+          uses: codecov/codecov-action@v5
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            slug: DS4Ag/dpest
