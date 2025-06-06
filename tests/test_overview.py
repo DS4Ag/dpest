@@ -213,3 +213,61 @@ def test_overview_special_characters_in_treatment(tmp_path, capsys):
         assert not df.empty
         assert Path(ins_path).exists()
 
+
+@pytest.mark.parametrize("mrk, smk, expected_error", [
+    ('a', '!', "Invalid mrk character"),
+    ('!', '!', "Invalid mrk character")  # Both markers being '!' is invalid
+])
+def test_overview_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        mrk=mrk,
+        smk=smk
+    )
+
+    captured = capsys.readouterr()
+    assert expected_error in captured.out
+    assert result is None
+
+
+def test_overview_variable_filtering(tmp_path):
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    test_vars = ['Anthesis (DAP)', 'Product wt (kg dm/ha;no loss)']
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        variables=test_vars
+    )
+
+    df, _ = result
+    # Check for cleaned variable name patterns
+    assert any('Anthesis_DAP' in name for name in df['variable_name'].values)
+    assert any('Productwtkgdmha' in name for name in df['variable_name'].values)
+
+
+def test_overview_different_output_formats(tmp_path):
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    # Test only known valid combinations
+    valid_markers = [('~', '!'), ('@', '#')]
+
+    for mrk, smk in valid_markers:
+        result = dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path),
+            mrk=mrk,
+            smk=smk
+        )
+        df, ins_path = result
+        assert Path(ins_path).exists()
