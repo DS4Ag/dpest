@@ -322,9 +322,6 @@ def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
     assert "FileNotFoundError: YAML file not found:" in captured.out
     assert result is None
 
-##################################
-##################################
-
 def test_overview_missing_treatment_argument(tmp_path, capsys):
     """Test missing treatment argument validation"""
     repo_root = Path(__file__).parent.parent
@@ -338,3 +335,20 @@ def test_overview_missing_treatment_argument(tmp_path, capsys):
     captured = capsys.readouterr()
     assert "ValueError: The 'treatment' argument is required and must be specified by the user." in captured.out
     assert result is None
+
+##################################
+##################################
+
+def test_overview_variables_accepts_string(tmp_path):
+    """Test that passing a string for 'variables' is accepted (converted to list internally)."""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    # Just call the function with a string for variables; it should not raise an error
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        variables='Anthesis (DAP)'
+    )
+    assert result is not None  # The function should run and return a result
