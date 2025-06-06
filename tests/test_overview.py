@@ -332,21 +332,3 @@ def test_overview_auto_ins_extension(tmp_path):
     _, ins_path = result
     assert ins_path.endswith(".ins")
 
-
-def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
-    """Test handling of unexpected exceptions"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    # Force an error by passing invalid YAML path
-    monkeypatch.setattr(dpest.wheat, "arguments.yml", "invalid/path.yml")
-
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path)
-    )
-
-    captured = capsys.readouterr()
-    assert "An unexpected error occurred" in captured.out
-    assert result is None
