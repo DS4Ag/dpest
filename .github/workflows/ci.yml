@@ -1,3 +1,9 @@
+name: CI with Coverage
+
+on:
+  push:
+  pull_request:
+
 jobs:
   test-and-coverage:
     runs-on: ubuntu-latest
