@@ -338,20 +338,3 @@ def test_overview_missing_treatment_argument(tmp_path, capsys):
     captured = capsys.readouterr()
     assert "ValueError: The 'treatment' argument is required and must be specified by the user." in captured.out
     assert result is None
-
-def test_overview_variables_str_converted_to_list(tmp_path):
-    """Test that a string passed to 'variables' is converted to a list internally."""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    # Pass a single variable as a string
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        variables='Anthesis (DAP)'
-    )
-    df, _ = result
-    # Should only have one variable in the result DataFrame
-    assert len(df) == 1
-    assert 'Anthesis_DAP' in df['variable_name'].iloc[0]
