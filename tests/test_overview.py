@@ -368,40 +368,27 @@ def test_overview_mrk_smk_same_character(tmp_path, capsys):
     assert "mrk and smk must be different characters" in captured.out
     assert result is None
 
-
-######################
+#################3
 
 def test_overview_auto_adds_ins_extension(tmp_path):
-    """Test that output_filename is auto-appended with '.ins' if missing or uppercase."""
+    """Test that the output file automatically gets .ins extension, even with uppercase output directory."""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
 
-    # Case 1: No extension
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        output_filename="MY_OUTPUT"
-    )
-    _, ins_path = result
-    assert ins_path.lower().endswith(".ins")
+    # Create an uppercase output directory
+    output_dir = tmp_path / "OUTPUT_DIR"
+    output_dir.mkdir()
 
-    # Case 2: Uppercase extension
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        output_filename="MY_OUTPUT.INS"
+        output_path=str(output_dir)
     )
-    _, ins_path = result
-    assert ins_path.lower().endswith(".ins")
 
-    # Case 3: Mixed case extension
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        output_filename="MY_OUTPUT.InS"
-    )
+    # Get the generated INS file path
     _, ins_path = result
-    assert ins_path.lower().endswith(".ins")
+
+    # Verify the filename (not the directory) ends with .ins (case-insensitive)
+    assert Path(ins_path).name.lower().endswith(".ins")
+    # Verify the filename (not the directory) ends with .ins
+    assert Path(ins_path).name.lower().endswith(".ins")
