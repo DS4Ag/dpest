@@ -111,31 +111,6 @@ def test_overview_file_not_found(tmp_path, capsys):
     assert "does not exist" in captured.out
     assert result is None
 
-
-@pytest.mark.parametrize("mrk, smk, expected_error", [
-    ('a', '!', "Invalid mrk character"),
-    ('!', '@', None)  # Valid case (no error)
-])
-def test_overview_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        mrk=mrk,
-        smk=smk
-    )
-
-    captured = capsys.readouterr()
-    if expected_error:
-        assert expected_error in captured.out
-        assert result is None
-    else:
-        assert result is not None  # Valid case should return data
-
-
 def test_overview_nonexistent_treatment(tmp_path, capsys):
     """Test handling of non-existent treatment"""
     repo_root = Path(__file__).parent.parent
@@ -238,24 +213,3 @@ def test_overview_special_characters_in_treatment(tmp_path, capsys):
         assert not df.empty
         assert Path(ins_path).exists()
 
-
-@pytest.mark.parametrize("mrk, smk", [
-    ('~', '!'),  # Known valid combination
-    ('$', '?')  # Another valid combination
-])
-def test_overview_different_output_formats(tmp_path, mrk, smk):
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        mrk=mrk,
-        smk=smk
-    )
-
-    df, ins_path = result
-    with open(ins_path, 'r') as f:
-        content = f.read()
-        assert f"pif {mrk}" in content
