@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import pytest
 
-def test_overview_basic(tmp_path):
+def test_overview(tmp_path):
     """Test generation of instruction file and observations from OVERVIEW.OUT."""
     # Setup paths
     repo_root = Path(__file__).parent.parent
