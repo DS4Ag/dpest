@@ -336,9 +336,6 @@ def test_overview_missing_treatment_argument(tmp_path, capsys):
     assert "ValueError: The 'treatment' argument is required and must be specified by the user." in captured.out
     assert result is None
 
-##################################
-##################################
-
 def test_overview_variables_accepts_string(tmp_path):
     """Test that passing a string for 'variables' is accepted (converted to list internally)."""
     repo_root = Path(__file__).parent.parent
@@ -352,3 +349,20 @@ def test_overview_variables_accepts_string(tmp_path):
         variables='Anthesis (DAP)'
     )
     assert result is not None  # The function should run and return a result
+
+#############################
+############################
+
+def test_overview_mrk_smk_same_character(tmp_path):
+    """Test that using the same character for mrk and smk raises an error."""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    with pytest.raises(ValueError, match="mrk and smk must be different characters."):
+        dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path),
+            mrk='~',
+            smk='~'
+        )
