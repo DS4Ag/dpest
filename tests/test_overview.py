@@ -272,8 +272,6 @@ def test_overview_different_output_formats(tmp_path):
         df, ins_path = result
         assert Path(ins_path).exists()
 
-##################################
-##################################
 def test_overview_missing_yaml_file(tmp_path, capsys):
     """Test handling of missing YAML arguments file"""
     # Simulate missing OVERVIEW.OUT file (which triggers the file not found branch)
@@ -324,16 +322,36 @@ def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
     assert "FileNotFoundError: YAML file not found:" in captured.out
     assert result is None
 
+##################################
+##################################
 
-def test_overview_missing_treatment_argument(tmp_path):
+def test_overview_missing_treatment_argument(tmp_path, capsys):
     """Test missing treatment argument validation"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
 
-    with pytest.raises(ValueError, match="The 'treatment' argument is required and must be specified by the user."):
-        dpest.wheat.overview(
-            treatment=None,
-            overview_file_path=str(overview_file),
-            output_path=str(tmp_path)
-        )
+    result = dpest.wheat.overview(
+        treatment=None,
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path)
+    )
+    captured = capsys.readouterr()
+    assert "ValueError: The 'treatment' argument is required and must be specified by the user." in captured.out
+    assert result is None
 
+def test_overview_variables_str_converted_to_list(tmp_path):
+    """Test that a string passed to 'variables' is converted to a list internally."""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    # Pass a single variable as a string
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        variables='Anthesis (DAP)'
+    )
+    df, _ = result
+    # Should only have one variable in the result DataFrame
+    assert len(df) == 1
+    assert 'Anthesis_DAP' in df['variable_name'].iloc[0]
