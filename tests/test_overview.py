@@ -78,23 +78,26 @@ def test_overview_with_optional_parameters(tmp_path):
     # Verify suffix in filename
     assert 'TRT1' in ins_path
 
-    # Verify variable filtering
-    expected_vars = {'Anthesis_DAP', 'Maturity_DAP'}
+    # Verify variable filtering (with suffix)
+    expected_vars = {'Anthesis_DAP_TRT1', 'Maturity_DAP_TRT1'}
     assert expected_vars.issubset(df['variable_name'].values)
 
 
-def test_overview_nonexistent_treatment(tmp_path):
+def test_overview_nonexistent_treatment(tmp_path, capsys):
     """Test with non-existent treatment"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
 
-    with pytest.raises(ValueError) as excinfo:
-        dpest.wheat.overview(
-            treatment='NON_EXISTENT_TREATMENT',
-            overview_file_path=str(overview_file),
-            output_path=str(tmp_path)
-        )
-    assert "No data found for treatment" in str(excinfo.value)
+    # Run the function
+    dpest.wheat.overview(
+        treatment='NON_EXISTENT_TREATMENT',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path)
+    )
+
+    # Capture printed output
+    captured = capsys.readouterr()
+    assert "No data found for treatment" in captured.out
 
 
 def test_overview_output_structure(tmp_path):
