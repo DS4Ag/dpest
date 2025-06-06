@@ -323,3 +323,17 @@ def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
     captured = capsys.readouterr()
     assert "FileNotFoundError: YAML file not found:" in captured.out
     assert result is None
+
+
+def test_overview_missing_treatment_argument(tmp_path):
+    """Test missing treatment argument validation"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    with pytest.raises(ValueError, match="The 'treatment' argument is required and must be specified by the user."):
+        dpest.wheat.overview(
+            treatment=None,
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path)
+        )
+
