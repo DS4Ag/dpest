@@ -1,0 +1,12 @@
+[run]
+branch = True
+source = dpest
+omit =
+    tests/*
+    */__init__.py
+    dpest/arguments.yml  # Exclude non-Python files
+    dpest/wheat/arguments.yml
+    dpest/wheat/ceres/arguments.yml
+
+[report]
+show_missing = True
