@@ -33,4 +33,5 @@ Issues = "https://github.com/DS4Ag/dpest/issues"
 [dependency-groups]
 dev = [
     "pytest>=8.4.0",
+    "coverage>=7.0.0",
 ]
