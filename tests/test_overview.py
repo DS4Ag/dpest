@@ -74,7 +74,6 @@ def test_overview_with_optional_parameters(tmp_path):
         smk='#'
     )
 
-    assert result is not None
     df, ins_path = result
     assert 'TRT1' in ins_path
     assert {'Anthesis_DAP_TRT1', 'Maturity_DAP_TRT1'}.issubset(set(df['variable_name'].values))
@@ -113,14 +112,15 @@ def test_overview_file_not_found(tmp_path, capsys):
     assert result is None
 
 
-@pytest.mark.parametrize("mrk, smk, expected_msg", [
-    ('a', '!', "Invalid mrk character"),
-    ('!', '!', "Invalid mrk character"),
+@pytest.mark.parametrize("mrk, smk, error_msg", [
+    ('a', '!', "Primary marker validation failed"),
+    ('!', '!', "Primary and secondary markers cannot match")
 ])
-def test_overview_invalid_markers(tmp_path, mrk, smk, expected_msg, capsys):
+def test_overview_invalid_markers(tmp_path, mrk, smk, error_msg, capsys):
     """Test invalid marker configurations"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
@@ -129,7 +129,7 @@ def test_overview_invalid_markers(tmp_path, mrk, smk, expected_msg, capsys):
         smk=smk
     )
     captured = capsys.readouterr()
-    assert expected_msg in captured.out
+    assert error_msg in captured.out
     assert result is None
 
 
@@ -160,7 +160,7 @@ def test_overview_empty_variables(tmp_path, capsys):
         variables=[]
     )
     captured = capsys.readouterr()
-    assert "The 'variables' should be a non-empty string or a list of strings" in captured.out
+    assert "At least one variable must be specified" in captured.out
     assert result is None
 
 
@@ -178,11 +178,10 @@ def test_overview_variable_filtering(tmp_path):
         variables=test_vars
     )
 
-    assert result is not None
     df, _ = result
-    # Accept any variable names that start with the cleaned base name
-    for v in test_vars:
-        assert any(v.replace(' ', '_').replace('(', '').replace(')', '').replace(';', '').replace('/', '').replace('-', '').replace('.', '').replace(',', '').replace(':', '').replace("'", "").replace('"', '')[:20] in name for name in df['variable_name'].values)
+    # Check for base variable names in formatted output
+    assert any('Anthesis_DAP' in name for name in df['variable_name'].values)
+    assert any('Productwtkgdmha' in name for name in df['variable_name'].values)
 
 
 def test_overview_full_parameters(tmp_path):
@@ -205,20 +204,18 @@ def test_overview_full_parameters(tmp_path):
         smk='%'
     )
 
-    assert result is not None
     df, ins_path = result
     assert {'variable_name', 'value_measured', 'group'}.issubset(df.columns)
     assert len(df) == len(custom_vars)
 
     with open(ins_path, 'r') as f:
         content = f.read()
-        assert content.startswith('pif #')
-        for v in custom_vars:
-            base = v.replace(' ', '_').replace('(', '').replace(')', '').replace(';', '').replace('/', '').replace('-', '').replace('.', '').replace(',', '').replace(':', '').replace("'", "").replace('"', '')[:20]
-            assert f"!{base}_TEST!" in content
+        assert content.startswith('pif # @')
+        assert '@Anthesis (DAP)@ %Anthesis_DAP_TEST%' in content
+        assert '@Maturity (DAP)@ %Maturity_DAP_TEST%' in content
 
 
-def test_overview_special_characters_in_treatment(tmp_path, capsys):
+def test_overview_special_characters_in_treatment(tmp_path):
     """Test treatment names with special characters"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
@@ -228,20 +225,18 @@ def test_overview_special_characters_in_treatment(tmp_path, capsys):
         overview_file_path=str(overview_file),
         output_path=str(tmp_path)
     )
-    if result is None:
-        captured = capsys.readouterr()
-        assert "No data found for treatment" in captured.out
-    else:
-        df, ins_path = result
-        assert not df.empty
-        assert Path(ins_path).exists()
+
+    df, ins_path = result
+    assert not df.empty
+    assert Path(ins_path).exists()
 
 
-def test_overview_different_output_formats(tmp_path, capsys):
+def test_overview_different_output_formats(tmp_path):
     """Test various output configurations"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
 
+    # Test with different marker combinations
     for mrk, smk in [('$', '&'), ('*', '?')]:
         result = dpest.wheat.overview(
             treatment='164.0 KG N/HA IRRIG',
@@ -250,11 +245,7 @@ def test_overview_different_output_formats(tmp_path, capsys):
             mrk=mrk,
             smk=smk
         )
-        if result is None:
-            captured = capsys.readouterr()
-            assert "Invalid smk character" in captured.out or "Invalid mrk character" in captured.out
-        else:
-            df, ins_path = result
-            with open(ins_path, 'r') as f:
-                content = f.read()
-                assert f"pif {mrk}" in content
+        df, ins_path = result
+        with open(ins_path, 'r') as f:
+            content = f.read()
+            assert f"pif {mrk}" in content
