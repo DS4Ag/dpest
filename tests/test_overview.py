@@ -353,16 +353,20 @@ def test_overview_variables_accepts_string(tmp_path):
 #############################
 ############################
 
-def test_overview_mrk_smk_same_character(tmp_path):
-    """Test that using the same character for mrk and smk raises an error."""
+def test_overview_mrk_smk_same_character(tmp_path, capsys):
+    """Test validation of identical valid markers"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
 
-    with pytest.raises(ValueError, match="mrk and smk must be different characters."):
-        dpest.wheat.overview(
-            treatment='164.0 KG N/HA IRRIG',
-            overview_file_path=str(overview_file),
-            output_path=str(tmp_path),
-            mrk='~',
-            smk='~'
-        )
+    # Use valid markers that are identical
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        mrk='#',
+        smk='#'
+    )
+
+    captured = capsys.readouterr()
+    assert "mrk and smk must be different characters" in captured.out
+    assert result is None
