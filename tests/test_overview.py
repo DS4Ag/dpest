@@ -350,9 +350,6 @@ def test_overview_variables_accepts_string(tmp_path):
     )
     assert result is not None  # The function should run and return a result
 
-#############################
-############################
-
 def test_overview_mrk_smk_same_character(tmp_path, capsys):
     """Test validation of identical valid markers"""
     repo_root = Path(__file__).parent.parent
@@ -370,3 +367,41 @@ def test_overview_mrk_smk_same_character(tmp_path, capsys):
     captured = capsys.readouterr()
     assert "mrk and smk must be different characters" in captured.out
     assert result is None
+
+
+######################
+
+def test_overview_auto_adds_ins_extension(tmp_path):
+    """Test that output_filename is auto-appended with '.ins' if missing or uppercase."""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    # Case 1: No extension
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        output_filename="MY_OUTPUT"
+    )
+    _, ins_path = result
+    assert ins_path.lower().endswith(".ins")
+
+    # Case 2: Uppercase extension
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        output_filename="MY_OUTPUT.INS"
+    )
+    _, ins_path = result
+    assert ins_path.lower().endswith(".ins")
+
+    # Case 3: Mixed case extension
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        output_filename="MY_OUTPUT.InS"
+    )
+    _, ins_path = result
+    assert ins_path.lower().endswith(".ins")
