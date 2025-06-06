@@ -121,14 +121,21 @@ def test_overview_output_structure(tmp_path):
         assert any('_TEST!' in line for line in content.split('\n'))
 
 
-def test_overview_missing_required_arguments():
+def test_overview_missing_required_arguments(capsys):
     """Test missing required 'treatment' argument"""
-    with pytest.raises(ValueError) as excinfo:
-        dpest.wheat.overview(
-            treatment=None,
-            overview_file_path="dummy/path"
-        )
-    assert "The 'treatment' argument is required" in str(excinfo.value)
+    result = dpest.wheat.overview(
+        treatment=None,
+        overview_file_path="dummy/path"
+    )
+    captured = capsys.readouterr()
+    assert "The 'treatment' argument is required" in captured.out
+    assert result is None
+
+@pytest.mark.parametrize("invalid_suffix, error_msg", [
+    (123, "Suffix must be a string"),
+    ("bad!", "only contain letters and numbers"),
+    ("LONGSUFFIX", "at most 4 characters")
+])
 
 
 @pytest.mark.parametrize("invalid_suffix, error_msg", [
@@ -136,49 +143,84 @@ def test_overview_missing_required_arguments():
     ("bad!", "only contain letters and numbers"),
     ("LONGSUFFIX", "at most 4 characters")
 ])
-def test_overview_invalid_suffix(tmp_path, invalid_suffix, error_msg):
+def test_overview_invalid_suffix(tmp_path, invalid_suffix, error_msg, capsys):
     """Test invalid suffix values"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
 
-    with pytest.raises(ValueError) as excinfo:
-        dpest.wheat.overview(
-            treatment='164.0 KG N/HA IRRIG',
-            overview_file_path=str(overview_file),
-            output_path=str(tmp_path),
-            suffix=invalid_suffix
-        )
-    assert error_msg in str(excinfo.value)
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        suffix=invalid_suffix
+    )
+    captured = capsys.readouterr()
+    assert error_msg in captured.out
+    assert result is None
 
 
-def test_overview_file_not_found(tmp_path):
+def test_overview_file_not_found(tmp_path, capsys):
     """Test non-existent input file handling"""
-    with pytest.raises(FileNotFoundError):
-        dpest.wheat.overview(
-            treatment='164.0 KG N/HA IRRIG',
-            overview_file_path="nonexistent/file.out",
-            output_path=str(tmp_path)
-        )
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path="nonexistent/file.out",
+        output_path=str(tmp_path)
+    )
+    captured = capsys.readouterr()
+    assert "does not exist" in captured.out
+    assert result is None
 
 
 @pytest.mark.parametrize("mrk, smk, error_msg", [
     ('a', '!', "Primary marker validation failed"),
     ('!', '!', "Primary and secondary markers cannot match")
 ])
-def test_overview_invalid_markers(tmp_path, mrk, smk, error_msg):
+def test_overview_invalid_markers(tmp_path, mrk, smk, error_msg, capsys):
     """Test invalid marker configurations"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
 
-    with pytest.raises(ValueError) as excinfo:
-        dpest.wheat.overview(
-            treatment='164.0 KG N/HA IRRIG',
-            overview_file_path=str(overview_file),
-            output_path=str(tmp_path),
-            mrk=mrk,
-            smk=smk
-        )
-    assert error_msg in str(excinfo.value)
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        mrk=mrk,
+        smk=smk
+    )
+    captured = capsys.readouterr()
+    assert error_msg in captured.out
+    assert result is None
+
+
+def test_overview_nonexistent_treatment(tmp_path, capsys):
+    """Test handling of non-existent treatment"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    result = dpest.wheat.overview(
+        treatment='NON_EXISTENT_TREATMENT',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path)
+    )
+    captured = capsys.readouterr()
+    assert "No data found for treatment" in captured.out
+    assert result is None
+
+
+def test_overview_empty_variables(tmp_path, capsys):
+    """Test empty variables list handling"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        variables=[]
+    )
+    captured = capsys.readouterr()
+    assert "At least one variable must be specified" in captured.out
+    assert result is None
 
 
 def test_overview_variable_filtering(tmp_path):
@@ -198,20 +240,6 @@ def test_overview_variable_filtering(tmp_path):
     df, _ = result
     expected_vars = {v.replace(' ', '')[:20] for v in test_vars}
     assert all(var in df['variable_name'].values for var in expected_vars)
-
-
-def test_overview_nonexistent_treatment(tmp_path):
-    """Test handling of non-existent treatment"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    with pytest.raises(ValueError) as excinfo:
-        dpest.wheat.overview(
-            treatment='NON_EXISTENT_TREATMENT',
-            overview_file_path=str(overview_file),
-            output_path=str(tmp_path)
-        )
-    assert "No data found for treatment" in str(excinfo.value)
 
 
 def test_overview_full_parameters(tmp_path):
@@ -245,21 +273,6 @@ def test_overview_full_parameters(tmp_path):
         content = f.read()
         assert content.startswith('pif #')
         assert all(f"!{v.replace(' ', '_')[:20]}_TEST!" in content for v in custom_vars)
-
-
-def test_overview_empty_variables(tmp_path):
-    """Test empty variables list handling"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    with pytest.raises(ValueError) as excinfo:
-        dpest.wheat.overview(
-            treatment='164.0 KG N/HA IRRIG',
-            overview_file_path=str(overview_file),
-            output_path=str(tmp_path),
-            variables=[]
-        )
-    assert "At least one variable must be specified" in str(excinfo.value)
 
 
 def test_overview_special_characters_in_treatment(tmp_path):
