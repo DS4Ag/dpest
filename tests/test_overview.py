@@ -271,3 +271,82 @@ def test_overview_different_output_formats(tmp_path):
         )
         df, ins_path = result
         assert Path(ins_path).exists()
+
+
+def test_overview_missing_yaml_file(tmp_path, capsys):
+    """Test handling of missing YAML arguments file"""
+    # Create dummy overview file path that doesn't exist
+    non_existent_file = tmp_path / "nonexistent.yml"
+
+    with pytest.raises(FileNotFoundError) as excinfo:
+        dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path=str(non_existent_file),
+            output_path=str(tmp_path)
+        )
+    assert "YAML file not found" in str(excinfo.value)
+
+
+def test_overview_missing_treatment_argument(tmp_path, capsys):
+    """Test missing treatment argument validation"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    with pytest.raises(ValueError) as excinfo:
+        dpest.wheat.overview(
+            treatment=None,
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path)
+        )
+    assert "The 'treatment' argument is required" in str(excinfo.value)
+
+
+def test_overview_duplicate_markers(tmp_path, capsys):
+    """Test validation of identical mrk/smk markers"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    with pytest.raises(ValueError) as excinfo:
+        dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path),
+            mrk='!',
+            smk='!'
+        )
+    assert "mrk and smk must be different" in str(excinfo.value)
+
+
+def test_overview_auto_ins_extension(tmp_path):
+    """Test automatic .ins extension addition"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        output_filename="TEST_OUTPUT"
+    )
+
+    _, ins_path = result
+    assert ins_path.endswith(".ins")
+
+
+def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
+    """Test handling of unexpected exceptions"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    # Force an error by passing invalid YAML path
+    monkeypatch.setattr(dpest.wheat, "arguments.yml", "invalid/path.yml")
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "An unexpected error occurred" in captured.out
+    assert result is None
