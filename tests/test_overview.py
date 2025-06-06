@@ -119,3 +119,180 @@ def test_overview_output_structure(tmp_path):
         content = f.read()
         # Check for truncated variable names with suffix
         assert any('_TEST!' in line for line in content.split('\n'))
+
+
+def test_overview_missing_required_arguments():
+    """Test missing required 'treatment' argument"""
+    with pytest.raises(ValueError) as excinfo:
+        dpest.wheat.overview(
+            treatment=None,
+            overview_file_path="dummy/path"
+        )
+    assert "The 'treatment' argument is required" in str(excinfo.value)
+
+
+@pytest.mark.parametrize("invalid_suffix, error_msg", [
+    (123, "Suffix must be a string"),
+    ("bad!", "only contain letters and numbers"),
+    ("LONGSUFFIX", "at most 4 characters")
+])
+def test_overview_invalid_suffix(tmp_path, invalid_suffix, error_msg):
+    """Test invalid suffix values"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    with pytest.raises(ValueError) as excinfo:
+        dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path),
+            suffix=invalid_suffix
+        )
+    assert error_msg in str(excinfo.value)
+
+
+def test_overview_file_not_found(tmp_path):
+    """Test non-existent input file handling"""
+    with pytest.raises(FileNotFoundError):
+        dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path="nonexistent/file.out",
+            output_path=str(tmp_path)
+        )
+
+
+@pytest.mark.parametrize("mrk, smk, error_msg", [
+    ('a', '!', "Primary marker validation failed"),
+    ('!', '!', "Primary and secondary markers cannot match")
+])
+def test_overview_invalid_markers(tmp_path, mrk, smk, error_msg):
+    """Test invalid marker configurations"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    with pytest.raises(ValueError) as excinfo:
+        dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path),
+            mrk=mrk,
+            smk=smk
+        )
+    assert error_msg in str(excinfo.value)
+
+
+def test_overview_variable_filtering(tmp_path):
+    """Test filtering with specific variables"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    test_vars = ['Anthesis (DAP)', 'Product wt (kg dm/ha;no loss)']
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        variables=test_vars
+    )
+
+    df, _ = result
+    expected_vars = {v.replace(' ', '')[:20] for v in test_vars}
+    assert all(var in df['variable_name'].values for var in expected_vars)
+
+
+def test_overview_nonexistent_treatment(tmp_path):
+    """Test handling of non-existent treatment"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    with pytest.raises(ValueError) as excinfo:
+        dpest.wheat.overview(
+            treatment='NON_EXISTENT_TREATMENT',
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path)
+        )
+    assert "No data found for treatment" in str(excinfo.value)
+
+
+def test_overview_full_parameters(tmp_path):
+    """Test all optional parameters together"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    custom_vars = ['Anthesis (DAP)', 'Maturity (DAP)']
+    custom_classification = {'Anthesis (DAP)': 'phenology', 'Maturity (DAP)': 'phenology'}
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        suffix='TEST',
+        variables=custom_vars,
+        variables_classification=custom_classification,
+        overview_ins_first_line="pif #",
+        mrk='@',
+        smk='%'
+    )
+
+    df, ins_path = result
+
+    # Verify DataFrame structure
+    assert {'variable_name', 'value_measured', 'group'}.issubset(df.columns)
+    assert len(df) == len(custom_vars)
+
+    # Verify INS file content
+    with open(ins_path, 'r') as f:
+        content = f.read()
+        assert content.startswith('pif #')
+        assert all(f"!{v.replace(' ', '_')[:20]}_TEST!" in content for v in custom_vars)
+
+
+def test_overview_empty_variables(tmp_path):
+    """Test empty variables list handling"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    with pytest.raises(ValueError) as excinfo:
+        dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path),
+            variables=[]
+        )
+    assert "At least one variable must be specified" in str(excinfo.value)
+
+
+def test_overview_special_characters_in_treatment(tmp_path):
+    """Test treatment names with special characters"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA (IRRIGATED)',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path)
+    )
+
+    df, ins_path = result
+    assert not df.empty
+    assert Path(ins_path).exists()
+
+
+def test_overview_different_output_formats(tmp_path):
+    """Test various output configurations"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    # Test with different marker combinations
+    for mrk, smk in [('$', '&'), ('*', '?')]:
+        result = dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path),
+            mrk=mrk,
+            smk=smk
+        )
+        df, ins_path = result
+        with open(ins_path, 'r') as f:
+            content = f.read()
+            assert f"pif {mrk}" in content
