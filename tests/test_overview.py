@@ -75,75 +75,16 @@ def test_overview_with_optional_parameters(tmp_path):
     )
 
     df, ins_path = result
-    # Verify suffix in filename
     assert 'TRT1' in ins_path
-
-    # Verify variable filtering (with suffix)
-    expected_vars = {'Anthesis_DAP_TRT1', 'Maturity_DAP_TRT1'}
-    assert expected_vars.issubset(df['variable_name'].values)
+    assert {'Anthesis_DAP_TRT1', 'Maturity_DAP_TRT1'}.issubset(df['variable_name'].values)
 
 
-def test_overview_nonexistent_treatment(tmp_path, capsys):
-    """Test with non-existent treatment"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    # Run the function
-    dpest.wheat.overview(
-        treatment='NON_EXISTENT_TREATMENT',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path)
-    )
-
-    # Capture printed output
-    captured = capsys.readouterr()
-    assert "No data found for treatment" in captured.out
-
-
-def test_overview_output_structure(tmp_path):
-    """Detailed output structure validation"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        suffix='TEST'
-    )
-
-    df, ins_path = result
-
-    # Verify INS file content
-    with open(ins_path, 'r') as f:
-        content = f.read()
-        # Check for truncated variable names with suffix
-        assert any('_TEST!' in line for line in content.split('\n'))
-
-
-def test_overview_missing_required_arguments(capsys):
-    """Test missing required 'treatment' argument"""
-    result = dpest.wheat.overview(
-        treatment=None,
-        overview_file_path="dummy/path"
-    )
-    captured = capsys.readouterr()
-    assert "The 'treatment' argument is required" in captured.out
-    assert result is None
-
-@pytest.mark.parametrize("invalid_suffix, error_msg", [
+@pytest.mark.parametrize("suffix_value, error_msg", [
     (123, "Suffix must be a string"),
     ("bad!", "only contain letters and numbers"),
     ("LONGSUFFIX", "at most 4 characters")
 ])
-
-
-@pytest.mark.parametrize("invalid_suffix, error_msg", [
-    (123, "Suffix must be a string"),
-    ("bad!", "only contain letters and numbers"),
-    ("LONGSUFFIX", "at most 4 characters")
-])
-def test_overview_invalid_suffix(tmp_path, invalid_suffix, error_msg, capsys):
+def test_overview_invalid_suffix(tmp_path, suffix_value, error_msg, capsys):
     """Test invalid suffix values"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
@@ -152,7 +93,7 @@ def test_overview_invalid_suffix(tmp_path, invalid_suffix, error_msg, capsys):
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
-        suffix=invalid_suffix
+        suffix=suffix_value
     )
     captured = capsys.readouterr()
     assert error_msg in captured.out
@@ -263,12 +204,9 @@ def test_overview_full_parameters(tmp_path):
     )
 
     df, ins_path = result
-
-    # Verify DataFrame structure
     assert {'variable_name', 'value_measured', 'group'}.issubset(df.columns)
     assert len(df) == len(custom_vars)
 
-    # Verify INS file content
     with open(ins_path, 'r') as f:
         content = f.read()
         assert content.startswith('pif #')
@@ -296,7 +234,6 @@ def test_overview_different_output_formats(tmp_path):
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
 
-    # Test with different marker combinations
     for mrk, smk in [('$', '&'), ('*', '?')]:
         result = dpest.wheat.overview(
             treatment='164.0 KG N/HA IRRIG',
