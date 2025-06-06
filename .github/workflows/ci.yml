@@ -27,6 +27,7 @@ jobs:
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
-          with:
-            token: ${{ secrets.CODECOV_TOKEN }}
-            slug: DS4Ag/dpest
+        with:
+          # token: ${{ secrets.CODECOV_TOKEN }}  # Optional for public repos
+          slug: DS4Ag/dpest
+          files: ./coverage.xml
