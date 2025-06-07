@@ -80,32 +80,6 @@ def test_plantgro_with_optional_parameters(tmp_path):
     assert any('LAID' in name and 'TRT1' in name for name in df['variable_name'].values)
     assert any('CWAD' in name and 'TRT1' in name for name in df['variable_name'].values)
 
-# def test_plantgro_full_parameters(tmp_path):
-#     """Test all optional parameters together"""
-#     repo_root = Path(__file__).parent.parent
-#     plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
-#
-#     custom_vars = ['LAID', 'CWAD']
-#     custom_classification = {'LAID': 'lai', 'CWAD': 'biomass'}
-#
-#     result = dpest.wheat.plantgro(
-#         treatment='164.0 KG N/HA IRRIG',
-#         plantgro_file_path=str(plantgro_file),
-#         output_path=str(tmp_path),
-#         suffix='TEST',
-#         variables=custom_vars,
-#         variables_classification=custom_classification,
-#         plantgro_ins_first_line="pif #",
-#         mrk='@',
-#         smk='%'
-#     )
-#
-#     df, ins_path = result
-#     assert {'variable_name', 'value_measured', 'group'}.issubset(df.columns)
-#     # Check that at least one row for each variable exists (with suffix)
-#     for var in custom_vars:
-#         assert any(var in name and 'TEST' in name for name in df['variable_name'].values)
-
 
 def test_plantgro_variable_filtering(tmp_path):
     """Test filtering with specific variables"""
@@ -124,36 +98,6 @@ def test_plantgro_variable_filtering(tmp_path):
     df, _ = result
     assert any('LAID' in name for name in df['variable_name'].values)
     assert any('CWAD' in name for name in df['variable_name'].values)
-
-def test_plantgro_full_parameters(tmp_path):
-    """Test all optional parameters together"""
-    repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
-
-    custom_vars = ['LAID', 'CWAD']
-    custom_classification = {'LAID': 'lai', 'CWAD': 'biomass'}
-
-    result = dpest.wheat.plantgro(
-        treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
-        output_path=str(tmp_path),
-        suffix='TEST',
-        variables=custom_vars,
-        variables_classification=custom_classification,
-        plantgro_ins_first_line="pif #",
-        mrk='@',
-        smk='%'
-    )
-
-    df, ins_path = result
-    assert {'variable_name', 'value_measured', 'group'}.issubset(df.columns)
-    assert len(df) == len(custom_vars)
-
-    with open(ins_path, 'r') as f:
-        content = f.read()
-        assert content.startswith('pif # @')
-        assert '@LAID@ %LAID_TEST%' in content
-        assert '@CWAD@ %CWAD_TEST%' in content
 
 def test_plantgro_missing_treatment_argument(tmp_path, capsys):
     """Test missing treatment argument validation"""
