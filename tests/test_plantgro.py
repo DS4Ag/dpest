@@ -51,3 +51,294 @@ def test_overview(tmp_path):
     # 7. Check that the DataFrame has the expected columns
     expected_columns = {'variable_name', 'value_measured', 'group'}
     assert expected_columns.issubset(df.columns), f"Missing expected columns in DataFrame: {expected_columns - set(df.columns)}"
+
+
+def test_plantgro_with_optional_parameters(tmp_path):
+    """Test with all optional parameters specified"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        suffix='TRT1',
+        variables=['LAID', 'CWAD'],
+        variables_classification={
+            'LAID': 'lai',
+            'CWAD': 'biomass'
+        },
+        plantgro_ins_first_line="pif #",
+        mrk='@',
+        smk='#'
+    )
+
+    df, ins_path = result
+    assert 'TRT1' in ins_path
+    assert {'LAID_TRT1', 'CWAD_TRT1'}.issubset(set(df['variable_name'].values))
+
+def test_plantgro_variable_filtering(tmp_path):
+    """Test filtering with specific variables"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    test_vars = ['LAID', 'CWAD']
+
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables=test_vars
+    )
+
+    df, _ = result
+    assert any('LAID' in name for name in df['variable_name'].values)
+    assert any('CWAD' in name for name in df['variable_name'].values)
+
+def test_plantgro_full_parameters(tmp_path):
+    """Test all optional parameters together"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    custom_vars = ['LAID', 'CWAD']
+    custom_classification = {'LAID': 'lai', 'CWAD': 'biomass'}
+
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        suffix='TEST',
+        variables=custom_vars,
+        variables_classification=custom_classification,
+        plantgro_ins_first_line="pif #",
+        mrk='@',
+        smk='%'
+    )
+
+    df, ins_path = result
+    assert {'variable_name', 'value_measured', 'group'}.issubset(df.columns)
+    assert len(df) == len(custom_vars)
+
+    with open(ins_path, 'r') as f:
+        content = f.read()
+        assert content.startswith('pif # @')
+        assert '@LAID@ %LAID_TEST%' in content
+        assert '@CWAD@ %CWAD_TEST%' in content
+
+def test_plantgro_missing_treatment_argument(tmp_path, capsys):
+    """Test missing treatment argument validation"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    result = dpest.wheat.plantgro(
+        treatment=None,
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path)
+    )
+    captured = capsys.readouterr()
+    assert "ValueError: The 'treatment' must be a non-empty string." in captured.out
+    assert result is None
+
+def test_plantgro_special_characters_in_treatment(tmp_path, capsys):
+    """Test treatment names with special characters"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA (IRRIGATED)',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path)
+    )
+
+    if result is None:
+        captured = capsys.readouterr()
+        assert "No valid data found for treatment" in captured.out or "No data found for treatment" in captured.out
+    else:
+        df, ins_path = result
+        assert not df.empty
+        assert Path(ins_path).exists()
+
+def test_plantgro_variables_accepts_string(tmp_path):
+    """Test that passing a string for 'variables' is accepted (converted to list internally)."""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables='LAID'
+    )
+    assert result is not None
+
+@pytest.mark.parametrize("suffix_value, error_msg", [
+    (123, "Suffix must only contain letters and numbers."),
+    ("bad!", "Suffix must only contain letters and numbers."),
+    ("LONGSUFFIX", "Suffix must be at most 4 characters long.")
+])
+def test_plantgro_invalid_suffix(tmp_path, suffix_value, error_msg, capsys):
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables=['LAID'],
+        suffix=suffix_value
+    )
+    captured = capsys.readouterr()
+    assert error_msg in captured.out
+    assert result is None
+
+def test_plantgro_file_not_found(tmp_path, capsys):
+    """Test non-existent input file handling"""
+    non_existent_file = tmp_path / "nonexistent.OUT"
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(non_existent_file),
+        output_path=str(tmp_path),
+        variables=['LAID']
+    )
+    captured = capsys.readouterr()
+    assert "FileNotFoundError: YAML file not found:" in captured.out or "FileNotFoundError: The file" in captured.out
+    assert result is None
+
+def test_plantgro_missing_yaml_file(tmp_path, capsys):
+    """Test handling of missing YAML arguments file"""
+    non_existent_file = tmp_path / "nonexistent.OUT"
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(non_existent_file),
+        output_path=str(tmp_path),
+        variables=['LAID']
+    )
+    captured = capsys.readouterr()
+    assert "FileNotFoundError: The file 'nonexistent.OUT' does not exist" in captured.out or "YAML file not found" in captured.out
+    assert result is None
+
+def test_plantgro_nonexistent_treatment(tmp_path, capsys):
+    """Test handling of non-existent treatment"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    result = dpest.wheat.plantgro(
+        treatment='NON_EXISTENT_TREATMENT',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables=['LAID']
+    )
+    captured = capsys.readouterr()
+    assert "No valid data found for treatment" in captured.out or "No data found for treatment" in captured.out
+    assert result is None
+
+def test_plantgro_empty_variables(tmp_path, capsys):
+    """Test empty variables list handling"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables=[]
+    )
+    captured = capsys.readouterr()
+    assert result is None
+    assert "should be a non-empty string or a list of strings" in captured.out
+
+@pytest.mark.parametrize("mrk, smk, expected_error", [
+    ('a', '!', "Invalid mrk character"),
+    ('!', '!', "Invalid mrk character")
+])
+def test_plantgro_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables=['LAID'],
+        mrk=mrk,
+        smk=smk
+    )
+
+    captured = capsys.readouterr()
+    assert expected_error in captured.out
+    assert result is None
+
+def test_plantgro_duplicate_markers(tmp_path, capsys):
+    """Test validation of identical mrk/smk markers"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables=['LAID'],
+        mrk='#',
+        smk='#'
+    )
+    captured = capsys.readouterr()
+    assert "mrk and smk must be different characters." in captured.out
+    assert result is None
+
+def test_plantgro_mrk_smk_same_character(tmp_path, capsys):
+    """Test validation of identical valid markers"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    # Use valid markers that are identical
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables=['LAID'],
+        mrk='#',
+        smk='#'
+    )
+
+    captured = capsys.readouterr()
+    assert "mrk and smk must be different characters" in captured.out
+    assert result is None
+
+def test_plantgro_different_output_formats(tmp_path):
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    # Test only known valid combinations
+    valid_markers = [('~', '!'), ('@', '#')]
+
+    for mrk, smk in valid_markers:
+        result = dpest.wheat.plantgro(
+            treatment='164.0 KG N/HA IRRIG',
+            plantgro_file_path=str(plantgro_file),
+            output_path=str(tmp_path),
+            variables=['LAID'],
+            mrk=mrk,
+            smk=smk
+        )
+        df, ins_path = result
+        assert Path(ins_path).exists()
+
+def test_plantgro_unexpected_error(tmp_path, capsys, monkeypatch):
+    """Test handling of unexpected exceptions"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    import os
+    original_isfile = os.path.isfile
+    def fake_isfile(path):
+        if "arguments.yml" in str(path):
+            return False
+        return original_isfile(path)
+    monkeypatch.setattr(os.path, "isfile", fake_isfile)
+    result = dpest.wheat.plantgro(
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables=['LAID']
+    )
+    captured = capsys.readouterr()
+    assert "FileNotFoundError: YAML file not found:" in captured.out
+    assert result is None

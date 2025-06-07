@@ -352,5 +352,3 @@ def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
     captured = capsys.readouterr()
     assert "FileNotFoundError: YAML file not found:" in captured.out
     assert result is None
-
-
