@@ -291,3 +291,37 @@ def test_pst_invalid_observations_type(tmp_path, capsys):
         captured = capsys.readouterr()
         assert "`ecotype_parameters`, if provided, must be a dictionary" in captured.out
         assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+
+def test_pst_dataframe_observations_required(tmp_path, capsys):
+    """Test that dataframe_observations must be provided in pst function."""
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cultivar_params, cul_tpl = dpest.wheat.ceres.cul(
+        P='P1D, P5',
+        G='G1, G2, G3',
+        PHINT='PHINT',
+        cultivar='MANITOU',
+        cul_file_path=str(cul_file),
+        output_path=str(tmp_path)
+    )
+
+    # Setup valid input_output_file_pairs
+    input_output_pairs = [
+        (str(cul_tpl), str(cul_file)),
+        ('dummy.ins', 'dummy.out')
+    ]
+
+    # Call pst with dataframe_observations=None
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        ecotype_parameters=None,
+        dataframe_observations=None,
+        model_comand_line='dummy',
+        input_output_file_pairs=input_output_pairs,
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "`dataframe_observations` must be provided." in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
