@@ -163,7 +163,6 @@ def test_pst_invalid_cultivar_type(tmp_path, capsys):
     assert "must be a dictionary" in captured.out
     assert not (tmp_path / "PEST_CONTROL.pst").exists()
 
-##################################
 
 def test_pst_missing_cul_extension(tmp_path, capsys):
     """Test missing .CUL file when using cultivar params"""
@@ -250,3 +249,45 @@ def test_pst_invalid_observations_type(tmp_path, capsys):
     captured = capsys.readouterr()
     assert "must be a DataFrame or a list of DataFrames" in captured.out
     assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+    ##################################
+
+    def test_pst_invalid_ecotype_type(tmp_path, capsys):
+        """Test error when ecotype_parameters is not a dict"""
+        # Setup valid cultivar parameters
+        repo_root = Path(__file__).parent.parent
+        cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+        cultivar_params, cul_tpl = dpest.wheat.ceres.cul(
+            P='P1D, P5',
+            G='G1, G2, G3',
+            PHINT='PHINT',
+            cultivar='MANITOU',  # Valid existing cultivar
+            cul_file_path=str(cul_file),
+            output_path=str(tmp_path)
+        )
+
+        # Setup valid observations
+        overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+        overview_obs, _ = dpest.wheat.overview(
+            treatment='164.0 KG N/HA IRRIG',
+            overview_file_path=str(overview_file),
+            output_path=str(tmp_path)
+        )
+
+        # Call pst with invalid ecotype_parameters type (string instead of dict)
+        dpest.pst(
+            cultivar_parameters=cultivar_params,
+            ecotype_parameters="invalid_string",  # <-- Invalid type
+            dataframe_observations=[overview_obs],
+            model_comand_line='dummy',
+            input_output_file_pairs=[
+                (str(cul_tpl), str(cul_file)),
+                ('dummy.ins', 'dummy.out')  # Valid OUT file
+            ],
+            output_path=str(tmp_path)
+        )
+
+        # Verify error handling
+        captured = capsys.readouterr()
+        assert "`ecotype_parameters`, if provided, must be a dictionary" in captured.out
+        assert not (tmp_path / "PEST_CONTROL.pst").exists()
