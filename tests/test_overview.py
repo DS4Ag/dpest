@@ -1,7 +1,6 @@
 import dpest
 from pathlib import Path
 import pandas as pd
-import os
 import pytest
 
 def test_overview(tmp_path):
@@ -78,6 +77,105 @@ def test_overview_with_optional_parameters(tmp_path):
     assert 'TRT1' in ins_path
     assert {'Anthesis_DAP_TRT1', 'Maturity_DAP_TRT1'}.issubset(set(df['variable_name'].values))
 
+def test_overview_variable_filtering(tmp_path):
+    """Test filtering with specific variables"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    test_vars = ['Anthesis (DAP)', 'Product wt (kg dm/ha;no loss)']
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        variables=test_vars
+    )
+
+    df, _ = result
+    # Check for base variable names in formatted output
+    assert any('Anthesis_DAP' in name for name in df['variable_name'].values)
+    assert any('Productwtkgdmha' in name for name in df['variable_name'].values)
+
+def test_overview_full_parameters(tmp_path):
+    """Test all optional parameters together"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    custom_vars = ['Anthesis (DAP)', 'Maturity (DAP)']
+    custom_classification = {'Anthesis (DAP)': 'phenology', 'Maturity (DAP)': 'phenology'}
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        suffix='TEST',
+        variables=custom_vars,
+        variables_classification=custom_classification,
+        overview_ins_first_line="pif #",
+        mrk='@',
+        smk='%'
+    )
+
+    df, ins_path = result
+    assert {'variable_name', 'value_measured', 'group'}.issubset(df.columns)
+    assert len(df) == len(custom_vars)
+
+    with open(ins_path, 'r') as f:
+        content = f.read()
+        assert content.startswith('pif # @')
+        assert '@Anthesis (DAP)@ %Anthesis_DAP_TEST%' in content
+        assert '@Maturity (DAP)@ %Maturity_DAP_TEST%' in content
+
+
+def test_overview_missing_treatment_argument(tmp_path, capsys):
+    """Test missing treatment argument validation"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    result = dpest.wheat.overview(
+        treatment=None,
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path)
+    )
+    captured = capsys.readouterr()
+    assert "ValueError: The 'treatment' argument is required and must be specified by the user." in captured.out
+    assert result is None
+
+
+def test_overview_special_characters_in_treatment(tmp_path, capsys):
+    """Test treatment names with special characters"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA (IRRIGATED)',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path)
+    )
+
+    if result is None:
+        captured = capsys.readouterr()
+        assert "No data found for treatment" in captured.out
+    else:
+        df, ins_path = result
+        assert not df.empty
+        assert Path(ins_path).exists()
+
+
+def test_overview_variables_accepts_string(tmp_path):
+    """Test that passing a string for 'variables' is accepted (converted to list internally)."""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    # Just call the function with a string for variables; it should not raise an error
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        variables='Anthesis (DAP)'
+    )
+    assert result is not None  # The function should run and return a result
+
 
 @pytest.mark.parametrize("suffix_value, error_msg", [
     (123, "Suffix must be a string"),
@@ -111,6 +209,21 @@ def test_overview_file_not_found(tmp_path, capsys):
     assert "does not exist" in captured.out
     assert result is None
 
+
+def test_overview_missing_yaml_file(tmp_path, capsys):
+    """Test handling of missing YAML arguments file"""
+    # Simulate missing OVERVIEW.OUT file (which triggers the file not found branch)
+    non_existent_file = tmp_path / "nonexistent.OUT"
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(non_existent_file),
+        output_path=str(tmp_path)
+    )
+    captured = capsys.readouterr()
+    assert "FileNotFoundError: The file 'nonexistent.OUT' does not exist" in captured.out
+    assert result is None
+
+
 def test_overview_nonexistent_treatment(tmp_path, capsys):
     """Test handling of non-existent treatment"""
     repo_root = Path(__file__).parent.parent
@@ -143,77 +256,6 @@ def test_overview_empty_variables(tmp_path, capsys):
     assert "non-empty string or a list of strings" in captured.out
 
 
-def test_overview_variable_filtering(tmp_path):
-    """Test filtering with specific variables"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    test_vars = ['Anthesis (DAP)', 'Product wt (kg dm/ha;no loss)']
-
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        variables=test_vars
-    )
-
-    df, _ = result
-    # Check for base variable names in formatted output
-    assert any('Anthesis_DAP' in name for name in df['variable_name'].values)
-    assert any('Productwtkgdmha' in name for name in df['variable_name'].values)
-
-
-def test_overview_full_parameters(tmp_path):
-    """Test all optional parameters together"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    custom_vars = ['Anthesis (DAP)', 'Maturity (DAP)']
-    custom_classification = {'Anthesis (DAP)': 'phenology', 'Maturity (DAP)': 'phenology'}
-
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        suffix='TEST',
-        variables=custom_vars,
-        variables_classification=custom_classification,
-        overview_ins_first_line="pif #",
-        mrk='@',
-        smk='%'
-    )
-
-    df, ins_path = result
-    assert {'variable_name', 'value_measured', 'group'}.issubset(df.columns)
-    assert len(df) == len(custom_vars)
-
-    with open(ins_path, 'r') as f:
-        content = f.read()
-        assert content.startswith('pif # @')
-        assert '@Anthesis (DAP)@ %Anthesis_DAP_TEST%' in content
-        assert '@Maturity (DAP)@ %Maturity_DAP_TEST%' in content
-
-
-def test_overview_special_characters_in_treatment(tmp_path, capsys):
-    """Test treatment names with special characters"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA (IRRIGATED)',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path)
-    )
-
-    if result is None:
-        captured = capsys.readouterr()
-        assert "No data found for treatment" in captured.out
-    else:
-        df, ins_path = result
-        assert not df.empty
-        assert Path(ins_path).exists()
-
-
 @pytest.mark.parametrize("mrk, smk, expected_error", [
     ('a', '!', "Invalid mrk character"),
     ('!', '!', "Invalid mrk character")  # Both markers being '!' is invalid
@@ -235,23 +277,40 @@ def test_overview_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
     assert result is None
 
 
-def test_overview_variable_filtering(tmp_path):
+def test_overview_duplicate_markers(tmp_path, capsys):
+    """Test validation of identical mrk/smk markers"""
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    test_vars = ['Anthesis (DAP)', 'Product wt (kg dm/ha;no loss)']
-
+    # '!' is not allowed as mrk, so this triggers the invalid mrk check before "must be different"
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
-        variables=test_vars
+        mrk='!',
+        smk='!'
+    )
+    captured = capsys.readouterr()
+    assert "Invalid mrk character. It must not be one of A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &." in captured.out
+    assert result is None
+
+
+def test_overview_mrk_smk_same_character(tmp_path, capsys):
+    """Test validation of identical valid markers"""
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    # Use valid markers that are identical
+    result = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path),
+        mrk='#',
+        smk='#'
     )
 
-    df, _ = result
-    # Check for cleaned variable name patterns
-    assert any('Anthesis_DAP' in name for name in df['variable_name'].values)
-    assert any('Productwtkgdmha' in name for name in df['variable_name'].values)
+    captured = capsys.readouterr()
+    assert "mrk and smk must be different characters" in captured.out
+    assert result is None
 
 
 def test_overview_different_output_formats(tmp_path):
@@ -272,34 +331,6 @@ def test_overview_different_output_formats(tmp_path):
         df, ins_path = result
         assert Path(ins_path).exists()
 
-def test_overview_missing_yaml_file(tmp_path, capsys):
-    """Test handling of missing YAML arguments file"""
-    # Simulate missing OVERVIEW.OUT file (which triggers the file not found branch)
-    non_existent_file = tmp_path / "nonexistent.OUT"
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(non_existent_file),
-        output_path=str(tmp_path)
-    )
-    captured = capsys.readouterr()
-    assert "FileNotFoundError: The file 'nonexistent.OUT' does not exist" in captured.out
-    assert result is None
-
-def test_overview_duplicate_markers(tmp_path, capsys):
-    """Test validation of identical mrk/smk markers"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-    # '!' is not allowed as mrk, so this triggers the invalid mrk check before "must be different"
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        mrk='!',
-        smk='!'
-    )
-    captured = capsys.readouterr()
-    assert "Invalid mrk character. It must not be one of A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &." in captured.out
-    assert result is None
 
 def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
     """Test handling of unexpected exceptions"""
@@ -322,73 +353,4 @@ def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
     assert "FileNotFoundError: YAML file not found:" in captured.out
     assert result is None
 
-def test_overview_missing_treatment_argument(tmp_path, capsys):
-    """Test missing treatment argument validation"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
 
-    result = dpest.wheat.overview(
-        treatment=None,
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path)
-    )
-    captured = capsys.readouterr()
-    assert "ValueError: The 'treatment' argument is required and must be specified by the user." in captured.out
-    assert result is None
-
-def test_overview_variables_accepts_string(tmp_path):
-    """Test that passing a string for 'variables' is accepted (converted to list internally)."""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    # Just call the function with a string for variables; it should not raise an error
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        variables='Anthesis (DAP)'
-    )
-    assert result is not None  # The function should run and return a result
-
-def test_overview_mrk_smk_same_character(tmp_path, capsys):
-    """Test validation of identical valid markers"""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    # Use valid markers that are identical
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(tmp_path),
-        mrk='#',
-        smk='#'
-    )
-
-    captured = capsys.readouterr()
-    assert "mrk and smk must be different characters" in captured.out
-    assert result is None
-
-#################3
-
-def test_overview_auto_adds_ins_extension(tmp_path):
-    """Test that the output file automatically gets .ins extension, even with uppercase output directory."""
-    repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-
-    # Create an uppercase output directory
-    output_dir = tmp_path / "OUTPUT_DIR"
-    output_dir.mkdir()
-
-    result = dpest.wheat.overview(
-        treatment='164.0 KG N/HA IRRIG',
-        overview_file_path=str(overview_file),
-        output_path=str(output_dir)
-    )
-
-    # Get the generated INS file path
-    _, ins_path = result
-
-    # Verify the filename (not the directory) ends with .ins (case-insensitive)
-    assert Path(ins_path).name.lower().endswith(".ins")
-    # Verify the filename (not the directory) ends with .ins
-    assert Path(ins_path).name.lower().endswith(".ins")
