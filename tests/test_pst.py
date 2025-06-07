@@ -162,3 +162,91 @@ def test_pst_invalid_cultivar_type(tmp_path, capsys):
     captured = capsys.readouterr()
     assert "must be a dictionary" in captured.out
     assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+##################################
+
+def test_pst_missing_cul_extension(tmp_path, capsys):
+    """Test missing .CUL file when using cultivar params"""
+    # Get valid cultivar params
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cultivar_params, _ = dpest.wheat.ceres.cul(
+        P='P1D, P5',  # From working test
+        G='G1, G2, G3',
+        PHINT='PHINT',
+        cultivar='MANITOU',  # Valid existing cultivar
+        cul_file_path=str(cul_file),
+        output_path=str(tmp_path)
+    )
+
+    # Invalid pairs without .CUL
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        dataframe_observations=[pd.DataFrame()],
+        model_comand_line='dummy',
+        input_output_file_pairs=[('dummy.tpl', 'invalid.txt')],
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "must have a '.CUL' extension" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+
+def test_pst_missing_out_extension(tmp_path, capsys):
+    """Test missing .OUT file in pairs"""
+    # Get valid params
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cultivar_params, tpl_path = dpest.wheat.ceres.cul(
+        P='P1D, P5',
+        G='G1, G2, G3',
+        PHINT='PHINT',
+        cultivar='MANITOU',
+        cul_file_path=str(cul_file),
+        output_path=str(tmp_path)
+    )
+
+    # Valid CUL pair but no OUT
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        dataframe_observations=[pd.DataFrame()],
+        model_comand_line='dummy',
+        input_output_file_pairs=[(str(tpl_path), str(cul_file))],  # No .OUT
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "must have a '.OUT' extension" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+
+def test_pst_invalid_observations_type(tmp_path, capsys):
+    """Test invalid observations type"""
+    # Get valid params
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cultivar_params, tpl_path = dpest.wheat.ceres.cul(
+        P='P1D, P5',
+        G='G1, G2, G3',
+        PHINT='PHINT',
+        cultivar='MANITOU',
+        cul_file_path=str(cul_file),
+        output_path=str(tmp_path)
+    )
+
+    # Invalid observations type
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        dataframe_observations="not_a_dataframe",
+        model_comand_line='dummy',
+        input_output_file_pairs=[
+            (str(tpl_path), str(cul_file)),
+            ('dummy.ins', 'dummy.out')  # Valid OUT
+        ],
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "must be a DataFrame or a list of DataFrames" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
