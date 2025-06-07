@@ -326,11 +326,15 @@ def test_pst_dataframe_observations_required(tmp_path, capsys):
     assert "`dataframe_observations` must be provided." in captured.out
     assert not (tmp_path / "PEST_CONTROL.pst").exists()
 
+####################
 
 def test_pst_input_output_file_pairs_validation(tmp_path, capsys):
     """Test validation rules for input_output_file_pairs"""
     repo_root = Path(__file__).parent.parent
     cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+
+    # Setup valid parameters and observations
     cultivar_params, cul_tpl = dpest.wheat.ceres.cul(
         P='P1D, P5',
         G='G1, G2, G3',
@@ -339,43 +343,46 @@ def test_pst_input_output_file_pairs_validation(tmp_path, capsys):
         cul_file_path=str(cul_file),
         output_path=str(tmp_path)
     )
-
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
     overview_obs, _ = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path)
     )
 
-    # Case 1: Pair with wrong number of elements but no .OUT file present
+    # Case 1: Pair with wrong number of elements + valid OUT file
     dpest.pst(
         cultivar_parameters=cultivar_params,
         dataframe_observations=[overview_obs],
         model_comand_line='dummy',
-        input_output_file_pairs=[(str(cul_tpl), str(cul_file), 'extra')],  # 3 elements, all strings
+        input_output_file_pairs=[
+            (str(cul_tpl), str(cul_file), 'extra'),  # Invalid 3-element pair
+            ('valid.ins', str(overview_file))         # Valid OUT file
+        ],
         output_path=str(tmp_path)
     )
     captured = capsys.readouterr()
-    # Expect .OUT extension error because it is checked before length validation
-    assert "At least one file in `input_output_file_pairs` must have a '.OUT' extension." in captured.out
+    assert "must contain exactly two elements" in captured.out
     assert not (tmp_path / "PEST_CONTROL.pst").exists()
 
-    # Case 2: Invalid first element extension (as strings)
+    # Case 2: Invalid first element extension + valid OUT file
     dpest.pst(
         cultivar_parameters=cultivar_params,
         dataframe_observations=[overview_obs],
         model_comand_line='dummy',
-        input_output_file_pairs=[('invalid.txt', str(cul_file))],  # .txt instead of .tpl/.ins
+        input_output_file_pairs=[
+            ('invalid.txt', str(cul_file)),          # Invalid extension
+            ('valid.ins', str(overview_file))        # Valid OUT file
+        ],
         output_path=str(tmp_path)
     )
     captured = capsys.readouterr()
     assert "must be a .tpl or .ins file" in captured.out
     assert not (tmp_path / "PEST_CONTROL.pst").exists()
 
-    # Case 3: Valid pairs (as strings)
+    # Case 3: Valid pairs
     valid_pairs = [
         (str(cul_tpl), str(cul_file)),
-        ('valid.ins', 'plantgro.out')
+        ('valid.ins', str(overview_file))  # .OUT file
     ]
     dpest.pst(
         cultivar_parameters=cultivar_params,
