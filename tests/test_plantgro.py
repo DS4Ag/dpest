@@ -80,7 +80,6 @@ def test_plantgro_with_optional_parameters(tmp_path):
     assert any('LAID' in name and 'TRT1' in name for name in df['variable_name'].values)
     assert any('CWAD' in name and 'TRT1' in name for name in df['variable_name'].values)
 
-
 def test_plantgro_variable_filtering(tmp_path):
     """Test filtering with specific variables"""
     repo_root = Path(__file__).parent.parent
@@ -326,3 +325,18 @@ def test_plantgro_unexpected_error(tmp_path, capsys, monkeypatch):
     captured = capsys.readouterr()
     assert "FileNotFoundError: YAML file not found:" in captured.out
     assert result is None
+
+def test_yaml_data_required(tmp_path):
+    """Test that 'yaml_data' argument is required."""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    with pytest.raises(ValueError) as excinfo:
+        dpest.wheat.plantgro(
+            yaml_data=None,
+            treatment='164.0 KG N/HA IRRIG',
+            plantgro_file_path=str(plantgro_file),
+            output_path=str(tmp_path),
+            variables=['LAID']
+        )
+    assert "The 'yaml_data' argument is required" in str(excinfo.value)
