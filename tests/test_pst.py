@@ -101,3 +101,148 @@ def test_pst(tmp_path):
         ]
         for section in required_sections:
             assert section in content, f"Missing section: {section}"
+
+
+#######################33
+def test_pst_missing_both_parameters(tmp_path, capsys):
+    """Test error when both cultivar and ecotype parameters are missing"""
+    # Setup valid observations and files
+    repo_root = Path(__file__).parent.parent
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    overview_obs, _ = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path)
+    )
+
+    input_output_pairs = [
+        (str(tmp_path / "dummy.ins"), str(plantgro_file))
+    ]
+
+    # Call pst without any parameters
+    dpest.pst(
+        cultivar_parameters=None,
+        ecotype_parameters=None,
+        dataframe_observations=[overview_obs],
+        model_comand_line='dummy_command',
+        input_output_file_pairs=input_output_pairs,
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "At least one of `cultivar_parameters` or `ecotype_parameters`" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+
+def test_pst_invalid_cultivar_type(tmp_path, capsys):
+    """Test error when cultivar_parameters is not a dict"""
+    # Setup valid ecotype parameters
+    repo_root = Path(__file__).parent.parent
+    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    ecotype_params, _ = dpest.wheat.ceres.eco(
+        PHEN='P1',
+        VERN='VEFF',
+        ecotype='TEST',
+        eco_file_path=str(eco_file),
+        output_path=str(tmp_path)
+    )
+
+    # Call with invalid cultivar type
+    dpest.pst(
+        cultivar_parameters="invalid",
+        ecotype_parameters=ecotype_params,
+        dataframe_observations=[pd.DataFrame()],
+        model_comand_line='dummy',
+        input_output_file_pairs=[('dummy.tpl', 'dummy.eco')],
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "must be a dictionary" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+
+def test_pst_missing_cul_extension(tmp_path, capsys):
+    """Test error when .CUL file is missing with cultivar params"""
+    # Setup valid cultivar parameters
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cultivar_params, _ = dpest.wheat.ceres.cul(
+        P='P1D',
+        G='G1',
+        PHINT='PHINT',
+        cultivar='TEST',
+        cul_file_path=str(cul_file),
+        output_path=str(tmp_path)
+    )
+
+    # Use invalid file pairs without .CUL
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        dataframe_observations=[pd.DataFrame()],
+        model_comand_line='dummy',
+        input_output_file_pairs=[('dummy.tpl', 'invalid.txt')],
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "must have a '.CUL' extension" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+
+def test_pst_missing_out_extension(tmp_path, capsys):
+    """Test error when no .OUT files in input pairs"""
+    # Setup valid parameters
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cultivar_params, tpl_path = dpest.wheat.ceres.cul(
+        P='P1D',
+        G='G1',
+        PHINT='PHINT',
+        cultivar='TEST',
+        cul_file_path=str(cul_file),
+        output_path=str(tmp_path)
+    )
+
+    # Invalid pairs without .OUT
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        dataframe_observations=[pd.DataFrame()],
+        model_comand_line='dummy',
+        input_output_file_pairs=[(str(tpl_path), str(cul_file))],
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "must have a '.OUT' extension" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+
+def test_pst_invalid_observations_type(tmp_path, capsys):
+    """Test error with non-DataFrame observations"""
+    # Setup valid parameters
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cultivar_params, tpl_path = dpest.wheat.ceres.cul(
+        P='P1D',
+        G='G1',
+        PHINT='PHINT',
+        cultivar='TEST',
+        cul_file_path=str(cul_file),
+        output_path=str(tmp_path)
+    )
+
+    # Pass invalid observations type
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        dataframe_observations="invalid",
+        model_comand_line='dummy',
+        input_output_file_pairs=[(str(tpl_path), str(cul_file)), ('dummy.ins', 'dummy.out')],
+        output_path=str(tmp_path)
+    )
+
+    captured = capsys.readouterr()
+    assert "must be a DataFrame or a list of DataFrames" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
