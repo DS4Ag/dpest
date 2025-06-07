@@ -326,17 +326,21 @@ def test_plantgro_unexpected_error(tmp_path, capsys, monkeypatch):
     assert "FileNotFoundError: YAML file not found:" in captured.out
     assert result is None
 
-def test_yaml_data_required(tmp_path):
+def test_yaml_data_required(tmp_path, capsys):
     """Test that 'yaml_data' argument is required."""
     repo_root = Path(__file__).parent.parent
     plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
 
-    with pytest.raises(ValueError) as excinfo:
-        dpest.wheat.plantgro(
-            yaml_data=None,
-            treatment='164.0 KG N/HA IRRIG',
-            plantgro_file_path=str(plantgro_file),
-            output_path=str(tmp_path),
-            variables=['LAID']
-        )
-    assert "The 'yaml_data' argument is required" in str(excinfo.value)
+    # Call the function with yaml_data=None and valid values for other required parameters
+    result = dpest.wheat.plantgro(
+        yaml_data=None,  # <-- Parameter under test
+        treatment='164.0 KG N/HA IRRIG',
+        plantgro_file_path=str(plantgro_file),
+        output_path=str(tmp_path),
+        variables=['LAID']  # Valid value for required 'variables' parameter
+    )
+
+    # Check printed error message
+    captured = capsys.readouterr()
+    assert "The 'yaml_data' argument is required" in captured.out
+    assert result is None
