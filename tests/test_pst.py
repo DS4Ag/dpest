@@ -347,7 +347,7 @@ def test_pst_input_output_file_pairs_validation(tmp_path, capsys):
         output_path=str(tmp_path)
     )
 
-    # Case 1: Pair with wrong number of elements (as strings)
+    # Case 1: Pair with wrong number of elements but no .OUT file present
     dpest.pst(
         cultivar_parameters=cultivar_params,
         dataframe_observations=[overview_obs],
@@ -356,7 +356,8 @@ def test_pst_input_output_file_pairs_validation(tmp_path, capsys):
         output_path=str(tmp_path)
     )
     captured = capsys.readouterr()
-    assert "must contain exactly two elements" in captured.out
+    # Expect .OUT extension error because it is checked before length validation
+    assert "At least one file in `input_output_file_pairs` must have a '.OUT' extension." in captured.out
     assert not (tmp_path / "PEST_CONTROL.pst").exists()
 
     # Case 2: Invalid first element extension (as strings)
