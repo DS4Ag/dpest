@@ -325,3 +325,66 @@ def test_pst_dataframe_observations_required(tmp_path, capsys):
     captured = capsys.readouterr()
     assert "`dataframe_observations` must be provided." in captured.out
     assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+
+def test_pst_input_output_file_pairs_validation(tmp_path, capsys):
+    """Test validation rules for input_output_file_pairs"""
+    # Setup valid parameters
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cultivar_params, cul_tpl = dpest.wheat.ceres.cul(
+        P='P1D, P5',
+        G='G1, G2, G3',
+        PHINT='PHINT',
+        cultivar='MANITOU',
+        cul_file_path=str(cul_file),
+        output_path=str(tmp_path)
+    )
+
+    # Setup valid observations
+    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_obs, _ = dpest.wheat.overview(
+        treatment='164.0 KG N/HA IRRIG',
+        overview_file_path=str(overview_file),
+        output_path=str(tmp_path)
+    )
+
+    # Case 1: Pair with wrong number of elements
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        dataframe_observations=[overview_obs],
+        model_comand_line='dummy',
+        input_output_file_pairs=[(cul_tpl, cul_file, 'extra')],  # 3 elements
+        output_path=str(tmp_path)
+    )
+    captured = capsys.readouterr()
+    assert "must contain exactly two elements" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+    # Case 2: Invalid first element extension
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        dataframe_observations=[overview_obs],
+        model_comand_line='dummy',
+        input_output_file_pairs=[('invalid.txt', cul_file)],  # .txt instead of .tpl/.ins
+        output_path=str(tmp_path)
+    )
+    captured = capsys.readouterr()
+    assert "must be a .tpl or .ins file" in captured.out
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
+
+    # Case 3: Valid pairs
+    valid_pairs = [
+        (str(cul_tpl), str(cul_file)),
+        ('valid.ins', 'plantgro.out')
+    ]
+    dpest.pst(
+        cultivar_parameters=cultivar_params,
+        dataframe_observations=[overview_obs],
+        model_comand_line='dummy',
+        input_output_file_pairs=valid_pairs,
+        output_path=str(tmp_path)
+    )
+    # Verify successful creation
+    pst_file = tmp_path / "PEST_CONTROL.pst"
+    assert pst_file.exists(), "PST file not created with valid pairs"
