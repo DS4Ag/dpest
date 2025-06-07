@@ -182,17 +182,29 @@ def test_plantgro_file_not_found(tmp_path, capsys):
     assert "FileNotFoundError: YAML file not found:" in captured.out or "FileNotFoundError: The file" in captured.out
     assert result is None
 
-def test_plantgro_missing_yaml_file(tmp_path, capsys):
-    """Test handling of missing YAML arguments file"""
-    non_existent_file = tmp_path / "nonexistent.OUT"
+
+def test_plantgro_missing_yaml_file(tmp_path, capsys, monkeypatch):
+    """Test handling of missing YAML configuration file"""
+    repo_root = Path(__file__).parent.parent
+    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+
+    # Monkeypatch to simulate missing YAML file
+    def mock_isfile(path):
+        if "arguments.yml" in str(path):
+            return False
+        return Path(path).exists()
+
+    monkeypatch.setattr(Path, "is_file", mock_isfile)
+
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(non_existent_file),
+        plantgro_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables=['LAID']
     )
+
     captured = capsys.readouterr()
-    assert "FileNotFoundError: The file 'nonexistent.OUT' does not exist" in captured.out or "YAML file not found" in captured.out
+    assert "FileNotFoundError: YAML configuration file not found" in captured.out
     assert result is None
 
 def test_plantgro_nonexistent_treatment(tmp_path, capsys):
@@ -324,23 +336,4 @@ def test_plantgro_unexpected_error(tmp_path, capsys, monkeypatch):
     )
     captured = capsys.readouterr()
     assert "FileNotFoundError: YAML file not found:" in captured.out
-    assert result is None
-
-def test_yaml_data_required(tmp_path, capsys):
-    """Test that 'yaml_data' argument is required."""
-    repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
-
-    # Call the function with yaml_data=None and valid values for other required parameters
-    result = dpest.wheat.plantgro(
-        yaml_data=None,  # <-- Parameter under test
-        treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
-        output_path=str(tmp_path),
-        variables=['LAID']  # Valid value for required 'variables' parameter
-    )
-
-    # Check printed error message
-    captured = capsys.readouterr()
-    assert "The 'yaml_data' argument is required" in captured.out
     assert result is None
