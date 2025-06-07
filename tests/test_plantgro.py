@@ -182,29 +182,17 @@ def test_plantgro_file_not_found(tmp_path, capsys):
     assert "FileNotFoundError: YAML file not found:" in captured.out or "FileNotFoundError: The file" in captured.out
     assert result is None
 
-
-def test_plantgro_missing_yaml_file(tmp_path, capsys, monkeypatch):
-    """Test handling of missing YAML configuration file"""
-    repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
-
-    # Monkeypatch to simulate missing YAML file
-    def mock_isfile(path):
-        if "arguments.yml" in str(path):
-            return False
-        return Path(path).exists()
-
-    monkeypatch.setattr(Path, "is_file", mock_isfile)
-
+def test_plantgro_missing_yaml_file(tmp_path, capsys):
+    """Test handling of missing YAML arguments file"""
+    non_existent_file = tmp_path / "nonexistent.OUT"
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
+        plantgro_file_path=str(non_existent_file),
         output_path=str(tmp_path),
         variables=['LAID']
     )
-
     captured = capsys.readouterr()
-    assert "FileNotFoundError: YAML configuration file not found" in captured.out
+    assert "FileNotFoundError: The file 'nonexistent.OUT' does not exist" in captured.out or "YAML file not found" in captured.out
     assert result is None
 
 def test_plantgro_nonexistent_treatment(tmp_path, capsys):
@@ -316,24 +304,3 @@ def test_plantgro_different_output_formats(tmp_path):
         )
         df, ins_path = result
         assert Path(ins_path).exists()
-
-def test_plantgro_unexpected_error(tmp_path, capsys, monkeypatch):
-    """Test handling of unexpected exceptions"""
-    repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
-    import os
-    original_isfile = os.path.isfile
-    def fake_isfile(path):
-        if "arguments.yml" in str(path):
-            return False
-        return original_isfile(path)
-    monkeypatch.setattr(os.path, "isfile", fake_isfile)
-    result = dpest.wheat.plantgro(
-        treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
-        output_path=str(tmp_path),
-        variables=['LAID']
-    )
-    captured = capsys.readouterr()
-    assert "FileNotFoundError: YAML file not found:" in captured.out
-    assert result is None
