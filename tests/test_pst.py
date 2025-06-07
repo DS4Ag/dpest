@@ -159,4 +159,4 @@ def test_pst_invalid_cultivar_type(tmp_path, capsys):
 
     captured = capsys.readouterr()
     assert "must be a dictionary" in captured.out
-    assert not (tmp_path / "PEST_CONTROL.pst").exists())
+    assert not (tmp_path / "PEST_CONTROL.pst").exists()
