@@ -175,3 +175,21 @@ def test_cul_default_header_start(capsys, tmp_path):
         new_template_file_extension='.tpl'  # Provide something else to not hit previous test
     )
     assert result is not None
+
+def test_cul_empty_parameters_grouped(tmp_path):
+    """Test that empty parameters_grouped triggers YAML defaults."""
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    output_dir = tmp_path / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Call WITHOUT any parameter group arguments (P=..., G=..., etc.)
+    result = dpest.wheat.ceres.cul(
+        cultivar='MANITOU',
+        cul_file_path=str(cul_file),
+        output_path=str(output_dir),
+        new_template_file_extension='.tpl'
+    )
+
+    # Verify function completes successfully
+    assert result is not None
