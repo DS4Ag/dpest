@@ -36,6 +36,35 @@ facparmax(pst_file_path, 2.0)
 # Set FACORIG to 01
 facorig(pst_file_path, 0.1)
 
+def test_facorig_error_branches(tmp_path, capsys):
+    # 1. FileNotFoundError
+    missing_file = tmp_path / "no_such_file.pst"
+    facorig(str(missing_file), 0.5)
+    captured = capsys.readouterr()
+    assert "Error: File" in captured.out
+
+    # 2. ValueError: out of range
+    test_file = tmp_path / "test1.pst"
+    test_file.write_text("\n" * 7 + "1 2 3\n")  # 8 lines, dummy content
+    facorig(str(test_file), 1.5)
+    captured = capsys.readouterr()
+    assert "ValueError: FACORIG must be between 0.0 and 1.0" in captured.out
+
+    # 3. IndexError: too few lines
+    short_file = tmp_path / "short.pst"
+    short_file.write_text("only one line\n")
+    facorig(str(short_file), 0.5)
+    captured = capsys.readouterr()
+    assert "IndexError: File has only" in captured.out
+
+    # 4. ValueError: too few values on line
+    bad_line_file = tmp_path / "badline.pst"
+    lines = ["\n"] * 6 + ["one two\n"]
+    bad_line_file.write_text("".join(lines))
+    facorig(str(bad_line_file), 0.5)
+    captured = capsys.readouterr()
+    assert "ValueError: FACORIG position not found in control data line" in captured.out
+
 # Set PHIREDSWH to 0.1
 phiredswh(pst_file_path, 0.1)
 
