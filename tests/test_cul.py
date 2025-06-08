@@ -138,3 +138,40 @@ def test_cul_invalid_parameters(capsys, tmp_path):
     captured = capsys.readouterr()
     assert "ValueError: Parameter 'INVALID_PARAM' does not exist in the header line of" in captured.out
     assert result is None
+
+def test_cul_default_new_template_file_extension(capsys, tmp_path):
+    """Test that default new_template_file_extension is used when not provided."""
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    output_dir = tmp_path / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Don't provide new_template_file_extension
+    result = dpest.wheat.ceres.cul(
+        P='P1D, P5',
+        G='G1, G2, G3',
+        PHINT='PHINT',
+        cultivar='MANITOU',
+        cul_file_path=str(cul_file),
+        output_path=str(output_dir)
+    )
+    assert result is not None
+
+def test_cul_default_header_start(capsys, tmp_path):
+    """Test that default header_start is used when not provided."""
+    repo_root = Path(__file__).parent.parent
+    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    output_dir = tmp_path / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Don't provide header_start
+    result = dpest.wheat.ceres.cul(
+        P='P1D, P5',
+        G='G1, G2, G3',
+        PHINT='PHINT',
+        cultivar='MANITOU',
+        cul_file_path=str(cul_file),
+        output_path=str(output_dir),
+        new_template_file_extension='.tpl'  # Provide something else to not hit previous test
+    )
+    assert result is not None
