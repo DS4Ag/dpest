@@ -1,7 +1,5 @@
 import dpest
 from pathlib import Path
-import pytest
-import re
 
 def test_cul(tmp_path):
     """Test generation of cultivar template files."""
