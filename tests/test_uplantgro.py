@@ -6,21 +6,19 @@ from pathlib import Path
 def test_uplantgro_success(capsys):
     plantgro_path = Path('tests/DSSAT48_data/Wheat/PlantGro.OUT').resolve()
 
-    # Execute the function
     result = dpest.wheat.utils.uplantgro(
         str(plantgro_path),
         '164.0 KG N/HA IRRIG',
         ['LAID', 'CWAD', 'T#AD']
     )
 
-    # Capture printed output
     captured = capsys.readouterr()
 
-    # The function should return None as per its docstring
     assert result is None
-
-    # Verify either update message or no-update message was printed
-    assert ("row(s) added" in captured.out) or ("No update required" in captured.out)
+    # Match EXACT output patterns from the function
+    assert ("rows added successfully" in captured.out) or \
+           ("row added successfully" in captured.out) or \
+           ("PlantGro.OUT status: No update required." in captured.out)
 
 
 def test_invalid_treatment_type(capsys):
