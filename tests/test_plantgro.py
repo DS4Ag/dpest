@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-def test_overview(tmp_path):
+def test_plantgro(tmp_path):
     """Test generation of instruction file and observations from PlantGro.OUT."""
     # Setup paths
     repo_root = Path(__file__).parent.parent
@@ -20,7 +20,7 @@ def test_overview(tmp_path):
     plantgro_file = str(plantgro_file)
     output_dir = str(output_dir)
 
-    # Call the dpest.wheat.overview function
+    # Call the dpest.wheat.plantgro function
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD'],
