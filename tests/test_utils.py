@@ -1293,7 +1293,6 @@ def test_svd_disable_mode(tmp_path, capsys):
     assert "0" in updated[2]  # svdmode line
     assert "1000 1.000000E-01" in updated[3]  # other params preserved
 
-
 def test_svd_missing_control_section(tmp_path, capsys):
     """Test handling missing control data section"""
     test_file = tmp_path / "test.pst"
@@ -1306,6 +1305,7 @@ def test_svd_missing_control_section(tmp_path, capsys):
     svd(str(test_file))
     captured = capsys.readouterr()
     assert "Missing required '* control data' section" in captured.out
+
 
 
 # Removing the LSQR Section from a PEST Control File
@@ -1404,3 +1404,115 @@ def test_rmv_lsqr_section_at_end(tmp_path, capsys):
     updated_content = test_file.read_text().splitlines()
     assert len(updated_content) == 1  # Only "* control" remains
     assert "* control" in updated_content[0]
+
+
+def test_rmv_svd_no_section(tmp_path, capsys):
+    """Test handling when no SVD section exists"""
+    # Create test file without SVD
+    test_file = tmp_path / "test.pst"
+    content = [
+        "* control data\n",
+        "* model\n",
+        "model_data\n"
+    ]
+    test_file.write_text("".join(content))
+
+    # Run function
+    rmv_svd(str(test_file))
+
+    # Verify output
+    captured = capsys.readouterr()
+    assert "No SVD (singular value decomposition) section found to remove" in captured.out
+
+    # Verify file remains unchanged
+    assert test_file.read_text() == "".join(content)
+
+
+def test_rmv_svd_case_insensitivity(tmp_path):
+    """Test case-insensitive section detection"""
+    test_file = tmp_path / "test.pst"
+    content = [
+        "* CONTROL DATA\n",
+        "* SINGULAR VALUE DECOMPOSITION\n",
+        "parameters\n",
+        "* MODEL\n"
+    ]
+    test_file.write_text("".join(content))
+
+    rmv_svd(str(test_file))
+    updated_content = test_file.read_text()
+    assert "* SINGULAR VALUE DECOMPOSITION" not in updated_content
+    assert "* MODEL" in updated_content
+
+
+def test_rmv_svd_file_not_found(capsys):
+    """Test handling of missing file"""
+    rmv_svd("non_existent_file.pst")
+    captured = capsys.readouterr()
+    assert "Error: File not found" in captured.out
+
+
+def test_rmv_svd_section_at_end(tmp_path, capsys):
+    """Test SVD section at end of file"""
+    test_file = tmp_path / "test.pst"
+    content = [
+        "* control data\n",
+        "* singular value decomposition\n",
+        "param1\n",
+        "param2\n"  # No following section
+    ]
+    test_file.write_text("".join(content))
+
+    rmv_svd(str(test_file))
+
+    updated_content = test_file.read_text().splitlines()
+    assert len(updated_content) == 1  # Only control data remains
+    assert "* control data" in updated_content[0]
+
+
+def test_rmv_svd_malformed_section(tmp_path, capsys):
+    """Test malformed SVD section without closing"""
+    test_file = tmp_path / "test.pst"
+    content = [
+        "* control data\n",
+        "* singular value decomposition\n",
+        "malformed_param\n",
+        "another_line\n"
+    ]
+    test_file.write_text("".join(content))
+
+    rmv_svd(str(test_file))
+
+    updated_content = test_file.read_text().splitlines()
+    assert "* control data" in updated_content[0]
+    assert len(updated_content) == 1  # All SVD-related lines removed
+
+
+def test_rmv_svd_successful_removal(tmp_path, capsys):
+    """Test removal of existing SVD section"""
+    # Create test file with SVD section
+    test_file = tmp_path / "test.pst"
+    content = [
+        "* control data\n",
+        "dummy line\n",
+        "* singular value decomposition\n",
+        "svd_param1 1.0\n",
+        "svd_param2 2.0\n",
+        "* model\n",
+        "model_data\n"
+    ]
+    test_file.write_text("".join(content))
+
+    # Run function
+    rmv_svd(str(test_file))
+
+    # Verify output
+    captured = capsys.readouterr()
+    assert "SVD (singular value decomposition) section removed successfully" in captured.out
+
+    # Verify file content
+    updated_content = test_file.read_text().splitlines()
+    assert "* singular value decomposition" not in updated_content
+    assert "svd_param1" not in updated_content
+    assert "* model" in updated_content
+    assert "model_data" in updated_content  # Will now pass after typo fix

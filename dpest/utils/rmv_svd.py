@@ -51,7 +51,7 @@ def rmv_svd(pst_path):
                 continue
             if in_svd:
                 if line.strip().startswith('*'):
-                    in_lsqr = False
+                    in_svd = False
                     new_lines.append(line)
                 continue
             new_lines.append(line)
