@@ -181,6 +181,14 @@ rmv_splitcols(“PEST_CONTROL.pst”)
 **Full List of Utility Functions:**  
 For the complete reference of available utility functions and their descriptions, see the [dpest ReadTheDocs Utils page](https://dpest.readthedocs.io/en/latest/utils.html).
 
+## Test Coverage
+
+[![codecov](https://codecov.io/gh/DS4Ag/dpest/branch/main/graph/badge.svg)](https://codecov.io/gh/DS4Ag/dpest)
+
+A detailed and up-to-date test coverage report for the `dpest` codebase is available on Codecov:
+
+[View detailed coverage report on Codecov](https://app.codecov.io/gh/DS4Ag/dpest/branch/main)
+
 ## Developer and Tester Setup Instructions for dpest
 
 These instructions will guide you through setting up your environment, installing dependencies, and running tests for the `dpest` package.
