@@ -187,7 +187,7 @@ For the complete reference of available utility functions and their descriptions
 
 A detailed and up-to-date test coverage report for the `dpest` codebase is available on Codecov:
 
-[View detailed coverage report on Codecov](https://app.codecov.io/gh/DS4Ag/dpest/branch/main)
+<a href="https://app.codecov.io/gh/DS4Ag/dpest/branch/main" target="_blank">View detailed coverage report on Codecov</a>
 
 ## Developer and Tester Setup Instructions for dpest
 
