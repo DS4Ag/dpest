@@ -1052,10 +1052,25 @@ def test_lsqr_invalid_parameters(tmp_path, capsys):
     captured = capsys.readouterr()
     assert "lsqr_atol must be greater than or equal to 0" in captured.out
 
+    # Test negative btol (NEW)
+    lsqr(str(test_file), lsqr_btol=-1)
+    captured = capsys.readouterr()
+    assert "lsqr_btol must be greater than or equal to 0" in captured.out
+
+    # Test negative conlim (NEW)
+    lsqr(str(test_file), lsqr_conlim=-1)
+    captured = capsys.readouterr()
+    assert "lsqr_conlim must be greater than or equal to 0" in captured.out
+
     # Test invalid itnlim
     lsqr(str(test_file), lsqr_itnlim=0)
     captured = capsys.readouterr()
     assert "lsqr_itnlim must be an integer greater than 0" in captured.out
+
+    # Test invalid lsqrwrite (NEW)
+    lsqr(str(test_file), lsqrwrite=2)
+    captured = capsys.readouterr()
+    assert "lsqrwrite must be 0 or 1" in captured.out
 
 
 def test_lsqr_file_not_found(capsys):

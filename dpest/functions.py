@@ -328,58 +328,58 @@ def extract_simulation_data(file_path):
     return all_data, header_line
 
 
-def process_treatment_file(file_path, treatment_mapping, season_mapping):
-    """
-    Reads the treatment file, extracts the treatment data, and adds 'treatment' and 'season' columns.
-
-    Parameters:
-    - file_path: Path to the treatment file.
-    - treatment_mapping: A dictionary for mapping treatment codes (e.g., 'WW' to 'Well-watered').
-    - season_mapping: A dictionary for mapping season codes (e.g., '22' to 'Winter 2021-2022').
-
-    Returns:
-    - DataFrame with 'N', 'TNAME', 'CU', 'treatment', and 'season' columns.
-    """
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-    
-    # Initialize an empty list to store the data
-    data = []
-    in_treatments_section = False
-
-    for line in lines:
-        # Check if we are entering the TREATMENTS section
-        if line.startswith('*TREATMENTS'):
-            in_treatments_section = True
-            continue
-        
-        # Check if we are leaving the TREATMENTS section
-        if in_treatments_section and line.startswith('*'):
-            break
-        
-        # Process lines in the TREATMENTS section
-        if in_treatments_section:
-            # Skip the header row
-            if '@N' in line:
-                continue
-            
-            # Split the line into columns using whitespace
-            parts = list(filter(None, line.split()))
-            if len(parts) >= 5:
-                # Extract the required columns
-                N = parts[0]
-                TNAME = parts[4]
-                CU = parts[5]
-                data.append([N, TNAME, CU])
-    
-    # Create a DataFrame from the extracted data
-    df = pd.DataFrame(data, columns=['N', 'TNAME', 'entry'])
-    
-    # Extract treatment code and season code from TNAME and map them
-    df['treatment'] = df['TNAME'].str[:2].map(treatment_mapping)
-    df['season'] = df['TNAME'].str[2:4].map(season_mapping)
-    
-    return df
+# def process_treatment_file(file_path, treatment_mapping, season_mapping):
+#     """
+#     Reads the treatment file, extracts the treatment data, and adds 'treatment' and 'season' columns.
+#
+#     Parameters:
+#     - file_path: Path to the treatment file.
+#     - treatment_mapping: A dictionary for mapping treatment codes (e.g., 'WW' to 'Well-watered').
+#     - season_mapping: A dictionary for mapping season codes (e.g., '22' to 'Winter 2021-2022').
+#
+#     Returns:
+#     - DataFrame with 'N', 'TNAME', 'CU', 'treatment', and 'season' columns.
+#     """
+#     with open(file_path, 'r') as file:
+#         lines = file.readlines()
+#
+#     # Initialize an empty list to store the data
+#     data = []
+#     in_treatments_section = False
+#
+#     for line in lines:
+#         # Check if we are entering the TREATMENTS section
+#         if line.startswith('*TREATMENTS'):
+#             in_treatments_section = True
+#             continue
+#
+#         # Check if we are leaving the TREATMENTS section
+#         if in_treatments_section and line.startswith('*'):
+#             break
+#
+#         # Process lines in the TREATMENTS section
+#         if in_treatments_section:
+#             # Skip the header row
+#             if '@N' in line:
+#                 continue
+#
+#             # Split the line into columns using whitespace
+#             parts = list(filter(None, line.split()))
+#             if len(parts) >= 5:
+#                 # Extract the required columns
+#                 N = parts[0]
+#                 TNAME = parts[4]
+#                 CU = parts[5]
+#                 data.append([N, TNAME, CU])
+#
+#     # Create a DataFrame from the extracted data
+#     df = pd.DataFrame(data, columns=['N', 'TNAME', 'entry'])
+#
+#     # Extract treatment code and season code from TNAME and map them
+#     df['treatment'] = df['TNAME'].str[:2].map(treatment_mapping)
+#     df['season'] = df['TNAME'].str[2:4].map(season_mapping)
+#
+#     return df
 
     
 ### Variables transformation functions
