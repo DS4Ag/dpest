@@ -787,20 +787,20 @@ def validate_file_path(file_path):
     return file_path
 
 
-def extract_all_params(*parameter_dicts):
-    """
-    Extract all parameters from one or more dictionaries.
-    """
-    all_params = []
-    for param_dict in parameter_dicts:
-        grouped = param_dict.get('parameters_grouped', {})
-        params = [
-            param
-            for group in grouped.values()
-            for param in group.replace(' ', '').split(',')
-        ]
-        all_params.extend(params)
-    return all_params
+# def extract_all_params(*parameter_dicts):
+#     """
+#     Extract all parameters from one or more dictionaries.
+#     """
+#     all_params = []
+#     for param_dict in parameter_dicts:
+#         grouped = param_dict.get('parameters_grouped', {})
+#         params = [
+#             param
+#             for group in grouped.values()
+#             for param in group.replace(' ', '').split(',')
+#         ]
+#         all_params.extend(params)
+#     return all_params
 
 
 def read_growth_file(file_path, treatment_range):
