@@ -47,7 +47,7 @@ The first step is to create the cultivar Template File (``.TPL``) for the ``MANI
         G = 'G1, G2, G3', 
         PHINT = 'PHINT',
         cultivar = 'MANITOU',
-        cul_file_path = 'C:/DSSAT48/Genotype/WHCER048.CUL'
+        cul_file_path = './DSSAT48/Genotype/WHCER048.CUL'
     )  
 
 After running this function:  
@@ -66,14 +66,14 @@ For this experiment, key end-of-season crop performance metrics and phenological
     # Create OVERVIEW observations INS file
     overview_observations, overview_ins_path = dpest.wheat.overview(
         treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
-        overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT'  # Path to the OVERVIEW.OUT file
+        overview_file_path = './DSSAT48/Wheat/OVERVIEW.OUT'  # Path to the OVERVIEW.OUT file
     )
 
     # Create PlantGro observations INS file
     plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
         treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
         variables = ['LAID', 'CWAD', 'T#AD'],  # Variables to calibrate
-        plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT'  # Path to the PlantGro.OUT file
+        plantgro_file_path = './DSSAT48/Wheat/PlantGro.OUT'  # Path to the PlantGro.OUT file
     )
 
 After running these functions:
@@ -99,40 +99,69 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
     import subprocess
     from dpest.wheat.utils import uplantgro
 
-    def build_path(*args):
-        """
-        Construct a file path from multiple arguments.
-        """
-        return os.path.join(*args)
+    # User-editable section for system DSSAT installation
+    dssat_install_dir = r'C:\DSSAT48'  # System DSSAT installation folder
+    dssat_exe = os.path.join(dssat_install_dir, 'DSCSM048.EXE')
+    control_file = os.path.join(dssat_install_dir, 'Wheat', 'DSSBatch.v48')
 
-    # Define DSSAT root directory and output folder
-    dssat_path = 'C://DSSAT48/'
-    output_directory = 'C://DSSAT48/Wheat/'
+    # Project data directory (relative to script location)
+    project_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(project_dir, 'DSSAT48')
+    output_dir = os.path.join(data_dir, 'Wheat')
 
-    # Set the working directory to the output folder
-    os.chdir(output_directory)
+    # Change working directory to the output directory
+    os.chdir(output_dir)
 
-    # Build the command to run DSSAT
-    main_executable = build_path(dssat_path, 'DSCSM048.EXE')
+    # Build and run DSSAT command
     module = 'CSCER048'
     switch = 'B'
-    control_file = build_path(dssat_path, 'Wheat/DSSBatch.v48')
-
-    # Create and execute the command 
-    command_line = ' '.join([main_executable, module, switch, control_file])
+    command_line = f'"{dssat_exe}" {module} {switch} "{control_file}"'
     result = subprocess.run(command_line, shell=True, check=True, capture_output=True, text=True)
-
-    # Print DSSAT execution output
     print(result.stdout)
 
     # Use uplantgro from dpest.wheat.utils to extract and update data from PlantGro.OUT if needed
     uplantgro(
-        plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+        plantgro_file_path=os.path.join(output_dir, 'PlantGro.OUT'),
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
-This script should be ``saved in the PEST installation directory`` (e.g., ``C:\pest18``). The command to execute it (``py "C:\pest18\script_name.py"``) must match the actual filename and will be included in the ``.PST`` file.
+
+
+Download the example of a Python script to run DSSAT
+====================================================
+
+`run_dssat.py <https://github.com/DS4Ag/dpest/blob/main/examples/wheat/ceres/run_dssat.py>`_ *(Click to download if not already in your directory)*
+
+.. important::
+
+   The provided run_dssat.py script is set up so that DSSAT writes its output files directly into the project’s data directory (e.g., DSSAT48/Wheat). This ensures PEST always reads the latest simulation results.
+
+   If you use a different method to run DSSAT (such as your own script, a batch file, or a direct executable call), you must:
+
+   - Ensure that DSSAT outputs are written to the correct directory referenced in your .pst file.
+   - Update the * model command line in the .pst file to match your actual execution command.
+   - Double-check that the output files are being updated with each run, so PEST uses the latest results.
+   - For more on running DSSAT from the command line and managing outputs, see the `DSSAT Power Users Guide <https://dssat.net/tools/tools-for-power-users/>`_.
+
+   The run_dssat.py script is provided as a reference. Adapt it as needed for your own DSSAT installation and workflow.
+
+Where to save and how to call the Python script for PEST
+========================================================
+
+The Python script ``run_dssat.py`` is configured to be saved in the root directory of your project (i.e., in the same folder as your main project files and the ``DSSAT48`` data directory).
+
+When specifying the command to execute this script in the PEST control file (``.PST``), use a command that correctly references the script’s filename and its path relative to the directory where you run PEST.
+
+For example, if the script is named ``run_dssat.py`` and is located in the project root, the command to execute it would be::
+
+   py ./run_dssat.py
+
+or equivalently::
+
+   python ./run_dssat.py
+
+This command should be included exactly as shown in the ``* model command line`` section of your ``.PST`` file.
 
 **Generate the PEST Control File (.PST)**  
 
@@ -143,11 +172,11 @@ Once the script is saved, we can generate the ``PEST control file`` using the fo
     dpest.pst(
         cultivar_parameters = cultivar_parameters,
         dataframe_observations = [overview_observations, plantgro_observations],
-        model_comand_line = r'py "C:\pest18\run_dssat.py"',  # Command to run the model
+        model_comand_line = r'py ./run_dssat.py',  # Command to run the model
         input_output_file_pairs = [
-            (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),  # Template file → Target file
-            (overview_ins_path , 'C://DSSAT48/Wheat/OVERVIEW.OUT'),  # Instruction file → Target file
-            (plantgro_ins_path , 'C://DSSAT48/Wheat/PlantGro.OUT')  # Instruction file → Target file
+            (cultivar_tpl_path, './DSSAT48/Genotype/WHCER048.CUL'),  # Template file → Target file
+            (overview_ins_path , './DSSAT48/Wheat/OVERVIEW.OUT'),  # Instruction file → Target file
+            (plantgro_ins_path , './DSSAT48/Wheat/PlantGro.OUT')  # Instruction file → Target file
         ]
     )
 
@@ -187,10 +216,10 @@ Run the following commands to validate the different PEST input files. Each vali
     tempchek.exe WHCER048_CUL.TPL 
 
     # Validate the Overview Instruction File (.INS)
-    inschek.exe OVERVIEW.ins C://DSSAT48/Wheat/OVERVIEW.OUT  
+    inschek.exe OVERVIEW.ins ./DSSAT48/Wheat/OVERVIEW.OUT
 
     # Validate the PlantGro Instruction File (.INS)
-    inschek.exe PlantGro.ins C://DSSAT48/Wheat/PlantGro.OUT 
+    inschek.exe PlantGro.ins ./DSSAT48/Wheat/PlantGro.OUT
 
     # Validate the PEST Control File (.PST)
     pestchek.exe PEST_CONTROL.pst  
@@ -203,8 +232,8 @@ If the files are correctly formatted and no errors are found, the output will co
 
 After successfully validating the ``PEST input files``, the final step is to run the calibration process.
 
-Run the following command to start ``PEST`` in parameter estimation mode:
+Run the following command in the Command Prompt (or terminal, if using a different operating system) to start ``PEST`` in parameter estimation mode:
 
 .. code-block:: console
 
-    C:\wht_manitou_cal> PEST.exe PEST_CONTROL.pst 
+   PEST.exe PEST_CONTROL.pst
