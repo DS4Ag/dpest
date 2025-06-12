@@ -126,8 +126,6 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
-
-
 **Download the example of a Python script to run DSSAT**
 
 `run_dssat.py <https://github.com/DS4Ag/dpest/blob/main/examples/wheat/ceres/run_dssat.py>`_ *(Click to download if not already in your directory)*
@@ -145,7 +143,8 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
 
    The run_dssat.py script is provided as a reference. Adapt it as needed for your own DSSAT installation and workflow.
 
-** Where to save and how to call the Python script for PEST**
+
+    **Where to save and how to call the Python script for PEST**
 
 The Python script ``run_dssat.py`` is configured to be saved in the root directory of your project (i.e., in the same folder as your main project files and the ``DSSAT48`` data directory).
 
@@ -161,7 +160,7 @@ or equivalently::
 
 This command should be included exactly as shown in the ``* model command line`` section of your ``.PST`` file.
 
-**Generate the PEST Control File (.PST)**  
+    **Generate the PEST Control File (.PST)**
 
 Once the script is saved, we can generate the ``PEST control file`` using the following function:
 
