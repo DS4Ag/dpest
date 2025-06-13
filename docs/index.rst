@@ -183,8 +183,6 @@ Example Usage
     rmv_splitcols("PEST_CONTROL.pst")
 
 
-Table of Contents
-=================
 
 .. toctree::
    :maxdepth: 1
