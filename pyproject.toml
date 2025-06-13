@@ -30,8 +30,13 @@ build-backend = "setuptools.build_meta"
 [project.urls]
 Homepage = "https://github.com/DS4Ag/dpest"
 Issues = "https://github.com/DS4Ag/dpest/issues"
-[dependency-groups]
+
+[project.optional-dependencies]
 dev = [
     "pytest>=8.4.0",
     "coverage>=7.0.0",
+]
+notebooks = [
+    "ipykernel>=6.29.5",
+    "jupyter>=7.4.3. "
 ]
