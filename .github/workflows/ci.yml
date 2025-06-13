@@ -27,7 +27,7 @@ jobs:
 
       - name: Run tests with coverage
         env:
-          COVERAGE_PROCESS_START: ${{ github.workspace }}/.coveragerc  # Critical for subprocess tracking
+          COVERAGE_PROCESS_START: ${{ github.workspace }}/.coveragerc
         run: |
           pdm run coverage run -m pytest tests/
           pdm run coverage combine  # Merge subprocess coverage files
