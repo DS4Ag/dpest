@@ -1,57 +1,8 @@
-#name: CI with Coverage
-#
-#on:
-#  push:
-#  pull_request:
-#
-#jobs:
-#  test-and-coverage:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - name: Set up Python 3.10
-#        uses: actions/setup-python@v4
-#        with:
-#          python-version: "3.10"
-#
-#      - name: Install PDM and dependencies
-#        run: |
-#          pip install --user pdm
-#          pdm install --dev
-#
-##      - name: Run tests with coverage
-##        run: |
-##          pdm run coverage run -m pytest
-##          pdm run coverage xml
-#
-##      - name: Run tests with coverage
-##        env:
-##          COVERAGE_PROCESS_START: ${{ github.workspace }}/.coveragerc
-##        run: |
-##          pdm run coverage run -m pytest tests/
-##          pdm run coverage combine  # Merge subprocess coverage files
-##          pdm run coverage xml
-#
-#      - name: Run tests with coverage
-#        env:
-#          COVERAGE_PROCESS_START: ${{ github.workspace }}/.coveragerc
-#        run: |
-#          # Explicitly run notebook tests and unit tests
-#          pdm run python -m coverage run -m pytest tests/test_notebooks.py
-#          pdm run python -m coverage run -m pytest tests/
-#          pdm run python -m coverage combine
-#          pdm run python -m coverage xml
-#
-#      - name: Upload coverage reports to Codecov
-#        uses: codecov/codecov-action@v5
-#        with:
-#          # token: ${{ secrets.CODECOV_TOKEN }}  # Optional for public repos
-#          slug: DS4Ag/dpest
-#          files: ./coverage.xml
-
 name: CI with Coverage
-on: [push, pull_request]
+
+on:
+  push:
+  pull_request:
 
 jobs:
   test-and-coverage:
@@ -70,19 +21,13 @@ jobs:
           pdm install --dev
 
       - name: Run tests with coverage
-        env:
-          COVERAGE_PROCESS_START: ${{ github.workspace }}/.coveragerc
         run: |
-          pdm run python -m coverage run -m pytest tests/test_notebooks.py
-          pdm run python -m coverage run -m pytest tests/
-          pdm run python -m coverage combine
-          pdm run python -m coverage xml
-
-      - name: Debug Coverage Data
-        run: |
-          cat coverage.xml | grep "dpest/"
+          pdm run coverage run -m pytest
+          pdm run coverage xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
+          # token: ${{ secrets.CODECOV_TOKEN }}  # Optional for public repos
+          slug: DS4Ag/dpest
           files: ./coverage.xml
