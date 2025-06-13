@@ -42,14 +42,14 @@ dev = [
 ]
 
 [project.optional-dependencies]
-#dev = [
-#    "pytest>=8.4.0",
-#    "coverage>=7.0.0",
-#    "nbval",
-#    "nbformat>=5.10.4",
-#    "nbconvert>=7.16.0",
-#    "ipykernel>=6.29.0"
-#]
+dev = [
+    "pytest>=8.4.0",
+    "coverage>=7.0.0",
+    "nbval",
+    "nbformat>=5.10.4",
+    "nbconvert>=7.16.0",
+    "ipykernel>=6.29.0"
+]
 notebook = [
     "ipykernel>=6.29.0",
     "notebook>=7.1.0",
