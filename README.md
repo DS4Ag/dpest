@@ -41,7 +41,26 @@ pip install dpest
 ## How to Use dpest?
 
 ### Jupyter notebook example
-We provide a Jupyter notebook example ([usage_example.ipynb](https://github.com/DS4Ag/dpest/blob/main/examples/wheat/ceres/usage_example.ipynb)) that demonstrates all package functions in a practical workflow and includes steps for using PEST’s “check” functions to validate the generated input files.
+To quickly explore how `dpest` works in practice, you can open and run the example Jupyter notebook included in the repository:
+
+[`examples/wheat/ceres/usage_example.ipynb`](https://github.com/DS4Ag/dpest/blob/main/examples/wheat/ceres/usage_example.ipynb)
+
+This notebook walks through:
+
+* Loading DSSAT outputs (`OVERVIEW.OUT`, `PlantGro.OUT`)
+* Generating template (`.TPL`) and instruction (`.INS`) files
+* Creating the main PEST control file (`.PST`)
+* Validating the setup using PEST check commands
+
+To run the notebook:
+
+```bash
+  pip install dpest[notebook]
+  jupyter notebook examples/wheat/ceres/usage_example.ipynb
+```
+
+> **Note:** The `[notebook]` extra installs `ipykernel` and `notebook` dependencies required to open the notebook.
+
 
 
 ### Read the Docs
