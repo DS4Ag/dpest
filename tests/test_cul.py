@@ -5,7 +5,7 @@ def test_cul(tmp_path):
     """Test generation of cultivar template files."""
     # Setup paths
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
 
     # Ensure the input file exists
@@ -58,7 +58,7 @@ def test_cul_missing_arguments_file(capsys, tmp_path):
     """Test printed error when arguments.yml is missing."""
     # Temporarily rename arguments.yml if it exists
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     module_dir = Path(dpest.wheat.ceres.__file__).parent
@@ -86,7 +86,7 @@ def test_cul_missing_arguments_file(capsys, tmp_path):
 def test_cul_missing_cultivar(capsys, tmp_path):
     """Test printed error when cultivar is not provided."""
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     result = dpest.wheat.ceres.cul(
@@ -104,7 +104,7 @@ def test_cul_missing_cultivar(capsys, tmp_path):
 def test_cul_invalid_cultivar(capsys, tmp_path):
     """Test printed error when cultivar does not exist in file."""
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     result = dpest.wheat.ceres.cul(
@@ -122,7 +122,7 @@ def test_cul_invalid_cultivar(capsys, tmp_path):
 def test_cul_invalid_parameters(capsys, tmp_path):
     """Test printed error when parameter does not exist in header."""
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     result = dpest.wheat.ceres.cul(
@@ -140,7 +140,7 @@ def test_cul_invalid_parameters(capsys, tmp_path):
 def test_cul_default_new_template_file_extension(capsys, tmp_path):
     """Test that default new_template_file_extension is used when not provided."""
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -158,7 +158,7 @@ def test_cul_default_new_template_file_extension(capsys, tmp_path):
 def test_cul_default_header_start(capsys, tmp_path):
     """Test that default header_start is used when not provided."""
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -177,7 +177,7 @@ def test_cul_default_header_start(capsys, tmp_path):
 def test_cul_empty_parameters_grouped(tmp_path):
     """Test that empty parameters_grouped triggers YAML defaults."""
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 

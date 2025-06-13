@@ -7,7 +7,7 @@ def test_plantgro(tmp_path):
     """Test generation of instruction file and observations from PlantGro.OUT."""
     # Setup paths
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
     output_dir = tmp_path / "output"
 
     # Ensure the input file exists
@@ -57,7 +57,7 @@ def test_plantgro(tmp_path):
 def test_plantgro_with_optional_parameters(tmp_path):
     """Test with all optional parameters specified"""
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
@@ -83,7 +83,7 @@ def test_plantgro_with_optional_parameters(tmp_path):
 def test_plantgro_variable_filtering(tmp_path):
     """Test filtering with specific variables"""
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     test_vars = ['LAID', 'CWAD']
 
@@ -101,7 +101,7 @@ def test_plantgro_variable_filtering(tmp_path):
 def test_plantgro_missing_treatment_argument(tmp_path, capsys):
     """Test missing treatment argument validation"""
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     result = dpest.wheat.plantgro(
         treatment=None,
@@ -115,7 +115,7 @@ def test_plantgro_missing_treatment_argument(tmp_path, capsys):
 def test_plantgro_special_characters_in_treatment(tmp_path, capsys):
     """Test treatment names with special characters"""
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA (IRRIGATED)',
@@ -139,7 +139,7 @@ def test_plantgro_special_characters_in_treatment(tmp_path, capsys):
 def test_plantgro_variables_accepts_string(tmp_path):
     """Test that passing a string for 'variables' is accepted (converted to list internally)."""
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
@@ -156,7 +156,7 @@ def test_plantgro_variables_accepts_string(tmp_path):
 ])
 def test_plantgro_invalid_suffix(tmp_path, suffix_value, error_msg, capsys):
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
@@ -198,7 +198,7 @@ def test_plantgro_missing_yaml_file(tmp_path, capsys):
 def test_plantgro_nonexistent_treatment(tmp_path, capsys):
     """Test handling of non-existent treatment"""
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     result = dpest.wheat.plantgro(
         treatment='NON_EXISTENT_TREATMENT',
@@ -218,7 +218,7 @@ def test_plantgro_nonexistent_treatment(tmp_path, capsys):
 def test_plantgro_empty_variables(tmp_path, capsys):
     """Test empty variables list handling"""
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
@@ -236,7 +236,7 @@ def test_plantgro_empty_variables(tmp_path, capsys):
 ])
 def test_plantgro_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
@@ -254,7 +254,7 @@ def test_plantgro_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
 def test_plantgro_duplicate_markers(tmp_path, capsys):
     """Test validation of identical mrk/smk markers"""
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
     result = dpest.wheat.plantgro(
         treatment='164.0 KG N/HA IRRIG',
         plantgro_file_path=str(plantgro_file),
@@ -270,7 +270,7 @@ def test_plantgro_duplicate_markers(tmp_path, capsys):
 def test_plantgro_mrk_smk_same_character(tmp_path, capsys):
     """Test validation of identical valid markers"""
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     # Use valid markers that are identical
     result = dpest.wheat.plantgro(
@@ -288,7 +288,7 @@ def test_plantgro_mrk_smk_same_character(tmp_path, capsys):
 
 def test_plantgro_different_output_formats(tmp_path):
     repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     # Test only known valid combinations
     valid_markers = [('~', '!'), ('@', '#')]

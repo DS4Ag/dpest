@@ -8,10 +8,10 @@ def test_pst(tmp_path):
 
     # Define test file paths
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     # Ensure all required files exist
     assert cul_file.exists(), f"Missing: {cul_file}"
@@ -109,8 +109,8 @@ def test_pst_missing_both_parameters(tmp_path, capsys):
     """Test error when both cultivar and ecotype parameters are missing"""
     # Setup valid observations and files
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
-    plantgro_file = repo_root / "tests/DSSAT48_data/Wheat/PlantGro.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
+    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
     overview_obs, _ = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
@@ -141,7 +141,7 @@ def test_pst_invalid_cultivar_type(tmp_path, capsys):
     """Test invalid cultivar_parameters type"""
     # Use valid ecotype parameters
     repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     ecotype_params, _ = dpest.wheat.ceres.eco(
         PHEN='P1, P2FR1',  # Valid parameters from existing test
         VERN='VEFF',
@@ -168,7 +168,7 @@ def test_pst_missing_cul_extension(tmp_path, capsys):
     """Test missing .CUL file when using cultivar params"""
     # Get valid cultivar params
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     cultivar_params, _ = dpest.wheat.ceres.cul(
         P='P1D, P5',  # From working test
         G='G1, G2, G3',
@@ -196,7 +196,7 @@ def test_pst_missing_out_extension(tmp_path, capsys):
     """Test missing .OUT file in pairs"""
     # Get valid params
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     cultivar_params, tpl_path = dpest.wheat.ceres.cul(
         P='P1D, P5',
         G='G1, G2, G3',
@@ -224,7 +224,7 @@ def test_pst_invalid_observations_type(tmp_path, capsys):
     """Test invalid observations type"""
     # Get valid params
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     cultivar_params, tpl_path = dpest.wheat.ceres.cul(
         P='P1D, P5',
         G='G1, G2, G3',
@@ -256,7 +256,7 @@ def test_pst_invalid_observations_type(tmp_path, capsys):
         """Test error when ecotype_parameters is not a dict"""
         # Setup valid cultivar parameters
         repo_root = Path(__file__).parent.parent
-        cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+        cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
         cultivar_params, cul_tpl = dpest.wheat.ceres.cul(
             P='P1D, P5',
             G='G1, G2, G3',
@@ -267,7 +267,7 @@ def test_pst_invalid_observations_type(tmp_path, capsys):
         )
 
         # Setup valid observations
-        overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+        overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
         overview_obs, _ = dpest.wheat.overview(
             treatment='164.0 KG N/HA IRRIG',
             overview_file_path=str(overview_file),
@@ -296,7 +296,7 @@ def test_pst_invalid_observations_type(tmp_path, capsys):
 def test_pst_dataframe_observations_required(tmp_path, capsys):
     """Test that dataframe_observations must be provided in pst function."""
     repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.CUL"
+    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     cultivar_params, cul_tpl = dpest.wheat.ceres.cul(
         P='P1D, P5',
         G='G1, G2, G3',

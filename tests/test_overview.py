@@ -7,7 +7,7 @@ def test_overview(tmp_path):
     """Test generation of instruction file and observations from OVERVIEW.OUT."""
     # Setup paths
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
     output_dir = tmp_path / "output"
 
     # Ensure the input file exists
@@ -56,7 +56,7 @@ def test_overview(tmp_path):
 def test_overview_with_optional_parameters(tmp_path):
     """Test with all optional parameters specified"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
@@ -80,7 +80,7 @@ def test_overview_with_optional_parameters(tmp_path):
 def test_overview_variable_filtering(tmp_path):
     """Test filtering with specific variables"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     test_vars = ['Anthesis (DAP)', 'Product wt (kg dm/ha;no loss)']
 
@@ -99,7 +99,7 @@ def test_overview_variable_filtering(tmp_path):
 def test_overview_full_parameters(tmp_path):
     """Test all optional parameters together"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     custom_vars = ['Anthesis (DAP)', 'Maturity (DAP)']
     custom_classification = {'Anthesis (DAP)': 'phenology', 'Maturity (DAP)': 'phenology'}
@@ -130,7 +130,7 @@ def test_overview_full_parameters(tmp_path):
 def test_overview_missing_treatment_argument(tmp_path, capsys):
     """Test missing treatment argument validation"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     result = dpest.wheat.overview(
         treatment=None,
@@ -145,7 +145,7 @@ def test_overview_missing_treatment_argument(tmp_path, capsys):
 def test_overview_special_characters_in_treatment(tmp_path, capsys):
     """Test treatment names with special characters"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA (IRRIGATED)',
@@ -165,7 +165,7 @@ def test_overview_special_characters_in_treatment(tmp_path, capsys):
 def test_overview_variables_accepts_string(tmp_path):
     """Test that passing a string for 'variables' is accepted (converted to list internally)."""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     # Just call the function with a string for variables; it should not raise an error
     result = dpest.wheat.overview(
@@ -185,7 +185,7 @@ def test_overview_variables_accepts_string(tmp_path):
 def test_overview_invalid_suffix(tmp_path, suffix_value, error_msg, capsys):
     """Test invalid suffix values"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
@@ -227,7 +227,7 @@ def test_overview_missing_yaml_file(tmp_path, capsys):
 def test_overview_nonexistent_treatment(tmp_path, capsys):
     """Test handling of non-existent treatment"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     result = dpest.wheat.overview(
         treatment='NON_EXISTENT_TREATMENT',
@@ -242,7 +242,7 @@ def test_overview_nonexistent_treatment(tmp_path, capsys):
 def test_overview_empty_variables(tmp_path, capsys):
     """Test empty variables list handling"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
@@ -262,7 +262,7 @@ def test_overview_empty_variables(tmp_path, capsys):
 ])
 def test_overview_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
@@ -280,7 +280,7 @@ def test_overview_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
 def test_overview_duplicate_markers(tmp_path, capsys):
     """Test validation of identical mrk/smk markers"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
     # '!' is not allowed as mrk, so this triggers the invalid mrk check before "must be different"
     result = dpest.wheat.overview(
         treatment='164.0 KG N/HA IRRIG',
@@ -297,7 +297,7 @@ def test_overview_duplicate_markers(tmp_path, capsys):
 def test_overview_mrk_smk_same_character(tmp_path, capsys):
     """Test validation of identical valid markers"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     # Use valid markers that are identical
     result = dpest.wheat.overview(
@@ -315,7 +315,7 @@ def test_overview_mrk_smk_same_character(tmp_path, capsys):
 
 def test_overview_different_output_formats(tmp_path):
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     # Test only known valid combinations
     valid_markers = [('~', '!'), ('@', '#')]
@@ -335,7 +335,7 @@ def test_overview_different_output_formats(tmp_path):
 def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
     """Test handling of unexpected exceptions"""
     repo_root = Path(__file__).parent.parent
-    overview_file = repo_root / "tests/DSSAT48_data/Wheat/OVERVIEW.OUT"
+    overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
     # Monkeypatch os.path.isfile to simulate missing YAML file
     import os
     original_isfile = os.path.isfile

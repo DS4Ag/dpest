@@ -5,7 +5,7 @@ def test_eco(tmp_path):
     """Test generation of ecotype template files."""
     # Setup paths
     repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
 
     # Ensure the input file exists
@@ -56,7 +56,7 @@ def test_eco_missing_arguments_file(capsys, tmp_path):
     """Test printed error when arguments.yml is missing."""
     # Temporarily rename arguments.yml if it exists
     repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     module_dir = Path(dpest.wheat.ceres.__file__).parent
@@ -83,7 +83,7 @@ def test_eco_missing_arguments_file(capsys, tmp_path):
 def test_eco_missing_ecotype(capsys, tmp_path):
     """Test printed error when ecotype is not provided."""
     repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     result = dpest.wheat.ceres.eco(
@@ -100,7 +100,7 @@ def test_eco_missing_ecotype(capsys, tmp_path):
 def test_eco_invalid_ecotype(capsys, tmp_path):
     """Test printed error when ecotype does not exist in file."""
     repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     result = dpest.wheat.ceres.eco(
@@ -117,7 +117,7 @@ def test_eco_invalid_ecotype(capsys, tmp_path):
 def test_eco_invalid_parameters(capsys, tmp_path):
     """Test printed error when parameter does not exist in header."""
     repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     result = dpest.wheat.ceres.eco(
@@ -135,7 +135,7 @@ def test_eco_invalid_parameters(capsys, tmp_path):
 def test_eco_default_new_template_file_extension(capsys, tmp_path):
     """Test that default new_template_file_extension is used when not provided."""
     repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -152,7 +152,7 @@ def test_eco_default_new_template_file_extension(capsys, tmp_path):
 def test_eco_default_header_start(capsys, tmp_path):
     """Test that default header_start is used when not provided."""
     repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -170,7 +170,7 @@ def test_eco_default_header_start(capsys, tmp_path):
 def test_eco_empty_parameters_grouped(tmp_path):
     """Test that empty parameters_grouped triggers YAML defaults."""
     repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48_data/Genotype/WHCER048.ECO"
+    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
