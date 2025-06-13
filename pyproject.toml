@@ -37,16 +37,7 @@ dev = [
     "coverage>=7.0.0",
 ]
 
-#[project.optional-dependencies]
-#notebooks = [
-#    "ipykernel>=6.0.0",
-#    "jupyter>=1.0.0"
-#]
 [project.optional-dependencies]
-dev = [
-    "pytest>=8.4.0",
-    "coverage>=7.0.0",
-]
 notebook = [
     "ipykernel>=6.29,<7",
     "notebook>=7.1,<8"
