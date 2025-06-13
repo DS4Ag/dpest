@@ -35,10 +35,6 @@ Issues = "https://github.com/DS4Ag/dpest/issues"
 dev = [
     "pytest>=8.4.0",
     "coverage>=7.0.0",
-    "nbval",
-    "nbformat>=5.10.4",
-    "nbconvert>=7.16.0",
-    "ipykernel>=6.29.0"
 ]
 
 [project.optional-dependencies]
