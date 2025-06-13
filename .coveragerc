@@ -1,8 +1,6 @@
 [run]
 branch = True
-source =
-    dpest
-    examples
+source = dpest
 parallel = True
 concurrency =
 omit =
