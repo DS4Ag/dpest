@@ -1,6 +1,8 @@
 [run]
 branch = True
 source = dpest
+parallel = True
+concurrency =
 omit =
     tests/*
     **/__init__.py
