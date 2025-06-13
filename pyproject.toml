@@ -31,17 +31,7 @@ build-backend = "setuptools.build_meta"
 Homepage = "https://github.com/DS4Ag/dpest"
 Issues = "https://github.com/DS4Ag/dpest/issues"
 
-#[dependency-groups]
-#dev = [
-#    "pytest>=8.4.0",
-#    "coverage>=7.0.0",
-#    "nbval",
-#    "nbformat>=5.10.4",
-#    "nbconvert>=7.16.0",
-#    "ipykernel>=6.29.0"
-#]
-
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "pytest>=8.4.0",
     "coverage>=7.0.0",
@@ -50,6 +40,16 @@ dev = [
     "nbconvert>=7.16.0",
     "ipykernel>=6.29.0"
 ]
+
+[project.optional-dependencies]
+#dev = [
+#    "pytest>=8.4.0",
+#    "coverage>=7.0.0",
+#    "nbval",
+#    "nbformat>=5.10.4",
+#    "nbconvert>=7.16.0",
+#    "ipykernel>=6.29.0"
+#]
 notebook = [
     "ipykernel>=6.29.0",
     "notebook>=7.1.0",
