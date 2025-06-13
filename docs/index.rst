@@ -183,3 +183,39 @@ Example Usage
     rmv_splitcols("PEST_CONTROL.pst")
 
 
+Table of Contents
+=================
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Home
+   :hidden:
+
+   Home <self>
+
+.. toctree::
+   :maxdepth: 2
+   :caption: PEST control file
+   :hidden:
+
+   dpest.pst
+   utils
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Wheat (PEST input files)
+   :hidden:
+
+   dpest.wheat.ceres.cul
+   dpest.wheat.ceres.eco
+   dpest.wheat.overview
+   dpest.wheat.plantgro
+   dpest.wheat.utils.uplantgro
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Examples
+   :hidden:
+
+   example
+   example_multiple_trts
