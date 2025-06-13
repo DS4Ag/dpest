@@ -62,7 +62,7 @@ The first step is to create a template file (`.TPL`) for the `MANITOU` cultivar,
         G='G1, G2, G3',
         PHINT='PHINT',
         cultivar='MANITOU',
-        cul_file_path='C:/DSSAT48/Genotype/WHCER048.CUL'
+        cul_file_path='./DSSAT48/Genotype/WHCER048.CUL'
     )
 
 After running this function:
@@ -85,19 +85,19 @@ Use the `overview()` function to generate instruction files for each treatment t
 
     overview_observations_trt1, overview_ins_path_trt1 = overview(
         treatment='82.0 KG N/HA IRRIG',
-        overview_file_path='C:/DSSAT48/Wheat/OVERVIEW.OUT',
+        overview_file_path='./DSSAT48/Wheat/OVERVIEW.OUT',
         suffix='TRT1'
     )
 
     overview_observations_trt2, overview_ins_path_trt2 = overview(
         treatment='123.0 KG N/HA IRRIG',
-        overview_file_path='C:/DSSAT48/Wheat/OVERVIEW.OUT',
+        overview_file_path='./DSSAT48/Wheat/OVERVIEW.OUT',
         suffix='TRT2'
     )
 
     overview_observations_trt3, overview_ins_path_trt3 = overview(
         treatment='164.0 KG N/HA IRRIG',
-        overview_file_path='C:/DSSAT48/Wheat/OVERVIEW.OUT',
+        overview_file_path='./DSSAT48/Wheat/OVERVIEW.OUT',
         suffix='TRT3'
     )
 
@@ -114,21 +114,21 @@ Use the `plantgro()` function to generate instruction files for each treatment t
 
     plantgro_observations_trt1, plantgro_ins_path_trt1 = plantgro(
         treatment='82.0 KG N/HA IRRIG',
-        plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+        plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         variables=['LAID', 'CWAD', 'T#AD'],
         suffix='TRT1'
     )
 
     plantgro_observations_trt2, plantgro_ins_path_trt2 = plantgro(
         treatment='123.0 KG N/HA IRRIG',
-        plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+        plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         variables=['LAID', 'CWAD', 'T#AD'],
         suffix='TRT2'
     )
 
     plantgro_observations_trt3, plantgro_ins_path_trt3 = plantgro(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+        plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         variables=['LAID', 'CWAD', 'T#AD'],
         suffix='TRT3'
     )
@@ -145,7 +145,7 @@ Note that both instruction files (`OVERVIEW.INS` and `PlantGro.INS`) will be cre
 
 After creating the ``template file`` and ``instruction files`` for calibrating the ``MANITOU`` wheat cultivar across multiple treatments, the next step is to generate the ``PEST control file (.PST)``. This file integrates all necessary components and guides the calibration process.
 
-The `.PST` file is created using the variables obtained in **2.2** and **2.3**. Additionally, you need to specify the `command-line instruction` to execute the DSSAT model for all treatments. For more information on running DSSAT from the command line, visit the the `DSSAT web documentation <https://dssat.net/tools/tools-for-power-users/>`_.
+The ``.PST`` file is created using the ``variables`` obtained in ``2.2`` and ``2.3``. Additionally, we need to specify the ``command-line instruction`` to execute the DSSAT model. For more information on how to run DSSAT from the command line, visit the `DSSAT Power Users Guide <https://dssat.net/tools/tools-for-power-users/>`_.
 
 The following Python script provides an example of how to run the ``DSSAT CERES-Wheat model`` using Python:
 
@@ -155,54 +155,82 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
     import subprocess
     from dpest.wheat.utils import uplantgro
 
-    def build_path(*args):
-        """
-        Construct a file path from multiple arguments.
-        """
-        return os.path.join(*args)
+    # User-editable section for system DSSAT installation
+    dssat_install_dir = r'C:\DSSAT48'  # System DSSAT installation folder
+    dssat_exe = os.path.join(dssat_install_dir, 'DSCSM048.EXE')
+    control_file = os.path.join(dssat_install_dir, 'Wheat', 'DSSBatch.v48')
 
-    # Define DSSAT root directory and output folder
-    dssat_path = 'C://DSSAT48/'
-    output_directory = 'C://DSSAT48/Wheat/'
+    # Project data directory (relative to script location)
+    project_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(project_dir, 'DSSAT48')
+    output_dir = os.path.join(data_dir, 'Wheat')
 
-    # Set the working directory to the output folder
-    os.chdir(output_directory)
+    # Change working directory to the output directory
+    os.chdir(output_dir)
 
-    # Build the command to run DSSAT
-    main_executable = build_path(dssat_path, 'DSCSM048.EXE')
+    # Build and run DSSAT command
     module = 'CSCER048'
     switch = 'B'
-    control_file = build_path(dssat_path, 'Wheat/DSSBatch.v48')
-
-    # Create and execute the command
-    command_line = ' '.join([main_executable, module, switch, control_file])
+    command_line = f'"{dssat_exe}" {module} {switch} "{control_file}"'
     result = subprocess.run(command_line, shell=True, check=True, capture_output=True, text=True)
-
-    # Print DSSAT execution output
     print(result.stdout)
 
     # Use uplantgro from dpest.wheat.utils to extract and update data from PlantGro.OUT for each treatment if needed
     
     uplantgro(
-        plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+        plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         treatment='82.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
     uplantgro(
-        plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+        plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         treatment='123.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
     uplantgro(
-        plantgro_file_path='C:/DSSAT48/Wheat/PlantGro.OUT',
+        plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
 
-This script should be ``saved in the PEST installation directory`` (e.g., ``C:\pest18``). The command to execute it (e.g., ``py "C:\pest18\script_name.py"``) must match the actual filename and will be included in the ``.PST`` file.
+
+**Download the example of a Python script to run DSSAT**
+
+`run_dssat_mtrt.py <https://github.com/DS4Ag/dpest/blob/main/examples/wheat/ceres/run_dssat_mtrt.py>`_ *(Click to download if not already in your directory)*
+
+.. important::
+
+   The provided run_dssat.py script is set up so that DSSAT writes its output files directly into the project’s data directory (e.g., DSSAT48/Wheat). This ensures PEST always reads the latest simulation results.
+
+   If you use a different method to run DSSAT (such as your own script, a batch file, or a direct executable call), you must:
+
+   - Ensure that DSSAT outputs are written to the correct directory referenced in your .pst file.
+   - Update the * model command line in the .pst file to match your actual execution command.
+   - Double-check that the output files are being updated with each run, so PEST uses the latest results.
+   - For more on running DSSAT from the command line and managing outputs, see the `DSSAT Power Users Guide <https://dssat.net/tools/tools-for-power-users/>`_.
+
+   The run_dssat.py script is provided as a reference. Adapt it as needed for your own DSSAT installation and workflow.
+
+
+    **Where to save and how to call the Python script for PEST**
+
+The Python script ``run_dssat.py`` is configured to be saved in the root directory of your project (i.e., in the same folder as your main project files and the ``DSSAT48`` data directory).
+
+When specifying the command to execute this script in the PEST control file (``.PST``), use a command that correctly references the script’s filename and its path relative to the directory where you run PEST.
+
+For example, if the script is named ``run_dssat.py`` and is located in the project root, the command to execute it would be::
+
+   py ./run_dssat.py
+
+or equivalently::
+
+   python ./run_dssat.py
+
+This command should be included exactly as shown in the ``* model command line`` section of your ``.PST`` file.
+
 
 **Generate the PEST Control File (.PST)**
 
@@ -219,17 +247,17 @@ Once you have saved your script for running DSSAT, you can generate the ``PEST c
         model_comand_line=r'py "C:\pest18\run_dssat.py"',  # Command to run DSSAT
         input_output_file_pairs=[
             # Template file → Cultivar parameter file
-            (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
+            (cultivar_tpl_path, './DSSAT48/Genotype/WHCER048.CUL'),
             
             # Instruction files for OVERVIEW.OUT (3 treatments)
-            (overview_ins_path_trt1, 'C://DSSAT48/Wheat/OVERVIEW.OUT'),
-            (overview_ins_path_trt2, 'C://DSSAT48/Wheat/OVERVIEW.OUT'),
-            (overview_ins_path_trt3, 'C://DSSAT48/Wheat/OVERVIEW.OUT'),
+            (overview_ins_path_trt1, './DSSAT48/Wheat/OVERVIEW.OUT'),
+            (overview_ins_path_trt2, './DSSAT48/Wheat/OVERVIEW.OUT'),
+            (overview_ins_path_trt3, './DSSAT48/Wheat/OVERVIEW.OUT'),
 
             # Instruction files for PlantGro.OUT (3 treatments)
-            (plantgro_ins_path_trt1, 'C:/DSSAT48/Wheat/PlantGro.OUT'),
-            (plantgro_ins_path_trt2, 'C:/DSSAT48/Wheat/PlantGro.OUT'),
-            (plantgro_ins_path_trt3, 'C:/DSSAT48/Wheat/PlantGro.OUT')
+            (plantgro_ins_path_trt1, '.DSSAT48/Wheat/PlantGro.OUT'),
+            (plantgro_ins_path_trt2, './DSSAT48/Wheat/PlantGro.OUT'),
+            (plantgro_ins_path_trt3, './DSSAT48/Wheat/PlantGro.OUT')
         ]
     )
 
@@ -270,14 +298,14 @@ Run the following commands to validate the different PEST input files. Each vali
     tempchek.exe WHCER048_CUL.TPL
 
     # Validate the Overview Instruction FileS (.INS) 
-    inschek.exe OVERVIEW_TRT1.ins C://DSSAT48/Wheat/OVERVIEW.OUT
-    inschek.exe OVERVIEW_TRT2.ins C://DSSAT48/Wheat/OVERVIEW.OUT
-    inschek.exe OVERVIEW_TRT3.ins C://DSSAT48/Wheat/OVERVIEW.OUT
+    inschek.exe OVERVIEW_TRT1.ins ./DSSAT48/Wheat/OVERVIEW.OUT
+    inschek.exe OVERVIEW_TRT2.ins ./DSSAT48/Wheat/OVERVIEW.OUT
+    inschek.exe OVERVIEW_TRT3.ins ./DSSAT48/Wheat/OVERVIEW.OUT
 
     # Validate the PlantGro Instruction File (.INS)
-    inschek.exe PlantGro_TRT1.ins C://DSSAT48/Wheat/PlantGro.OUT
-    inschek.exe PlantGro_TRT2.ins C://DSSAT48/Wheat/PlantGro.OUT
-    inschek.exe PlantGro_TRT3.ins C://DSSAT48/Wheat/PlantGro.OUT
+    inschek.exe PlantGro_TRT1.ins ./DSSAT48/Wheat/PlantGro.OUT
+    inschek.exe PlantGro_TRT2.ins ./DSSAT48/Wheat/PlantGro.OUT
+    inschek.exe PlantGro_TRT3.ins ./DSSAT48/Wheat/PlantGro.OUT
 
     # Validate PEST Control File
     pestchek.exe PEST_CONTROL.pst

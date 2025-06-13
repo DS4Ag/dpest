@@ -42,7 +42,6 @@ html_title = "Home"
 # }
 
 html_sidebars = {
-    'index': [],
     '**': [
         'globaltoc.html',
         'relations.html',  # previous/next links
@@ -57,4 +56,7 @@ html_theme_options = {
     "show_nav_level": 2,  # Ensure navigation is visible up to depth 2
     "navigation_with_keys": True,  # Enable keyboard navigation
     "navbar_center": [],
+    "toc": {
+        "root": "sidebar",
+    },
 }

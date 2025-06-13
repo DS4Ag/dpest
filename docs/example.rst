@@ -19,7 +19,9 @@ This example demonstrates how to use ``dpest`` to create the necessary files for
 .. raw:: html
 
     <iframe 
-            src="https://www.youtube.com/embed/dzKpvJSEXZc?vq=hd1080" 
+            width="700"
+            height="400"
+            src="https://www.youtube.com/embed/dzKpvJSEXZc?vq=hd1080"
             frameborder="0" allowfullscreen>
     </iframe>
 
@@ -89,7 +91,7 @@ Note that the ``OVERVIEW.INS`` and ``PlantGro.INS`` instruction files will be cr
 
 After creating the ``template file`` and ``instruction files`` for calibrating the ``MANITOU`` wheat cultivar, the next step is to generate the ``PEST control file (.PST``). This file integrates all necessary components and guides the ``calibration process``.
 
-The ``.PST`` file is created using the ``variables`` obtained in ``2.2`` and ``2.3``. Additionally, we need to specify the ``command-line instruction`` to execute the DSSAT model. For more information on how to run DSSAT from the command line, visit the `DSSAT web documentation <https://dssat.net/tools/tools-for-power-users/>`_.
+The ``.PST`` file is created using the ``variables`` obtained in ``2.2`` and ``2.3``. Additionally, we need to specify the ``command-line instruction`` to execute the DSSAT model. For more information on how to run DSSAT from the command line, visit the `DSSAT Power Users Guide <https://dssat.net/tools/tools-for-power-users/>`_.
 
 The following Python script provides an example of how to run the ``DSSAT CERES-Wheat model`` using Python:
 
