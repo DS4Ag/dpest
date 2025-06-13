@@ -130,7 +130,7 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
 
 **Download the example of a Python script to run DSSAT**
 
-`run_dssat.py <https://github.com/DS4Ag/dpest/blob/main/examples/wheat/ceres/run_dssat.py>`_ *(Click to download if not already in your directory)*
+`run_dssat.py <https://raw.githubusercontent.com/DS4Ag/dpest/refs/heads/main/examples/wheat/ceres/run_dssat.py>`_ *(Click to download if not already in your directory)*
 
 .. important::
 
