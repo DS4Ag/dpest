@@ -708,7 +708,8 @@ def filter_dataframe(dataframe, treatment, treatment_number_name, variables):
                     (dataframe['TRNO'] == trno_value) &
                     (dataframe[variable] != '-99') &
                     (dataframe[variable] != -99) &
-                    (dataframe[variable] != 0)
+                    (dataframe[variable] != 0 )&
+                    (dataframe[variable] != '0')
                 ]
 
                 # Populate results
