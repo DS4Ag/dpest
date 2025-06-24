@@ -215,7 +215,7 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
    The run_dssat.py script is provided as a reference. Adapt it as needed for your own DSSAT installation and workflow.
 
 
-    **Where to save and how to call the Python script for PEST**
+**Where to save and how to call the Python script for PEST**
 
 The Python script ``run_dssat.py`` is configured to be saved in the root directory of your project (i.e., in the same folder as your main project files and the ``DSSAT48`` data directory).
 
