@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Documentation Status](https://readthedocs.org/projects/dpest/badge/?version=latest)](https://dpest.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/DS4Ag/dpest/branch/main/graph/badge.svg)](https://codecov.io/gh/DS4Ag/dpest)
-[![DOI](https://zenodo.org/badge/924849437.svg)](https://doi.org/10.5281/zenodo.15733806)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.08188/status.svg)](https://doi.org/10.21105/joss.08188)
 
 A Python package for automating PEST (Parameter ESTimation) file creation for DSSAT crop model calibration using time series data.
 ## What is dpest?
