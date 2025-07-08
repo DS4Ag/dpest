@@ -9,6 +9,32 @@
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.08188/status.svg)](https://doi.org/10.21105/joss.08188)
 
 A Python package for automating PEST (Parameter ESTimation) file creation for DSSAT crop model calibration using time series data.
+
+## How to Cite
+
+If you use `dpest` in your research, please cite our article in the Journal of Open Source Software:
+
+**APA:**
+
+Vargas-Rojas, L., & Wang, D. R. (2025). dpest: Streamlining Creation of PEST input files for DSSAT Crop Model Calibration. *Journal of Open Source Software, 10*(111), 8188. https://doi.org/10.21105/joss.08188
+
+**BibTeX:**
+
+@article{Vargas-Rojas_dpest_Streamlining_Creation_2025,
+  author  = {Vargas-Rojas, Luis and Wang, Diane R.},
+  title   = {dpest: Streamlining Creation of PEST input files for DSSAT Crop Model Calibration},
+  journal = {Journal of Open Source Software},
+  year    = {2025},
+  volume  = {10},
+  number  = {111},
+  pages   = {8188},
+  doi     = {10.21105/joss.08188},
+  url     = {https://joss.theoj.org/papers/10.21105/joss.08188},
+  month   = jul
+}
+
+For additional citation formats, see the [CITATION.cff](./CITATION.cff) file in this repository or use the "Cite this repository" button in the GitHub About section.
+
 ## What is dpest?
 
 `dpest` is a Python package designed to automate the creation of [PEST (Parameter Estimation and Uncertainty Analysis)](https://pesthomepage.org/) control files for calibrating [DSSAT (Decision Support System for Agrotechnology Transfer)](https://dssat.net/) crop models. Currently, `dpest` is capable of calibrating DSSAT wheat models only.  It generates template files for cultivar and ecotype parameters, instruction files for `OVERVIEW.OUT` and `PlantGro.OUT`, and the main PEST control file. A utility module is also included to extend `PlantGro.OUT` files for complete time series compatibility. 
