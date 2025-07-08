@@ -8,11 +8,6 @@ What is dpest?
 
 ``dpest`` is a Python package designed to automate the creation of `PEST (Parameter Estimation and Uncertainty Analysis) <https://pesthomepage.org/>`_ control files for calibrating `DSSAT (Decision Support System for Agrotechnology Transfer) <https://dssat.net/>`_ crop models. Currently, ``dpest`` is capable of calibrating DSSAT wheat models only. It generates template files for cultivar and ecotype parameters, instruction files for ``OVERVIEW.OUT`` and ``PlantGro.OUT``, and the main PEST control file. A utility module is also included to extend ``PlantGro.OUT`` files for complete time series compatibility.
 
-Documentation
--------------
-
-For detailed usage instructions and module references, see the full documentation on: `dpest.readthedocs.io/en/latest <https://dpest.readthedocs.io/en/latest/>`_.
-
 Key Features
 ============
 
