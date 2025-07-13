@@ -27,7 +27,7 @@ This example demonstrates how to use ``dpest`` to create the necessary files for
 
 2. Using ``dpest`` create the PEST input files to perform the calibration
 ----------------------------------------------
-For this example, we are going to calibrate the ``MANITOU`` wheat cultivar (Cultivar ID: ``IB1500``) using the field-collected data from the ``164.0 KG N/HA IRRIG`` treatment of the ``SWSW7501.WHX`` experiment. The experiment information is found in the ``C:/DSSAT48/Wheat/SWSW7501.WHX`` file.  
+For this example, we are going to calibrate the ``MANITOU`` wheat cultivar (Cultivar ID: ``IB1500``) using the field-collected data from the ``164.0 KG N/HA IRRIG`` treatment of the ``SWSW7501.WHX`` experiment. The experiment information is found in the ``./DSSAT48/Wheat/SWSW7501.WHX`` file.
 
 **2.1. Import the dpest Package**
 
@@ -61,7 +61,7 @@ Note that the cultivar template file named ``WHCER048_CUL.TPL`` will be created 
 
 **2.3. Create Instructions Files**
 
-For this experiment, key end-of-season crop performance metrics and phenological observations were collected and recorded in the ``C:/DSSAT48/Wheat/SWSW7501.WHA`` file (referred to as the ``A File``). Additionally, time-series data were collected and recorded in the ``C:/DSSAT48/Wheat/SWSW7501.WHT`` file (referred to as the ``T File``). To create the PEST instruction files, we will use the ``overview()`` and ``plantgro()`` modules. The ``overview()`` module will create the instruction file to compare the model simulations from the ``'C:/DSSAT48/Wheat/OVERVIEW.OUT'`` file with the measured data from the ``A File``, while the ``plantgro()`` module will create the instruction file to compare the time-series model simulations from the ``'C:/DSSAT48/Wheat/PlantGro.OUT'`` file with the time-series measured data from the ``T File``.
+For this experiment, key end-of-season crop performance metrics and phenological observations were collected and recorded in the ``./DSSAT48/Wheat/SWSW7501.WHA`` file (referred to as the ``A File``). Additionally, time-series data were collected and recorded in the ``./DSSAT48/Wheat/SWSW7501.WHT`` file (referred to as the ``T File``). To create the PEST instruction files, we will use the ``overview()`` and ``plantgro()`` modules. The ``overview()`` module will create the instruction file to compare the model simulations from the ``'./DSSAT48/Wheat/OVERVIEW.OUT'`` file with the measured data from the ``A File``, while the ``plantgro()`` module will create the instruction file to compare the time-series model simulations from the ``'./DSSAT48/Wheat/PlantGro.OUT'`` file with the time-series measured data from the ``T File``.
 
 .. code-block:: python
 

@@ -79,7 +79,7 @@ Now, we need to create instruction files for each treatment and the instruction 
 
 **OVERVIEW.OUT Instruction Files:**
 
-Use the `overview()` function to generate instruction files for each treatment to compare the model simulations from the ``C:/DSSAT48/Wheat/OVERVIEW.OUT`` file with the measured data from the ``A File``.
+Use the `overview()` function to generate instruction files for each treatment to compare the model simulations from the ``./DSSAT48/Wheat/OVERVIEW.OUT`` file with the measured data from the ``A File``.
 
 .. code-block:: python
 
@@ -108,7 +108,7 @@ After running these functions:
 
 **PlantGro.OUT Instruction Files:**
 
-Use the `plantgro()` function to generate instruction files for each treatment to compare the time-series model simulations from the ``'C:/DSSAT48/Wheat/PlantGro.OUT'`` file with the time-series measured data from the ``T File``.
+Use the `plantgro()` function to generate instruction files for each treatment to compare the time-series model simulations from the ``'./DSSAT48/Wheat/PlantGro.OUT'`` file with the time-series measured data from the ``T File``.
 
 .. code-block:: python
 
@@ -239,12 +239,12 @@ Once you have saved your script for running DSSAT, you can generate the ``PEST c
 .. code-block:: python
 
     pst(
-        cultivar_parameters=cultivar_parameters,
-        dataframe_observations=[
+        cultivar_parameters = cultivar_parameters,
+        dataframe_observations = [
             overview_observations_trt1, overview_observations_trt2, overview_observations_trt3,
             plantgro_observations_trt1, plantgro_observations_trt2, plantgro_observations_trt3
         ],
-        model_comand_line=r'py "C:\pest18\run_dssat.py"',  # Command to run DSSAT
+        model_comand_line = r'py ./run_dssat.py',  # Command to run DSSAT
         input_output_file_pairs=[
             # Template file → Cultivar parameter file
             (cultivar_tpl_path, './DSSAT48/Genotype/WHCER048.CUL'),
