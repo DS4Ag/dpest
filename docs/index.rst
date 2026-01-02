@@ -190,6 +190,14 @@ Example Usage
    :hidden:
 
    dpest.pst
+   utils
+
+.. toctree::
+   :maxdepth: 2
+   :caption: PEST model output files
+   :hidden:
+
+   dpest.pst
    dpest.overview
    dpest.plantgro
    dpest.uplantgro
@@ -197,7 +205,7 @@ Example Usage
 
 .. toctree::
    :maxdepth: 2
-   :caption: Wheat (PEST input files)
+   :caption: Wheat (PEST parameter input files)
    :hidden:
 
    dpest.wheat.ceres.cul
