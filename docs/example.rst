@@ -66,13 +66,13 @@ For this experiment, key end-of-season crop performance metrics and phenological
 .. code-block:: python
 
     # Create OVERVIEW observations INS file
-    overview_observations, overview_ins_path = dpest.wheat.overview(
+    overview_observations, overview_ins_path = dpest.overview(
         treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
         overview_file_path = './DSSAT48/Wheat/OVERVIEW.OUT'  # Path to the OVERVIEW.OUT file
     )
 
     # Create PlantGro observations INS file
-    plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
+    plantgro_observations, plantgro_ins_path = dpest.plantgro(
         treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
         variables = ['LAID', 'CWAD', 'T#AD'],  # Variables to calibrate
         plantgro_file_path = './DSSAT48/Wheat/PlantGro.OUT'  # Path to the PlantGro.OUT file

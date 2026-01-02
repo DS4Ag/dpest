@@ -49,7 +49,7 @@ def overview(
 
        .. code-block:: python
 
-          from dpest.wheat import overview
+          from dpest import overview
 
           # Call the module with only the required arguments
           overview_observations, overview_ins_path = overview(
@@ -65,7 +65,7 @@ def overview(
 
        .. code-block:: python
 
-          from dpest.wheat import overview
+          from dpest import overview
 
           # Call the module specifying variable classifications
           overview(

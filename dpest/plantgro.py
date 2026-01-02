@@ -51,7 +51,7 @@ def plantgro(
 
        .. code-block:: python
 
-          from dpest.wheat import plantgro
+          from dpest import plantgro
 
           # Call the module with multiple variables
           plantgro_observations, plantgro_ins_path = plantgro(
@@ -68,7 +68,7 @@ def plantgro(
 
        .. code-block:: python
 
-          from dpest.wheat import plantgro
+          from dpest import plantgro
 
           # Call the module with a single variable
           plantgro_observations, plantgro_ins_path = plantgro(
