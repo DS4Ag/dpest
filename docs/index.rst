@@ -190,6 +190,9 @@ Example Usage
    :hidden:
 
    dpest.pst
+   dpest.overview
+   dpest.plantgro
+   dpest.uplantgro
    utils
 
 .. toctree::
@@ -199,9 +202,6 @@ Example Usage
 
    dpest.wheat.ceres.cul
    dpest.wheat.ceres.eco
-   dpest.overview
-   dpest.plantgro
-   dpest.uplantgro
 
 .. toctree::
    :maxdepth: 2
