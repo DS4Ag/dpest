@@ -77,8 +77,7 @@ The following steps provide a brief overview of how to use ``dpest``.
 
       from dpest.wheat.ceres import cul, eco
       from dpest.wheat import overview, plantgro
-      from dpest import pst
-      from dpest.wheat.utils import uplantgro
+      from dpest import overview, plantgro, uplantgro, pst
 
       # Now you can use the functions directly:
       cul(...)
@@ -113,12 +112,12 @@ The following steps provide a brief overview of how to use ``dpest``.
       )
 
       # 2. Create OVERVIEW observations INS file
-      overview_observations,  overview_ins_path = dpest.wheat.overview(
+      overview_observations,  overview_ins_path = dpest.overview(
           treatment = '164.0 KG N/HA IRRIG', #Treatment Name
           overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT' #Path to the OVERVIEW.OUT file
       )
       # 3. Create PlantGro observations INS file
-      plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
+      plantgro_observations, plantgro_ins_path = dpest.plantgro(
           treatment = '164.0 KG N/HA IRRIG', #Treatment Name
           variables = ['LAID', 'CWAD', 'T#AD'], #Variables to calibrate
           plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT', #Path to the PlantGro.OUT file
@@ -201,9 +200,9 @@ Example Usage
 
    dpest.wheat.ceres.cul
    dpest.wheat.ceres.eco
-   dpest.wheat.overview
-   dpest.wheat.plantgro
-   dpest.wheat.utils.uplantgro
+   dpest.overview
+   dpest.plantgro
+   dpest.uplantgro
 
 .. toctree::
    :maxdepth: 2
