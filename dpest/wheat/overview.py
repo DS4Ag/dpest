@@ -65,7 +65,7 @@ def overview(
 
        .. code-block:: python
 
-          from dpestool.wheat import overview
+          from dpest.wheat import overview
 
           # Call the module specifying variable classifications
           overview(
