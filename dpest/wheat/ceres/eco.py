@@ -52,7 +52,7 @@ def eco(
 
        .. code-block:: python
 
-          from dpestool.wheat.ceres import eco
+          from dpest.wheat.ceres import eco
 
           # Call the module with only the required arguments
           ecotype_parameters, ecotype_tpl_path = eco(
@@ -68,7 +68,7 @@ def eco(
 
        .. code-block:: python
 
-          from dpestool.wheat.ceres import eco
+          from dpest.wheat.ceres import eco
 
           # Call the module specifying parameter groups, but not saving the returned tuple
           eco(

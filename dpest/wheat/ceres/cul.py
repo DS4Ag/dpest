@@ -56,7 +56,7 @@ def cul(
 
        .. code-block:: python
 
-          from dpestool.wheat.ceres import cul
+          from dpest.wheat.ceres import cul
 
           # Call the module with only the required arguments
           my_cultivar_parameters, my_cultivar_tpl_path = cul(
@@ -72,7 +72,7 @@ def cul(
 
        .. code-block:: python
 
-          from dpestool.wheat.ceres import cul
+          from dpest.wheat.ceres import cul
 
           # Call the module specifying parameter groups, but not saving the returned tuple
           cul(
