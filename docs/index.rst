@@ -76,7 +76,6 @@ The following steps provide a brief overview of how to use ``dpest``.
    .. code-block:: python
 
       from dpest.wheat.ceres import cul, eco
-      from dpest.wheat import overview, plantgro
       from dpest import overview, plantgro, uplantgro, pst
 
       # Now you can use the functions directly:

@@ -1,4 +1,4 @@
-dpest.wheat.utils.uplantgro
+dpest.uplantgro
 ----------------------------------
 
 .. automodule:: dpest.uplantgro
