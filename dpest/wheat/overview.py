@@ -49,7 +49,7 @@ def overview(
 
        .. code-block:: python
 
-          from dpestool.wheat import overview
+          from dpest.wheat import overview
 
           # Call the module with only the required arguments
           overview_observations, overview_ins_path = overview(
