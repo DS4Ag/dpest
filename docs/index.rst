@@ -197,11 +197,9 @@ Example Usage
    :caption: PEST model output files
    :hidden:
 
-   dpest.pst
    dpest.overview
    dpest.plantgro
    dpest.uplantgro
-   utils
 
 .. toctree::
    :maxdepth: 2
