@@ -20,8 +20,8 @@ def test_overview(tmp_path):
     overview_file = str(overview_file)
     output_dir = str(output_dir)
 
-    # Call the dpest.wheat.overview function
-    result = dpest.wheat.overview(
+    # Call the dpest.overview function
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=overview_file,
         output_path=str(output_dir)
@@ -58,7 +58,7 @@ def test_overview_with_optional_parameters(tmp_path):
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
@@ -84,7 +84,7 @@ def test_overview_variable_filtering(tmp_path):
 
     test_vars = ['Anthesis (DAP)', 'Product wt (kg dm/ha;no loss)']
 
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
@@ -104,7 +104,7 @@ def test_overview_full_parameters(tmp_path):
     custom_vars = ['Anthesis (DAP)', 'Maturity (DAP)']
     custom_classification = {'Anthesis (DAP)': 'phenology', 'Maturity (DAP)': 'phenology'}
 
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
@@ -132,7 +132,7 @@ def test_overview_missing_treatment_argument(tmp_path, capsys):
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment=None,
         overview_file_path=str(overview_file),
         output_path=str(tmp_path)
@@ -147,7 +147,7 @@ def test_overview_special_characters_in_treatment(tmp_path, capsys):
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA (IRRIGATED)',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path)
@@ -168,7 +168,7 @@ def test_overview_variables_accepts_string(tmp_path):
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     # Just call the function with a string for variables; it should not raise an error
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
@@ -187,7 +187,7 @@ def test_overview_invalid_suffix(tmp_path, suffix_value, error_msg, capsys):
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
@@ -200,7 +200,7 @@ def test_overview_invalid_suffix(tmp_path, suffix_value, error_msg, capsys):
 
 def test_overview_file_not_found(tmp_path, capsys):
     """Test non-existent input file handling"""
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path="nonexistent/file.out",
         output_path=str(tmp_path)
@@ -214,7 +214,7 @@ def test_overview_missing_yaml_file(tmp_path, capsys):
     """Test handling of missing YAML arguments file"""
     # Simulate missing OVERVIEW.OUT file (which triggers the file not found branch)
     non_existent_file = tmp_path / "nonexistent.OUT"
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(non_existent_file),
         output_path=str(tmp_path)
@@ -229,7 +229,7 @@ def test_overview_nonexistent_treatment(tmp_path, capsys):
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='NON_EXISTENT_TREATMENT',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path)
@@ -244,7 +244,7 @@ def test_overview_empty_variables(tmp_path, capsys):
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
@@ -264,7 +264,7 @@ def test_overview_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
@@ -282,7 +282,7 @@ def test_overview_duplicate_markers(tmp_path, capsys):
     repo_root = Path(__file__).parent.parent
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
     # '!' is not allowed as mrk, so this triggers the invalid mrk check before "must be different"
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
@@ -300,7 +300,7 @@ def test_overview_mrk_smk_same_character(tmp_path, capsys):
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
 
     # Use valid markers that are identical
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path),
@@ -321,7 +321,7 @@ def test_overview_different_output_formats(tmp_path):
     valid_markers = [('~', '!'), ('@', '#')]
 
     for mrk, smk in valid_markers:
-        result = dpest.wheat.overview(
+        result = dpest.overview(
             treatment='164.0 KG N/HA IRRIG',
             overview_file_path=str(overview_file),
             output_path=str(tmp_path),
@@ -344,7 +344,7 @@ def test_overview_unexpected_error(tmp_path, capsys, monkeypatch):
             return False
         return original_isfile(path)
     monkeypatch.setattr(os.path, "isfile", fake_isfile)
-    result = dpest.wheat.overview(
+    result = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path)
