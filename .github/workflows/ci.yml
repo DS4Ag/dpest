@@ -25,7 +25,7 @@ jobs:
           COVERAGE_PROCESS_START: ${{ github.workspace }}/.coveragerc
         run: |
           # Explicitly run notebook tests and unit tests
-          pdm run python -m coverage run -m pytest tests/test_notebooks.py
+          #pdm run python -m coverage run -m pytest tests/test_notebooks.py
           pdm run python -m coverage run -m pytest tests/
           pdm run python -m coverage combine
           pdm run python -m coverage xml
