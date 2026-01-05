@@ -36,10 +36,11 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install dependencies
+      - name: Install dependencies from local project
         run: |
           python -m pip install --upgrade pip
-          # Install test/dev dependencies (pytest, etc.)
+          # IMPORTANT: do NOT install the published dpest here
+          # pip install dpest
           python -m pip install -e .[dev]
 
       - name: Run unit tests
