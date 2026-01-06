@@ -49,13 +49,13 @@ def test_pst(tmp_path):
     )
 
     # Step 2: Generate observations using overview and plantgro
-    overview_obs, overview_ins_path = dpest.wheat.overview(
+    overview_obs, overview_ins_path = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=overview_file,
         output_path=output_dir_str
     )
 
-    plantgro_obs, plantgro_ins_path = dpest.wheat.plantgro(
+    plantgro_obs, plantgro_ins_path = dpest.plantgro(
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD'],
         plantgro_file_path=plantgro_file,
@@ -112,7 +112,7 @@ def test_pst_missing_both_parameters(tmp_path, capsys):
     overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
     plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
 
-    overview_obs, _ = dpest.wheat.overview(
+    overview_obs, _ = dpest.overview(
         treatment='164.0 KG N/HA IRRIG',
         overview_file_path=str(overview_file),
         output_path=str(tmp_path)
@@ -268,7 +268,7 @@ def test_pst_invalid_observations_type(tmp_path, capsys):
 
         # Setup valid observations
         overview_file = repo_root / "tests/DSSAT48/Wheat/OVERVIEW.OUT"
-        overview_obs, _ = dpest.wheat.overview(
+        overview_obs, _ = dpest.overview(
             treatment='164.0 KG N/HA IRRIG',
             overview_file_path=str(overview_file),
             output_path=str(tmp_path)
