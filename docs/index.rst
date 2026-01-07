@@ -201,9 +201,9 @@ Example Usage
 
    dpest.wheat.ceres.cul
    dpest.wheat.ceres.eco
-   dpest.wheat.overview
-   dpest.wheat.plantgro
-   dpest.wheat.utils.uplantgro
+   dpest.overview
+   dpest.plantgro
+   dpest.uplantgro
 
 .. toctree::
    :maxdepth: 2
