@@ -43,7 +43,9 @@ Import the required modules from the `dpest` package:
 .. code-block:: python
 
     from dpest.wheat.ceres.cul import cul
-    from dpest.pst import overview, plantgro, pst
+    from dpest.wheat.overview import overview
+    from dpest.wheat.plantgro import plantgro
+    from dpest.pst import pst
 
 After running this code, you will have access to all necessary functions for creating template files, instruction files, and the PEST control file.
 

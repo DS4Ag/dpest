@@ -23,10 +23,10 @@ The following steps outline the typical workflow for using `dpest`:
 
               dpest.wheat.ceres.cul(...)
               dpest.wheat.ceres.eco(...)
-              dpest.overview(...)
-              dpest.plantgro(...)
+              dpest.wheat.overview(...)
+              dpest.wheat.plantgro(...)
               dpest.pst(...)
-              dpest.uplantgro(...)
+              dpest.wheat.utils.uplantgro(...)
 
         B. **Using Locally Bound Names:**
 
@@ -35,8 +35,9 @@ The following steps outline the typical workflow for using `dpest`:
            .. code-block:: python
 
               from dpest.wheat.ceres import cul, eco
-              from dpest import pst,overview, plantgro, uplantgro
-              from dpest.wheat.utils import
+              from dpest.wheat import overview, plantgro
+              from dpest import pst
+              from dpest.wheat.utils import uplantgro
 
            Now you can use the functions directly by their locally bound names:
 
