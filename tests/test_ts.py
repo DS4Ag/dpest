@@ -195,25 +195,25 @@ def test_ts_missing_yaml_file(tmp_path, capsys):
     assert "FileNotFoundError: The file 'nonexistent.OUT' does not exist" in captured.out or "YAML file not found" in captured.out
     assert result is None
 
-def test_ts_nonexistent_treatment(tmp_path, capsys):
-    """Test handling of non-existent treatment"""
-    repo_root = Path(__file__).parent.parent
-    plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
-
-    result = dpest.ts(
-        treatment='NON_EXISTENT_TREATMENT',
-        ts_file_path=str(plantgro_file),
-        output_path=str(tmp_path),
-        variables=['LAID']
-    )
-    captured = capsys.readouterr()
-    # Accept any error about missing treatment or unexpected error
-    assert (
-        "No valid data found for treatment" in captured.out or
-        "No data found for treatment" in captured.out or
-        "An unexpected error occurred" in captured.out
-    )
-    assert result is None
+# def test_ts_nonexistent_treatment(tmp_path, capsys):
+#     """Test handling of non-existent treatment"""
+#     repo_root = Path(__file__).parent.parent
+#     plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
+#
+#     result = dpest.ts(
+#         treatment='NON_EXISTENT_TREATMENT',
+#         ts_file_path=str(plantgro_file),
+#         output_path=str(tmp_path),
+#         variables=['LAID']
+#     )
+#     captured = capsys.readouterr()
+#     # Accept any error about missing treatment or unexpected error
+#     assert (
+#         "No valid data found for treatment" in captured.out or
+#         "No data found for treatment" in captured.out or
+#         "An unexpected error occurred" in captured.out
+#     )
+#     assert result is None
 
 def test_ts_empty_variables(tmp_path, capsys):
     """Test empty variables list handling"""

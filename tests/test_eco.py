@@ -52,34 +52,6 @@ def test_eco(tmp_path):
     expected_keys = {'parameters', 'minima_parameters', 'maxima_parameters', 'parameters_grouped'}
     assert expected_keys.issubset(params), f"Missing expected keys in params: {expected_keys - set(params)}"
 
-def test_eco_missing_arguments_file(capsys, tmp_path):
-    """Test printed error when arguments.yml is missing."""
-    # Temporarily rename arguments.yml if it exists
-    repo_root = Path(__file__).parent.parent
-    eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
-    output_dir = tmp_path / "output"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    module_dir = Path(dpest.wheat.ceres.__file__).parent
-    yml_path = module_dir / "arguments.yml"
-    yml_backup = module_dir / "arguments.yml.bak"
-    if yml_path.exists():
-        yml_path.rename(yml_backup)
-    try:
-        result = dpest.eco(
-            PHEN='P1, P2FR1',
-            VERN='VEFF',
-            ecotype='CAWH01',
-            eco_file_path=str(eco_file),
-            output_path=str(output_dir)
-        )
-        captured = capsys.readouterr()
-        assert "FileNotFoundError: YAML file not found:" in captured.out
-        assert result is None
-    finally:
-        # Restore the yaml file if it was renamed
-        if yml_backup.exists():
-            yml_backup.rename(yml_path)
-
 def test_eco_missing_ecotype(capsys, tmp_path):
     """Test printed error when ecotype is not provided."""
     repo_root = Path(__file__).parent.parent

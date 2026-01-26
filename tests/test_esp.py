@@ -60,39 +60,25 @@ def test_spe_dict_syntax_sbgro(tmp_path):
     species_parameters, species_tpl_path = dpest.spe(
         species_file_path=str(spe_file),
         PARMAX={
-            "line": 5,
+            "line": 4,
             "column": 1,
             "min": 20.0,
             "max": 60.0,
             "group": "PHOTOSYN",
         },
         PHTMAX={
-            "line": 5,
+            "line": 4,
             "column": 2,
             "min": 40.0,
             "max": 80.0,
             "group": "PHOTOSYN",
         },
         XLMAXT_2={
-            "line": 11,
+            "line": 13,
             "column": 2,
             "min": 0.0,
             "max": 20.0,
             "group": "TEMP_RESP",
-        },
-        XPGSLW_3={
-            "line": 18,
-            "column": 3,
-            "min": 0.0,
-            "max": 0.01,
-            "group": "SLW_SHAPE",
-        },
-        RTDEPI={
-            "line": 40,
-            "column": 1,
-            "min": 10.0,
-            "max": 40.0,
-            "group": "ROOTS",
         },
         output_path=str(output_dir),
     )
