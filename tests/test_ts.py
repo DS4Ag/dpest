@@ -143,7 +143,7 @@ def test_ts_variables_accepts_string(tmp_path):
 
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        te_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables='LAID'
     )
