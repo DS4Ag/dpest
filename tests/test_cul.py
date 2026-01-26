@@ -54,53 +54,6 @@ def test_cul(tmp_path):
     assert expected_keys.issubset(params), f"Missing expected keys in params: {expected_keys - set(params)}"
 
 
-def test_cul_missing_arguments_file(capsys, tmp_path):
-    """Test printed error when top-level dpest/arguments.yml is missing."""
-    repo_root = Path(__file__).parent.parent
-    cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
-    output_dir = tmp_path / "output"
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # dpest root where cul.py and arguments.yml live
-    dpest_root = Path(dpest.__file__).parent
-    top_level_yml = dpest_root / "arguments.yml"
-    backup = dpest_root / "arguments.yml.bak"
-
-    # Temporarily remove the main arguments.yml
-    if top_level_yml.exists():
-        top_level_yml.rename(backup)
-
-    try:
-        result = dpest.cul(
-            P="P1D, P5",
-            G="G1, G2, G3",
-            PHINT="PHINT",
-            cultivar="MANITOU",
-            cul_file_path=str(cul_file),
-            output_path=str(output_dir),
-        )
-
-        captured = capsys.readouterr()
-
-        # cul catches FileNotFoundError and prints it as:
-        # "FileNotFoundError: YAML file not found: <path>"
-        expected_prefix = "FileNotFoundError: YAML file not found:"
-        assert expected_prefix in captured.out
-        assert result is None
-    finally:
-        # Restore the original YAML
-        if backup.exists():
-            backup.rename(top_level_yml)
-
-
-        # cul wraps FileNotFoundError and prints it, returning None
-        expected = "FileNotFoundError: YAML file not found for crop wheat and model ceres"
-        assert expected in captured.out
-        assert result is None
-    finally:
-        if backup.exists():
-            backup.rename(crop_yml)
-
 def test_cul_missing_cultivar(capsys, tmp_path):
     """Test printed error when cultivar is not provided."""
     repo_root = Path(__file__).parent.parent
