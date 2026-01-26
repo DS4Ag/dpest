@@ -1,5 +1,4 @@
 import dpest
-import dpest.cul as cul_mod
 from pathlib import Path
 
 def test_cul(tmp_path):
@@ -63,8 +62,8 @@ def test_cul_missing_arguments_file(capsys, tmp_path):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # dpest root (where cul.py lives)
-    dpest_root = Path(cul_mod.__file__).parent
-    # directory where the crop‑model arguments.yml lives
+    dpest_root = Path(dpest.__file__).parent
+    # directory where the crop-model arguments.yml lives
     module_dir = dpest_root / "wheat" / "ceres"
     yml_path = module_dir / "arguments.yml"
     yml_backup = module_dir / "arguments.yml.bak"
