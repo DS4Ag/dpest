@@ -1,4 +1,5 @@
 import dpest
+import dpest.cul as cul_mod
 from pathlib import Path
 
 def test_cul(tmp_path):
@@ -55,14 +56,15 @@ def test_cul(tmp_path):
 
 
 def test_cul_missing_arguments_file(capsys, tmp_path):
-    """Test printed error when arguments.yml is missing."""
+    """Test printed error when wheat/ceres arguments.yml is missing."""
     repo_root = Path(__file__).parent.parent
     cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # cul.py lives in dpest/, wheat/ceres/ is a subdirectory of that
+    # dpest root (where cul.py lives)
     dpest_root = Path(cul_mod.__file__).parent
+    # directory where the crop‑model arguments.yml lives
     module_dir = dpest_root / "wheat" / "ceres"
     yml_path = module_dir / "arguments.yml"
     yml_backup = module_dir / "arguments.yml.bak"
@@ -80,7 +82,7 @@ def test_cul_missing_arguments_file(capsys, tmp_path):
             output_path=str(output_dir),
         )
         captured = capsys.readouterr()
-        assert "FileNotFoundError: YAML file not found:" in captured.out
+        assert "FileNotFoundError: YAML file not found" in captured.out
         assert result is None
     finally:
         if yml_backup.exists():
