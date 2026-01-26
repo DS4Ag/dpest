@@ -56,30 +56,33 @@ def test_cul(tmp_path):
 
 def test_cul_missing_arguments_file(capsys, tmp_path):
     """Test printed error when arguments.yml is missing."""
-    # Temporarily rename arguments.yml if it exists
     repo_root = Path(__file__).parent.parent
     cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    module_dir = Path(dpest.wheat.ceres.__file__).parent
+
+    # cul.py lives in dpest/, wheat/ceres/ is a subdirectory of that
+    dpest_root = Path(cul_mod.__file__).parent
+    module_dir = dpest_root / "wheat" / "ceres"
     yml_path = module_dir / "arguments.yml"
     yml_backup = module_dir / "arguments.yml.bak"
+
     if yml_path.exists():
         yml_path.rename(yml_backup)
+
     try:
         result = dpest.cul(
-            P='P1D, P5',
-            G='G1, G2, G3',
-            PHINT='PHINT',
-            cultivar='MANITOU',
+            P="P1D, P5",
+            G="G1, G2, G3",
+            PHINT="PHINT",
+            cultivar="MANITOU",
             cul_file_path=str(cul_file),
-            output_path=str(output_dir)
+            output_path=str(output_dir),
         )
         captured = capsys.readouterr()
         assert "FileNotFoundError: YAML file not found:" in captured.out
         assert result is None
     finally:
-        # Restore the yaml file if it was renamed
         if yml_backup.exists():
             yml_backup.rename(yml_path)
 
