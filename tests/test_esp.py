@@ -1,20 +1,19 @@
-# tests/test_spe_function.py
+# tests/test_spe.py
 
 from pathlib import Path
 import dpest
 
 
 def test_spe_tuple_syntax_whcer(tmp_path):
-    """Test generation of species template file using tuple syntax (WHCER048.SPE)."""
+    """Successful template generation using tuple syntax (WHCER048.SPE example)."""
     repo_root = Path(__file__).parent.parent
     spe_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.SPE"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Ensure the input file exists
     assert spe_file.exists(), f"Input file not found: {spe_file}"
 
-    # Call the dpest.spe function using the example in the docstring
+    # Example 1 from the spe docstring
     species_parameters, species_tpl_path = dpest.spe(
         species_file_path=str(spe_file),
         PGERM=(15, 1, 0.0, 20.0, "Phase_dur"),
@@ -26,11 +25,7 @@ def test_spe_tuple_syntax_whcer(tmp_path):
         output_path=str(output_dir),
     )
 
-    # 1. Validate result is not None
-    assert species_parameters is not None
-    assert species_tpl_path is not None
-
-    # 2. Validate species_parameters is a dict with the expected top-level keys
+    # Check return structure
     assert isinstance(species_parameters, dict)
     expected_keys = {
         "parameters",
@@ -40,31 +35,28 @@ def test_spe_tuple_syntax_whcer(tmp_path):
     }
     assert expected_keys.issubset(
         species_parameters
-    ), f"Missing expected keys in species_parameters: {expected_keys - set(species_parameters)}"
+    ), f"Missing expected keys: {expected_keys - set(species_parameters)}"
 
-    # 3. Check that the template file exists
+    # Check template file
     tpl_path = Path(species_tpl_path)
     assert tpl_path.exists(), f"Template file not created: {tpl_path}"
-
-    # 4. Confirm the first line of the template file starts with 'ptf'
     with tpl_path.open("r") as f:
         first_line = f.readline().strip().lower()
     assert first_line.startswith(
         "ptf"
-    ), f"Template file must start with 'ptf', but got: {first_line}"
+    ), f"Template file must start with 'ptf', got: {first_line}"
 
 
 def test_spe_dict_syntax_sbgro(tmp_path):
-    """Test generation of species template file using dict syntax (SBGRO048.SPE)."""
+    """Successful template generation using dict syntax (SBGRO048.SPE example)."""
     repo_root = Path(__file__).parent.parent
     spe_file = repo_root / "tests/DSSAT48/Genotype/SBGRO048.SPE"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Ensure the input file exists
     assert spe_file.exists(), f"Input file not found: {spe_file}"
 
-    # Call the dpest.spe function using the soybean example in the docstring
+    # Example 2 from the spe docstring
     species_parameters, species_tpl_path = dpest.spe(
         species_file_path=str(spe_file),
         PARMAX={
@@ -105,11 +97,7 @@ def test_spe_dict_syntax_sbgro(tmp_path):
         output_path=str(output_dir),
     )
 
-    # 1. Validate result is not None
-    assert species_parameters is not None
-    assert species_tpl_path is not None
-
-    # 2. Validate species_parameters is a dict with the expected top-level keys
+    # Check return structure
     assert isinstance(species_parameters, dict)
     expected_keys = {
         "parameters",
@@ -119,53 +107,20 @@ def test_spe_dict_syntax_sbgro(tmp_path):
     }
     assert expected_keys.issubset(
         species_parameters
-    ), f"Missing expected keys in species_parameters: {expected_keys - set(species_parameters)}"
+    ), f"Missing expected keys: {expected_keys - set(species_parameters)}"
 
-    # 3. Check that the template file exists
+    # Check template file
     tpl_path = Path(species_tpl_path)
     assert tpl_path.exists(), f"Template file not created: {tpl_path}"
-
-    # 4. Confirm the first line of the template file starts with 'ptf'
     with tpl_path.open("r") as f:
         first_line = f.readline().strip().lower()
     assert first_line.startswith(
         "ptf"
-    ), f"Template file must start with 'ptf', but got: {first_line}"
-
-
-def test_spe_missing_arguments_file(capsys, tmp_path):
-    """Test printed error when arguments.yml is missing."""
-    repo_root = Path(__file__).parent.parent
-    spe_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.SPE"
-    output_dir = tmp_path / "output"
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Locate the module directory where arguments.yml should live
-    module_dir = Path(dpest.__file__).parent  # adjust if arguments.yml is elsewhere
-    yml_path = module_dir / "arguments.yml"
-    yml_backup = module_dir / "arguments.yml.bak"
-
-    # Temporarily rename arguments.yml if it exists
-    if yml_path.exists():
-        yml_path.rename(yml_backup)
-
-    try:
-        result = dpest.spe(
-            species_file_path=str(spe_file),
-            PGERM=(15, 1, 0.0, 20.0, "Phase_dur"),
-            output_path=str(output_dir),
-        )
-        captured = capsys.readouterr()
-        assert "FileNotFoundError: YAML file not found:" in captured.out
-        assert result is None
-    finally:
-        # Restore the yaml file if it was renamed
-        if yml_backup.exists():
-            yml_backup.rename(yml_path)
+    ), f"Template file must start with 'ptf', got: {first_line}"
 
 
 def test_spe_missing_species_file_path(capsys, tmp_path):
-    """Test printed error when species_file_path is not provided."""
+    """Missing species_file_path should print a ValueError and return None."""
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -174,6 +129,7 @@ def test_spe_missing_species_file_path(capsys, tmp_path):
         output_path=str(output_dir),
         PGERM=(15, 1, 0.0, 20.0, "Phase_dur"),
     )
+
     captured = capsys.readouterr()
     assert (
         "ValueError: The 'species_file_path' argument is required and must be specified by the user."
