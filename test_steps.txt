@@ -1,0 +1,23 @@
+Microsoft Windows [Version 10.0.26100.4202]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest_test_v2>git clone https://github.com/DS4Ag/dpest.git
+Cloning into 'dpest'...
+remote: Enumerating objects: 1501, done.
+remote: Counting objects: 100% (10/10), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 1501 (delta 2), reused 8 (delta 2), pack-reused 1491 (from 2)
+Receiving objects: 100% (1501/1501), 11.12 MiB | 13.02 MiB/s, done.
+Resolving deltas: 100% (906/906), done.
+
+C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest_test_v2>cd dpest
+
+C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest_test_v2\dpest>py -3.12 -m venv .venv
+
+C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest_test_v2\dpest>.\.venv\Scripts\activate
+
+(.venv) C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest_test_v2\dpest>pip install pdm
+
+(.venv) C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest_test_v2\dpest>pdm install
+
+(.venv) C:\Users\luizv\OneDrive_Purdue\OneDrive - purdue.edu\Thesis\dpest_test_v2\dpest>pdm run pytest tests/ -v

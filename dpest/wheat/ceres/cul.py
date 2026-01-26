@@ -108,7 +108,7 @@ def cul(
             raise ValueError("The 'cultivar' argument is required and must be specified by the user.")
 
         # Validate cul_file_path
-        validated_path = validate_file(cul_file_path, '.CUL')
+        validated_cul_file_path = validate_file(cul_file_path, '.CUL')
 
         # Validate marker delimiters using the validate_marker() function
         mrk = validate_marker(mrk, "mrk")
@@ -135,6 +135,8 @@ def cul(
             parameters_grouped = yaml_data[yml_cultivar_block][yaml_parameters]
             parameters_grouped = {key: ', '.join(value) for key, value in parameters_grouped.items()}
 
+        print('parameters_grouped:\n', parameters_grouped)
+
         # Combine all the groups of parameters into a list
         parameters = []
         for key, value in parameters_grouped.items():
@@ -142,7 +144,7 @@ def cul(
             parameters.extend(group_parameters)  # Add the group parameters to the main list
 
         # Read the CUL file
-        file_content = read_dssat_file(cul_file_path)
+        file_content = read_dssat_file(validated_cul_file_path)
         lines = file_content.split('\n')
 
         # Locate header and target lines
@@ -150,13 +152,13 @@ def cul(
         header_line = lines[header_line_number]
 
         # Get the number of the line that contains the parameters of the specified cultivar
-        cultivar_line_number = find_cultivar(file_content, header_start, cultivar, cul_file_path)
+        cultivar_line_number = find_cultivar(file_content, header_start, cultivar, validated_cul_file_path)
         if isinstance(cultivar_line_number, str):  # Error message returned
             raise ValueError(cultivar_line_number)
-        minima_line_number = find_cultivar(file_content, header_start, minima, cul_file_path)
+        minima_line_number = find_cultivar(file_content, header_start, minima, validated_cul_file_path)
         if isinstance(minima_line_number, str):  # Error message returned
             raise ValueError(minima_line_number)
-        maxima_line_number = find_cultivar(file_content, header_start, maxima, cul_file_path)
+        maxima_line_number = find_cultivar(file_content, header_start, maxima, validated_cul_file_path)
         if isinstance( maxima_line_number, str):  # Error message returned
             raise ValueError( maxima_line_number)
 
@@ -169,7 +171,7 @@ def cul(
                     parameter_value = lines[line_number][par_position[0]:par_position[1] + 1].strip()
                     parameter_values[parameter] = parameter_value
                 except Exception:
-                    raise ValueError(f"Parameter '{parameter}' does not exist in the header line of {cul_file_path}.")
+                    raise ValueError(f"Parameter '{parameter}' does not exist in the header line of {validated_cul_file_path}.")
             return parameter_values
 
         minima_parameter_values = extract_parameter_values(minima_line_number)
@@ -194,9 +196,6 @@ def cul(
         
             # Get the length of a parameter including empty spaces 
             char_compl = header_line[par_position[0]+1:par_position[1]+1]
-            
-            # Get the length of the parameter without empty characters 
-            char = char_compl.strip()
         
             # Calculate the number of available characters for the parameter
             available_space = len(char_compl) - 2
@@ -241,15 +240,12 @@ def cul(
         
         # Insert 'ptf' and marker at the beginning of the file content
         lines.insert(0, f"{tpl_first_line} {mrk}")
-        
-        # Output the updated text
-        updated_text = "\n".join(lines)
-    
+
         # Validate output_path
         output_path = validate_output_path(output_path)
 
         # Add the file name and extension to the path for the new file
-        output_new_file_path = os.path.join(output_path, os.path.splitext(os.path.basename(cul_file_path))[0] + '_CUL' + '.' + new_template_file_extension)
+        output_new_file_path = os.path.join(output_path, os.path.splitext(os.path.basename(validated_cul_file_path))[0] + '_CUL' + '.' + new_template_file_extension)
         
         # Save the updated text to a new .TPL file
         with open(output_new_file_path, 'w') as file:

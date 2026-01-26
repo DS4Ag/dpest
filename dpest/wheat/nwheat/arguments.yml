@@ -1,0 +1,123 @@
+### Contains the Nwheat (WHAPS048) cultivar and ecotype parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the Nwheat CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    PARAMETERS:
+        PHENO:          # Phenology and sensitivity
+            - VSEN      # Vernalization sensitivity
+            - PPSEN     # Photoperiod sensitivity
+            - P1        # Emergence–end juvenile thermal time
+            - P5        # Grainfill start–maturity thermal time
+            - PHINT     # Phyllochron
+        GRAIN_SET:      # Grain number and size
+            - GRNO      # Kernels per g stem at start of grain fill
+            - MXFIL     # Potential kernel growth rate
+            - STMMX     # Max stem dry weight per tiller
+        LEAF_TRAITS:
+            - SLAP1     # Leaf area to mass ratio at emergence
+
+# Arguments for the Nwheat ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    PARAMETERS:
+        TEMP_DEV:       # Temperature and development
+            - TBASE     # Base temperature
+            - TOPT      # Optimum veg temperature
+            - ROPT      # Optimum repro temperature
+            - TTOP      # Maximum temperature
+            - P2O       # Critical daylength
+            - VREQ      # Vernalization requirement
+            - GDDE      # GDD per cm depth to emergence
+            - DSGFT     # GDD from end ear growth to grain fill start
+        RADIATION:      # Radiation use and light interception
+            - RUE1      # Pre‑anthesis RUE
+            - RUE2      # Post‑anthesis RUE
+            - KVAL1     # Pre‑anthesis K
+            - KVAL2     # Post‑anthesis K
+        LEAF_TILLER:    # Leaf area, tillering, senescence
+            - SLAP2     # Leaf area to mass at end leaf growth
+            - TC1P1     # Tiller number parameter 1
+            - TC1P2     # Tiller number parameter 2
+            - DTNP1     # Post‑terminal spike tiller number term
+            - PLGP1     # Potential leaf growth param 1
+            - PLGP2     # Potential leaf growth param 2
+        ROOT_AERATION:  # Root and aeration stress response
+            - P2AF      # Threshold AD for root effect
+            - P3AF      # Depth of unaffected root
+            - P4AF      # Days to accumulate AD for root effect
+            - P5AF      # Power term for AD effect on roots
+            - P6AF      # Days to accumulate AD for crop growth effect
+            - ADLAI     # AD threshold affecting LAI
+            - ADTIL     # AD threshold affecting tillering
+            - ADPHO     # AD threshold affecting photosynthesis
+        CARBON_N:       # C and N dynamics
+            - STEMN     # Fraction stem C remobilised
+            - MXNUP     # Max N uptake per day
+            - MXNCR     # Max grain N:C ratio
+            - WFNU      # Water effect power on N supply
+            - PNUPR     # Potential N uptake rate
+            - EXNO3     # NO3 supply exponent
+            - MNNO3     # Min NO3 supply factor
+            - EXNH4     # NH4 supply exponent
+            - MNNH4     # Min NH4 supply factor
+        GRAIN_INIT:     # Initial and target grain properties
+            - INGWT     # Initial 100‑grain weight
+            - INGNC     # Initial grain N concentration
+            - FREAR     # Fraction defining min stem wt for remobilisation
+            - MNNCR     # Minimum grain N:C ratio
+            - GPPSS     # Stage to start GPP accumulation
+            - GPPES     # Stage to end GPP accumulation
+            - MXGWT     # Max kernel weight modifier
+            - MNRTN     # Min root N under grain N init
+            - NOMOB     # Non‑mobile fraction of stem C
+        ROOT_DEPTH:     # Root depth penalties
+            - RTDP1     # Soil water effect term
+            - RTDP2     # Crop stress effect term
+        OZONE_COLD:     # Ozone and cold damage
+            - FOZ1      # Ozone effect rate on photosynthesis
+            - FOZ2      # Ozone effect init on photosynthesis
+            - SFOZ1     # Ozone effect rate on leaf senescence
+            - SFOZ2     # Ozone effect init on senescence
+            - TSEN      # Critical temp for cold damage
+            - CDAY      # Cold days parameter
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Germination  (dap): phenology
+        Emergence    (dap): phenology
+        T.Spikelet   (dap): phenology
+        Anthesis     (dap): phenology
+        HardDough    (dap): phenology
+        AboveGround (kg dm/ha): biomass
+        Roots+seed residue (kg dm/ha): biomass
+        Senesced (kg dm/ha): biomass
+        Product (kg dm/ha): yield
+        AboveGroundVegetative (kg dm/ha): biomass
+        HarvestIndex (ratio): yield
+        Reserves (kg dm/ha): biomass
+        Product unit wt (g dm): yield
+        Product number (/m2): yield
+        Product number (/shoot): yield
+        Final shoot number (no/m2): yield
+        Maximum leaf area index: lai
+        Final leaf number (one axis): phenology
+        Assimilated N (kg/ha): nitrogen
+        AboveGround N (kg/ha): nitrogen
+        Root N (kg/ha): nitrogen
+        Senesced N (kg/ha): nitrogen
+        Product N (kg/ha): nitrogen
+        AboveGroundVegetative N (kg/ha): nitrogen
+        N HarvestIndex (ratio): yield
+        Product N (% dm): nitrogen
+        AboveGroundVegetative N (% dm): nitrogen
+        Straw wt,anthesis (kg dm/ha): biomass
+        Straw N,anthesis (kg/ha): nitrogen
+        Leaf wt,anthesis (kg dm/ha): biomass
+        Stem wt,anthesis (kg dm/ha): biomass
+        Res. wt,anthesis (kg dm/ha): biomass

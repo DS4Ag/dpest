@@ -1,0 +1,58 @@
+cd /mnt/c/pest18
+
+#pestchek.exe "C:\pest18\dssat_pest\e1_bm\e1_bm.pst"
+
+cd /mnt/c/Users/luizv/OneDrive_Purdue/OneDrive\ -\ purdue.edu/Thesis/PEST_DSSAT_function/
+
+pestchek.exe WHEAT_CERES_PEST_FILE
+
+#PEST.exe "C:\pest18\dssat_pest\e1_bm\e1_bm.pst"
+
+PEST.exe "WHEAT_CERES_PEST_FILE.pst"
+
+#pwtadj1.exe "C:\pest18\dssat_pest\e1_bm\e1_bm" "C:\pest18\dssat_pest\e1_bm\e1_bm_BAL" 1.0
+
+#PEST.exe "C:\pest18\dssat_pest\e1_bm\e1_bm_BAL.pst"
+
+# Review instruction file
+inschek.exe OVERVIEW.ins C://DSSAT48/Wheat/OVERVIEW.OUT
+
+
+
+#############################
+#### NEW release
+#############################
+
+#### Step 1: Update Your Workflow File
+
+# Edit Your Workflow File: Modify your .github/workflows/release.yaml file to ensure it's correctly configured for building and publishing your package.
+
+# Commit Changes:
+git add .github/workflows/release.yaml
+git commit -m "Update GitHub Actions for PyPI publishing"
+
+# Push Changes to GitHub:
+git push
+
+#### Step 2: Prepare a New Release
+
+
+############ IT IS NOT NECESARY TO DELEATE PREVIOUS VERSSIONS, BECAUSE IT WILL DELETE THE RELEASES FROM GITHUB
+### Delete Existing Tag (if necessary):
+# If you need to recreate a tag, first delete it locally and on GitHub:
+git tag -d v1.1.4 
+git push --delete origin v1.1.4
+############ /IT IS NOT NECESARY TO DELEATE PREVIOUS VERSSIONS 
+
+### Create a New Tag:
+# Create a new tag for your release:
+git tag v1.1.5
+
+### Push the New Tag:
+# Push the new tag to GitHub:
+git push origin v1.1.5
+
+##### Step 3: Trigger GitHub Actions
+Once you push the new tag, GitHub Actions will automatically trigger and build, publish your package to PyPI, and create a GitHub Release.
+
+Additional Tips

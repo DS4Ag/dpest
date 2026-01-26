@@ -1,0 +1,89 @@
+### Contains the MANIHOT-Cassava (CSYCA048) cultivar and ecotype parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the MANIHOT-Cassava CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    PARAMETERS:
+        BRANCHING:      # Forking schedule and branch number
+            - B01ND     # Thermal time to first fork
+            - B12ND     # Thermal time first–second fork
+            - B23ND     # Thermal time second–third fork
+            - B34ND     # Thermal time third–fourth fork
+            - BR1FX     # Branch number per fork 1
+            - BR2FX     # Branch number per fork 2
+            - BR3FX     # Branch number per fork 3
+            - BR4FX     # Branch number per fork 4
+        LEAVES:         # Leaf size, SLA and longevity
+            - LAXS      # Maximum leaf area without stress
+            - SLAS      # Specific lamina area
+            - LLIFA     # Leaf life from expansion to senescence
+            - LPEFR     # Petiole fraction of leaf
+            - LNSLP     # Leaf production slope (rate modifier)
+        STEM:           # Structural stem traits
+            - NODWT     # Node weight at 3400 °Cd
+            - NODLT     # Internode length before branching
+
+# Arguments for the MANIHOT-Cassava ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    PARAMETERS:
+        RADIATION:      # Radiation conversion and canopy
+            - PARUE     # PAR conversion factor
+            - KCAN      # PAR extinction coefficient
+        ROOT_STOR:      # Storage root and N properties
+            - TBLSZ     # Base temperature for leaf development
+            - SRN%S     # Storage-root standard N concentration
+            - SRUSE     # Reserves remobilization fraction
+        GERMPHOTO_VPD:  # Germination, branching delay, VPD effects
+            - PGERM     # Germination duration
+            - PPS1      # Photoperiod sens. delaying 1st branching
+            - PPS2      # Photoperiod sens. delaying 2nd branching
+            - PPS3      # Photoperiod sens. delaying 3rd branching
+            - PHTV      # VPD threshold for photosyn/transp reduction
+            - PHSV      # VPD sensitivity of photosyn/transp
+        ROOT_SYSTEM:    # Roots and soil exploration
+            - RDGS      # Root depth growth rate
+            - RLWR      # Root length/weight ratio
+        WATER_STRESS:   # Water and senescence
+            - WFSU      # Water stress factor for leaf senescence
+        HARVEST:        # Product quality
+            - HMPC      # Harvest product dry matter content
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Germination  (dap): phenology
+        Emergence    (dap): phenology
+        1stBranch    (dap): phenology
+        2ndBranch    (dap): phenology
+        3rdBranch    (dap): phenology
+        4thBranch    (dap): phenology
+        5thBranch    (dap): phenology
+        6thBranch    (dap): phenology
+        7thBranch    (dap): phenology
+        Harvest      (dap): phenology
+        AboveGround (kg dm/ha): biomass
+        Roots+seed residue (kg dm/ha): biomass
+        Senesced (kg dm/ha): biomass
+        Product (kg dm/ha): yield
+        AboveGroundVegetative (kg dm/ha): biomass
+        HarvestIndex (ratio): yield
+        Reserves (kg dm/ha): biomass
+        Product unit wt (g dm): yield
+        Product number (/m2): yield
+        Product number (/shoot): yield
+        Maximum leaf area index: lai
+        Final leaf number (one axis): yield
+        Assimilated N (kg/ha): nitrogen
+        AboveGround N (kg/ha): nitrogen
+        Root N (kg/ha): nitrogen
+        Senesced N (kg/ha): nitrogen
+        Product N (kg/ha): nitrogen
+        AboveGroundVegetative N (kg/ha): nitrogen
+        N HarvestIndex (ratio): nitrogen
+        Product N (% dm): nitrogen
+        AboveGroundVegetative N (% dm): nitrogen

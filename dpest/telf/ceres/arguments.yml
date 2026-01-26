@@ -1,0 +1,51 @@
+### Contains the teff CERES model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CERES Teff CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - P1
+            - P2R
+            - P5
+            - P2O
+        G:
+            - G1
+            - G2
+            - G3
+            - THOT
+        PHINT:
+            - PHINT
+        COLD: # Cold response parameters
+            - TCLDP
+            - TCLDF
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Panicle Initiation day (dap): phenology
+        Anthesis day (dap): phenology
+        Physiological maturity day (dap): phenology
+        Yield at harvest maturity (kg [dm]/ha): yield
+        Unit wt at maturity (g [dm]/unit): yield
+        Number at maturity (no/m2): yield
+        Pod or panicle number (no/m2): yield
+        Leaf area index, maximum: lai
+        Tops weight at anthesis (kg [dm]/ha): biomass
+        Tops N at anthesis (kg/ha): nitrogen
+        Tops weight at maturity (kg [dm]/ha): biomass
+        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
+        Harvest index at maturity: yield
+        Leaf number per stem at maturity: yield
+        Grain N at maturity (kg/ha): nitrogen
+        Tops N at maturity (kg/ha): nitrogen
+        Stem N at maturity (kg/ha): nitrogen
+        Grain N at maturity (%): nitrogen
+        Emergence day (dap): phenology

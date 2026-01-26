@@ -1,0 +1,59 @@
+### Contains the amaranth CROPGRO model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CROPGRO Amaranth CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:        # Phenology parameters
+            - CSDL
+            - PPSEN
+            - EM-FL
+            - FL-SH
+            - FL-SD
+            - SD-PM
+            - FL-LF
+            - SFDUR
+            - PODUR
+        G:        # Growth and partitioning parameters
+            - LFMAX
+            - SLAVR
+            - SIZLF
+            - XFRT
+            - WTPSD
+            - SDPDV
+            - THRSH
+            - SDPRO
+            - SDLIP
+
+# Arguments for the CROPGRO Amaranth ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        DEV:      # Development timing parameters
+            - MG
+            - TM
+            - PP-SS
+            - PL-EM
+            - EM-V1
+            - V1-JU
+            - JU-R0
+            - PM06
+            - PM09
+            - LNHSH
+            - R7-R8
+            - FL-VS
+        MORPH:    # Morphology and canopy scaling
+            - TRIFL
+            - RWDTH
+            - RHGHT
+        PHOTO:    # Photoperiod and temperature sensitivity
+            - R1PPO
+            - OPTBI
+            - SLOBI

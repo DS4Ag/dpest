@@ -1,0 +1,139 @@
+### Contains the sugarcane CASUPRO model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CASUPRO Sugarcane CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        PHOTO_RUE:      # Leaf photosynthesis and canopy CH2O production
+            - LFMAX
+            - PHTMAX
+        FRESH_WEIGHT:   # Fresh weight adjustment factors
+            - StkH2OFac
+            - SuH2OFac
+        PARTITION:      # Biomass partitioning (leaves / stalk / sucrose)
+            - PLF1
+            - PLF2
+            - Gamma
+            - StkB
+            - StkM
+        CANOPY_STRUCT:  # Canopy light interception fractions
+            - SIZLF
+            - LIsun
+            - LIshd
+        LEAF_TEMP:      # Leaf development temperature response
+            - TB_1
+            - TO1_1
+            - TO2_1
+            - TM_1
+        LEAF_PHENO:     # Leaf phyllochron and sheath–blade ratio
+            - PI1
+            - PI2
+            - DTPI
+            - LSFAC
+        TILLER_LIGHT:   # Tiller response to light
+            - LI1
+        TILLER_THERMAL: # Tiller telomechron and temperature response
+            - TELOM
+            - TB_2
+            - TO1_2
+            - TO2_2
+            - TM_2
+        TILLER_PHASE:   # Tiller phenology phases
+            - Ph1P
+            - Ph1R
+            - Ph2
+            - Ph3
+            - Ph4
+        TILLER_NUM:     # Stalk/tiller numbers per stool
+            - StHrv
+            - RTNFC
+        TILLER_MASS:    # Tiller survival minimum mass
+            - MinGr
+        RESP_SEN:       # Respiration and senescence coefficients
+            - RE30C
+            - RL30C
+            - R30C2
+
+# Arguments for the CASUPRO Sugarcane ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        CANOPY_K_SMAX:    # Canopy extinction and max stalks
+            - KCAN_ECO
+            - SMAX
+        CAB_GEOM:         # Cabbage and canopy layering
+            - CAB
+            - CanLmtFac
+            - LfShdFac
+            - MINSHD
+        STK_SENESC:       # Stalk senescence thresholds
+            - StkSenFrac
+            - SENDAY
+        SLA_DYN:          # SLA over time after planting
+            - XDAY(6)
+            - YSLA(6)
+        TILLER_RATE_LI:   # Tillering vs light interception
+            - XLI(6)
+            - YVTR(6)
+        INTERNODE_GEOM:   # Internode length/diameter and canopy width
+            - XVSHT(10)
+            - YVSHT(10)
+            - ZVSDI(10)
+            - YVSWH(10)
+        LEAF_AREA_POT:    # Potential leaf area vs leaf number
+            - XLFNUM(6)
+            - YLFSZ(6)
+        TILLER_LEAF_SIZE: # Tiller leaf-size factors vs stalk number
+            - XStkNum(8)
+            - YLfFac(8)
+        SUGAR_TABEX:      # Node-based sucrose accumulation
+            - XFRSU(4)
+            - YFRSU(4)
+        WATER_SENESC:     # Water-stress-driven leaf senescence
+            - XSENMX(4)
+            - SENMAX(4)
+        SHADE_SENESC:     # Shade-driven leaf senescence
+            - XShdMX(4)
+            - ShdMAX(4)
+        BACKGROUND_SEN:   # Background (potential) senescence
+            - XSTAGE(4)
+            - SENPOR(4)
+        COLD_SENESC:      # Cold-temperature senescence
+            - XTMIN(4)
+            - YLOSS(4)
+
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Millable cane fresh weight at harvest (t/ha): yield
+        Sucrose dry mass at harvest (t/ha): yield
+        Stalk (structural) dry mass at harvest (t/ha): biomass
+        Aerial biomass (green+dead), dm at harvest (t/ha): biomass
+        Trash (residue) dry mass at harvest (t/ha): biomass
+        Leaf area index, maximum: lai
+        Day at which maximum leaf area index occurs (dap): phenology
+        Leaf area index, at harvest: lai
+        Total leaf area/stalk (avg) at harvest(cm2/stalk): lai
+        Total leaf weight/stalk (avg) at harvest(g/stalk): biomass
+        Average nodes per stalk at harvest (nodes/stalk): yield
+        Primary stalk bud sprouts from sett (dap): phenology
+        Primary stalk emergence day (dap): phenology
+        First tiller emergence day (dap): phenology
+        Second tiller emergence day (dap): phenology
+        Tiller maximum population (stalks/m2): yield
+        Tiller maximum population day (dap): phenology
+        Initiation of tiller population decline (dap): phenology
+        Stalk population at harvest (stalks/m2): yield
+        Average height of stalks at harvest (m): biomass
+        Harvest index at maturity: yield

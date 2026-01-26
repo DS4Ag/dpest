@@ -18,8 +18,8 @@ def test_cul(tmp_path):
     cul_file = str(cul_file)
     output_dir = str(output_dir)
 
-    # Call the dpest.wheat.ceres.cul function
-    result = dpest.wheat.ceres.cul(
+    # Call the dpest.cul function
+    result = dpest.cul(
         P = 'P1D, P5',
         G = 'G1, G2, G3',
         PHINT = 'PHINT',
@@ -67,7 +67,7 @@ def test_cul_missing_arguments_file(capsys, tmp_path):
     if yml_path.exists():
         yml_path.rename(yml_backup)
     try:
-        result = dpest.wheat.ceres.cul(
+        result = dpest.cul(
             P='P1D, P5',
             G='G1, G2, G3',
             PHINT='PHINT',
@@ -89,7 +89,7 @@ def test_cul_missing_cultivar(capsys, tmp_path):
     cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    result = dpest.wheat.ceres.cul(
+    result = dpest.cul(
         P='P1D, P5',
         G='G1, G2, G3',
         PHINT='PHINT',
@@ -107,7 +107,7 @@ def test_cul_invalid_cultivar(capsys, tmp_path):
     cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    result = dpest.wheat.ceres.cul(
+    result = dpest.cul(
         P='P1D, P5',
         G='G1, G2, G3',
         PHINT='PHINT',
@@ -125,7 +125,7 @@ def test_cul_invalid_parameters(capsys, tmp_path):
     cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    result = dpest.wheat.ceres.cul(
+    result = dpest.cul(
         P='INVALID_PARAM',
         G='G1, G2, G3',
         PHINT='PHINT',
@@ -145,7 +145,7 @@ def test_cul_default_new_template_file_extension(capsys, tmp_path):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Don't provide new_template_file_extension
-    result = dpest.wheat.ceres.cul(
+    result = dpest.cul(
         P='P1D, P5',
         G='G1, G2, G3',
         PHINT='PHINT',
@@ -163,7 +163,7 @@ def test_cul_default_header_start(capsys, tmp_path):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Don't provide header_start
-    result = dpest.wheat.ceres.cul(
+    result = dpest.cul(
         P='P1D, P5',
         G='G1, G2, G3',
         PHINT='PHINT',
@@ -182,7 +182,7 @@ def test_cul_empty_parameters_grouped(tmp_path):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Call WITHOUT any parameter group arguments (P=..., G=..., etc.)
-    result = dpest.wheat.ceres.cul(
+    result = dpest.cul(
         cultivar='MANITOU',
         cul_file_path=str(cul_file),
         output_path=str(output_dir),

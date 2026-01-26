@@ -1,8 +1,10 @@
 import os
 import pandas as pd
 import re
-
 from datetime import datetime, timedelta
+from importlib import resources
+import yaml
+
 
 def read_dssat_file(file_path):
     '''
@@ -255,10 +257,16 @@ def extract_simulation_data(file_path):
         for treatment, (start_line, end_line) in treatment_dict.items():
             cultivar_data = []
             experiment_info = None
+            model_crop = None
 
             # Iterate through the lines in the specified range to find the EXPERIMENT line
             for i in range(start_line, end_line):
                 line = lines[i].strip()
+
+                # Look for the line containing 'MODEL'
+                if line.startswith("MODEL"):
+                    # Extract model and crop names
+                    model_crop = line.split(':')[1].strip()
 
                 # Look for the line containing 'EXPERIMENT'
                 if line.startswith('EXPERIMENT'):
@@ -270,7 +278,7 @@ def extract_simulation_data(file_path):
                     parts = line.split('CULTIVAR :')
                     if len(parts) > 1:
                         cultivar = parts[1].split('ECOTYPE')[0].strip()  # Extract everything between 'CULTIVAR :' and 'ECOTYPE'
-                
+
                 # Look for the line with simulation results (lines after @)
                 if line.startswith('@'):
 
@@ -325,7 +333,7 @@ def extract_simulation_data(file_path):
     # Convert all column names to lowercase
     all_data.columns = all_data.columns.str.lower()
 
-    return all_data, header_line
+    return all_data, header_line, model_crop
 
 
 # def process_treatment_file(file_path, treatment_mapping, season_mapping):
@@ -430,17 +438,26 @@ def process_variable_names(df):
 
 def extract_treatment_info_plantgrowth(file_path, treatment_dict):
     """
-    Extracts treatment information and their corresponding codes from a file.
+    Extracts treatment information, their corresponding codes, experiment codes,
+    and crop names from a PlantGro.OUT file.
 
     Args:
         file_path (str): Path to the input file.
-        treatment_dict (dict): A dictionary with treatment names as keys and their line ranges as values.
+        treatment_dict (dict): A dictionary with treatment names as keys and
+            their line ranges as values.
 
     Returns:
-        dict: A dictionary where keys are treatment names and values are treatment codes.
+        tuple:
+            treatment_number_name (dict): Keys are treatment names, values are
+                treatment codes (e.g., "1", "2", ...).
+            treatment_experiment_name (dict): Keys are treatment names, values
+                are experiment codes (e.g., "SWSW7501").
+            treatment_crop_name (dict): Keys are treatment names, values are
+                crop names parsed from the MODEL line (e.g., "Soybean").
     """
     treatment_number_name = {}
     treatment_experiment_name = {}
+    treatment_crop_name = {}
 
     # Read the file lines
     with open(file_path, 'r') as file:
@@ -448,77 +465,208 @@ def extract_treatment_info_plantgrowth(file_path, treatment_dict):
 
         # Iterate through each treatment range and extract data
         for treatment, (start_line, end_line) in treatment_dict.items():
+            experiment_info = None
+            crop_name = None
+
             # Iterate through the lines in the specified range
             for i in range(start_line, end_line):
                 line = lines[i].strip()
 
                 # Look for the line containing 'EXPERIMENT'
                 if line.startswith('EXPERIMENT'):
-                    # Extract the code between 'EXPERIMENT' and ':'
+                    # Extract the code between 'EXPERIMENT' and the rest
+                    # Example: "EXPERIMENT     : CLMO8501 SB EVANS, ..."
+                    # -> experiment_info = "CLMO8501"
                     experiment_info = line.split(':')[1].split()[0]
+
+                # Look for the line containing 'MODEL'
+                if line.startswith('MODEL'):
+                    # Example: "MODEL          : CRGRO048 - Soybean"
+                    # Crop name is after the dash
+                    parts = line.split('-')
+                    if len(parts) > 1:
+                        crop_name = parts[1].strip()
 
                 # Look for the line containing 'TREATMENT'
                 if line.startswith('TREATMENT'):
-                    # Extract the code between 'TREATMENT' and ':'
+                    # Extract the code after 'TREATMENT'
+                    # Example: "TREATMENT  1   : 85 EVANS, IRR, ..."
+                    # -> treatment_code = "1"
                     treatment_code = line.split()[1].strip()
 
                     # Extract the treatment_info after the ':' and before trailing spaces
+                    # Example: ": 85 EVANS, IRR, MORRIS, MN CRGRO048"
+                    # -> treatment_info = "85 EVANS, IRR, MORRIS, MN CRGRO048"
                     treatment_info = line.split(':')[1].strip().rsplit(maxsplit=1)[0]
 
-                    # Store the values in the dictionary
+                    # Store the values in the dictionaries
                     treatment_number_name[treatment_info] = treatment_code
-
                     treatment_experiment_name[treatment_info] = experiment_info
+                    treatment_crop_name[treatment_info] = crop_name
 
-    return treatment_number_name, treatment_experiment_name
+    return treatment_number_name, treatment_experiment_name, treatment_crop_name
 
+
+
+# def wht_filedata_to_dataframe(file_path):
+#     """
+#     Parses a DSSAT-style TXT file and returns a DataFrame.
+#
+#     Parameters:
+#         file_path (str): The path to the TXT file.
+#
+#     Returns:
+#         pd.DataFrame: A DataFrame containing the data from the TXT file.
+#     """
+#     with open(file_path, 'r') as file:
+#         lines = file.readlines()
+#
+#     # Find the line with column headers (starts with '@')
+#     header_line = None
+#     for line in lines:
+#         if line.startswith('@'):
+#             header_line = line.strip()
+#             break
+#
+#     if header_line is None:
+#         raise ValueError("No header line starting with '@' found in the file.")
+#
+#     # Extract column names from the header line
+#     columns = header_line[1:].split()
+#
+#     print(columns)
+#
+#     # Find the data lines (non-comment and numeric)
+#     data_lines = [
+#         line.strip() for line in lines
+#         if line.strip() and not line.startswith(('*', '!', '@'))
+#     ]
+#
+#     # Parse data lines into a list of lists for the DataFrame
+#     data = []
+#     for line in data_lines:
+#         # Split on whitespace and ensure consistency with the number of columns
+#         print(line)
+#         values = line.split()
+#         if len(values) == len(columns):
+#             data.append(values)
+#         else:
+#             raise ValueError(f"Data row has inconsistent column count: {line}")
+#
+#     # Create and return the DataFrame
+#     df = pd.DataFrame(data, columns=columns)
+#     return df
 
 def wht_filedata_to_dataframe(file_path):
     """
     Parses a DSSAT-style TXT file and returns a DataFrame.
-    
+
     Parameters:
         file_path (str): The path to the TXT file.
-    
+
     Returns:
         pd.DataFrame: A DataFrame containing the data from the TXT file.
+
+    Notes:
+        DSSAT T files can contain one or more tables starting with a header line
+        beginning with ``@TRNO   DATE``. When multiple tables are present, this
+        function merges them by ``TRNO`` and ``DATE`` so that each pair of
+        ``TRNO`` and ``DATE`` appears in a single row. Columns from subsequent
+        tables are added to the existing rows as new variables. If a given
+        ``TRNO``–``DATE`` combination is not present in a later table, the
+        corresponding variables are filled with ``-99`` in the merged DataFrame.
     """
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
-    # Find the line with column headers (starts with '@')
-    header_line = None
-    for line in lines:
-        if line.startswith('@'):
-            header_line = line.strip()
-            break
-    
-    if header_line is None:
-        raise ValueError("No header line starting with '@' found in the file.")
-    
-    # Extract column names from the header line
-    columns = header_line[1:].split()
+    # Find all header lines that start with '@TRNO' (each defines a table)
+    header_indices = [i for i, line in enumerate(lines) if line.startswith('@TRNO')]
 
-    # Find the data lines (non-comment and numeric)
-    data_lines = [
-        line.strip() for line in lines 
-        if line.strip() and not line.startswith(('*', '!', '@'))
-    ]
+    if not header_indices:
+        raise ValueError("No header line starting with '@TRNO' found in the file.")
 
-    # Parse data lines into a list of lists for the DataFrame
-    data = []
-    for line in data_lines:
-        # Split on whitespace and ensure consistency with the number of columns
-        values = line.split()
-        if len(values) == len(columns):
-            data.append(values)
+    # Build table blocks: (header_line_index, data_start_index, data_end_index)
+    table_blocks = []
+    for idx, h_idx in enumerate(header_indices):
+        # Find the first data line after the header (non-empty, not *, !, or @)
+        data_start = None
+        for j in range(h_idx + 1, len(lines)):
+            if lines[j].strip() and not lines[j].startswith(('*', '!', '@')):
+                data_start = j
+                break
+        if data_start is None:
+            continue
+
+        # Data end is just before the next header or end of file
+        if idx < len(header_indices) - 1:
+            next_header = header_indices[idx + 1]
+            data_end = next_header
         else:
-            raise ValueError(f"Data row has inconsistent column count: {line}")
+            data_end = len(lines)
 
-    # Create and return the DataFrame
-    df = pd.DataFrame(data, columns=columns)
-    return df
+        table_blocks.append((h_idx, data_start, data_end))
 
+    if not table_blocks:
+        raise ValueError("No data rows found after '@TRNO' header(s).")
+
+    # Parse each table block into a separate DataFrame
+    dfs = []
+    for h_idx, data_start, data_end in table_blocks:
+        # Find the line with column headers (starts with '@')
+        header_line = lines[h_idx].strip()
+
+        # Extract column names from the header line
+        columns = header_line[1:].split()
+
+        # Find the data lines (non-comment and numeric)
+        data_lines = [
+            line.strip() for line in lines[data_start:data_end]
+            if line.strip() and not line.startswith(('*', '!', '@'))
+        ]
+
+        # Parse data lines into a list of lists for the DataFrame
+        data = []
+        for line in data_lines:
+            # Split on whitespace and ensure consistency with the number of columns
+            values = line.split()
+            if len(values) == len(columns):
+                data.append(values)
+            else:
+                raise ValueError(f"Data row has inconsistent column count: {line}")
+
+        if not data:
+            continue
+
+        # Create the DataFrame for this block
+        df_block = pd.DataFrame(data, columns=columns)
+
+        # Ensure TRNO and DATE exist and can be used as merge keys
+        if 'TRNO' not in df_block.columns or 'DATE' not in df_block.columns:
+            raise ValueError("Each table must contain 'TRNO' and 'DATE' columns to be merged.")
+
+        dfs.append(df_block)
+
+    if not dfs:
+        raise ValueError("No valid data tables could be parsed from the file.")
+
+    # Merge all tables on TRNO and DATE
+    merged_df = dfs[0]
+    for df_block in dfs[1:]:
+        # Identify non-key columns and avoid duplicating columns already present
+        non_key_cols = [c for c in df_block.columns if c not in ['TRNO', 'DATE']]
+        new_cols = [c for c in non_key_cols if c not in merged_df.columns]
+        cols_to_merge = ['TRNO', 'DATE'] + new_cols
+
+        merged_df = merged_df.merge(
+            df_block[cols_to_merge],
+            on=['TRNO', 'DATE'],
+            how='left',
+        )
+
+    # Fill missing values with -99 (string, consistent with DSSAT conventions)
+    merged_df = merged_df.fillna('-99')
+
+    return merged_df
 
 def get_header_and_first_sim(file_path):
     """
@@ -921,3 +1069,142 @@ def add_suffix_to_variables(variable_names, suffix, max_length):
             new_name = var_name[:max_length - len(suffix)] + suffix
         updated_names[var_name] = new_name
     return updated_names
+
+def _load_simulation_crop_models_config():
+    """
+    Load the SIMULATION_CROP_MODELS mapping from dpest/arguments.yml.
+    """
+    base = resources.files("dpest")
+    arguments_path = base / "arguments.yml"
+    arguments_file = str(arguments_path)
+
+    if not os.path.isfile(arguments_file):
+        raise FileNotFoundError(
+            f"Top-level configuration file not found: {arguments_file}"
+        )
+
+    with open(arguments_file, "r") as f:
+        data = yaml.safe_load(f) or {}
+
+    try:
+        return data["SIMULATION_CROP_MODELS"]
+    except KeyError as exc:
+        raise KeyError(
+            "The top-level configuration file is missing the "
+            "'SIMULATION_CROP_MODELS' section required to resolve "
+            "crop/model aliases."
+        ) from exc
+
+
+def _normalize_token(s: str) -> str:
+    """
+    Normalize a crop or model identifier for comparison:
+    strip spaces, convert to lowercase, and remove internal spaces.
+    """
+    return s.strip().lower().replace(" ", "")
+
+
+def _resolve_crop_model_alias(crop: str, model: str):
+    """
+    Resolve user-provided crop and model identifiers (names or codes)
+    to canonical dpest crop/model directory names, using the
+    SIMULATION_CROP_MODELS configuration.
+
+    Returns
+    -------
+    (canonical_crop_dir, canonical_model_dir)
+    """
+    config = _load_simulation_crop_models_config()
+
+    crop_in = _normalize_token(crop)
+    model_in = _normalize_token(model)
+
+    for crop_dir, entry in config.items():
+        crop_aliases = [_normalize_token(a) for a in entry.get("crop_aliases", [])]
+        if crop_in not in crop_aliases:
+            continue
+
+        models_cfg = entry.get("models", {})
+        for model_dir, aliases in models_cfg.items():
+            model_aliases = [_normalize_token(a) for a in aliases]
+            if model_in in model_aliases:
+                return crop_dir, model_dir
+
+    # Fallback: if nothing matches, use normalized user input directly
+    return crop_in, model_in
+
+
+def get_crop_model_arguments_file_path(crop, model):
+    """
+    Build the full path to the configuration file used for variable classification
+    associated with a given crop and model.
+
+    The function assumes a package layout similar to:
+        dpest/
+          <crop>/
+            <model>/
+              arguments.yml
+
+    Parameters
+    ----------
+    crop : str
+        Name of the crop (for example, "wheat", "maize"), or a crop identifier
+        as used in DSSAT (e.g. the CROP code from the simulation.cde file).
+    model : str
+        Name of the model (for example, "ceres", "apsim"), or a model identifier
+        as used in DSSAT (e.g. the @MODEL code from the simulation.cde file).
+
+    Returns
+    -------
+    str
+        Absolute path to the configuration file for the given crop and model.
+
+    Raises
+    ------
+    ValueError
+        If crop or model is not a non-empty string, or if the corresponding crop/model
+        directory cannot be imported. This typically indicates a misspelling or that the
+        combination is not yet available in the dpest package.
+    FileNotFoundError
+        If the crop and model directories exist, but the expected configuration file
+        is missing inside that location.
+    """
+    # Basic validation of user input
+    if not crop or not isinstance(crop, str):
+        raise ValueError("The 'crop' argument must be a non-empty string.")
+    if not model or not isinstance(model, str):
+        raise ValueError("The 'model' argument must be a non-empty string.")
+
+    # Resolve aliases (DSSAT codes/names) to canonical dpest directory names
+    crop_key, model_key = _resolve_crop_model_alias(crop, model)
+
+    # Expected module path for the crop/model combination
+    module_name = f"dpest.{crop_key}.{model_key}"
+
+    try:
+        base = resources.files(module_name)
+    except ModuleNotFoundError as exc:
+        # Here it is not clear if the issue is a typo or that this crop/model has not
+        # been implemented yet. Inform the user of both possibilities.
+        raise ValueError(
+            f"The specified crop/model combination could not be located: "
+            f"crop='{crop_key}', model='{model_key}'. "
+            f"This may be due to a name misspelling, or because this crop/model "
+            f"combination is not yet available in the dpest package."
+        ) from exc
+
+    # If we reach this point, the crop/model package exists.
+    # Now check that the configuration file is present.
+    arguments_path = base / "arguments.yml"
+    arguments_file = str(arguments_path)
+
+    if not os.path.isfile(arguments_file):
+        # This situation is expected to be rare, but it is clearer to report it
+        # explicitly in case the package structure is incomplete.
+        raise FileNotFoundError(
+            f"A configuration file could not be found for crop='{crop_key}' "
+            f"and model='{model_key}' even though the corresponding directories exist "
+            f"in the dpest package."
+        )
+
+    return arguments_file

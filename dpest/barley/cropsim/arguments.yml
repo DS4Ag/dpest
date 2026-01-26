@@ -1,0 +1,122 @@
+### Contains the barley CROPSIM model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CROPSIM-Barley CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    PARAMETERS:
+        PHENO:        # Phenology phase durations
+            - P1      # Sowing–end juvenile
+            - P2      # End juvenile–floral initiation
+            - P3      # Floral init.–end leaf growth (part of P3+P4)
+            - P4      # End leaf growth–anthesis (part of P3+P4)
+            - P5      # Anthesis–end grain fill
+            - P6      # End grain fill–physiol. maturity
+            - P7      # Maturity–start dormancy
+            - P8      # Start dormancy–harvest ready
+        VERN:         # Vernalization response
+            - VREQ    # Vernalization requirement
+            - VBASE   # Base vernalization before effect
+            - VEFF    # Effect of unvernalized state
+        PHOTO:        # Photoperiod sensitivity by phase
+            - PPS1
+            - PPS2
+        LEAF_DEV:     # Leaf appearance
+            - PHINT   # Phyllochron
+        LEAF_SIZE:    # Leaf area and expansion
+            - LA1S    # Standard first leaf area
+            - LAFV    # Leaf area factor, vegetative
+            - LAFR    # Leaf area factor, reproductive
+        SHOOT_GRAIN:  # Biomass and yield formation
+            - SHWTS   # Standard shoot dry weight at maturity
+            - G#WTS   # Grain number per unit canopy weight
+            - GWTS    # Standard grain weight
+
+# Arguments for the CROPSIM-Barley ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    PARAMETERS:
+        RADIATION:   # Radiation use efficiency
+            - PARUE  # Standard PAR conversion
+            - PARU2  # PAR conversion after change
+        LEAF_APPEAR: # Leaf appearance & phyllochron phases
+            - PHL2   # Leaf number at PHINT change
+            - PHF3   # PHINT multiplier in later phase
+        LEAF_AREA_SLA_SEN:
+            - SLAS   # Specific leaf area
+            - LSENI  # Leaf senescence rate (intermediate)
+            - LSPHS  # Leaf senescence final phase start
+            - LSPHE  # Leaf senescence final phase end
+        TILLERING:   # Tiller production and death
+            - TIL#S  # Tiller production start leaf
+            - TIPHE  # Tiller production end stage
+            - TIFAC  # Tiller initiation factor
+            - TDPHS  # Tiller death phase start
+            - TDPHE  # Tiller death phase end
+            - TDFAC  # Tiller death factor
+            - TDSF   # Tiller death stress factor
+        ROOT_CANOPY: # Roots and canopy structure
+            - RDGS   # Root depth growth rate
+            - HTSTD  # Standard canopy height
+            - AWNS   # Awn score
+            - KCAN   # PAR extinction coefficient
+        COMPOSITION: # Reserve and grain composition
+            - RS%A   # Reserves at anthesis
+            - GN%S   # Standard grain N
+            - GN%MN  # Minimum grain N
+            - GM%H   # Grain moisture at harvest
+        GRAIN_ADJ:   # Grain set/weight adjustment
+            - TKFH   # Cold tolerance when hardened
+            - SSPHS  # Stem senescence phase start
+            - SSPHE  # Stem senescence phase end
+            - GWTAF  # Grain weight adjustment factor
+            - GWTAT  # Canopy wt threshold for GWTAF
+            - G#RF   # Grain number radiation factor
+        N_UPTAKE:    # Nitrogen uptake behavior
+            - RTNUP  # NO3 uptake per root length
+            - NUPNF  # N uptake vs concentration factor
+            - NUPWF  # Soil water effect on N uptake
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Germination  (dap): phenology
+        Emergence    (dap): phenology
+        MaxPrimordia (dap): phenology
+        Anthesis     (dap): phenology
+        HardDough    (dap): phenology
+
+        AboveGround (kg dm/ha): biomass
+        Roots+seed residue (kg dm/ha): biomass
+        Senesced (kg dm/ha): biomass
+        Product (kg dm/ha): yield
+        AboveGroundVegetative (kg dm/ha): biomass
+        HarvestIndex (ratio): yield
+        Reserves (kg dm/ha): biomass
+
+        Product unit wt (g dm): yield
+        Product number (/m2): yield
+        Product number (/shoot): yield
+        Final shoot number (no/m2): yield
+
+        Maximum leaf area index: lai
+        Final leaf number (one axis): phenology
+
+        Assimilated N (kg/ha): nitrogen
+        AboveGround N (kg/ha): nitrogen
+        Root N (kg/ha): nitrogen
+        Senesced N (kg/ha): nitrogen
+        Product N (kg/ha): nitrogen
+        AboveGroundVegetative N (kg/ha): nitrogen
+        N HarvestIndex (ratio): yield
+        Product N (% dm): nitrogen
+        AboveGroundVegetative N (% dm): nitrogen
+
+        Straw wt,anthesis (kg dm/ha): biomass
+        Straw N,anthesis (kg/ha): nitrogen
+        Leaf wt,anthesis (kg dm/ha): biomass
+        Stem wt,anthesis (kg dm/ha): biomass
+        Res. wt,anthesis (kg dm/ha): biomass

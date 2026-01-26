@@ -1,0 +1,71 @@
+### Contains the rye CROPSIM-CERES model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CROPSIM-CERES Rye CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - P1V
+            - P1D
+            - P5
+        G:
+            - G1
+            - G2
+            - G3
+        PHINT:
+            - PHINT
+
+# Arguments for the CROPSIM-CERES Rye ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        PHEN: # Phenology parameters
+            - P1
+            - P2FR1
+            - P2
+            - P3
+            - P4FR1
+            - P4FR2
+            - P4
+        VERN: # Vernalization parameter
+            - VEFF
+        RUE: # Radiation use efficiency parameters
+            - PARUE
+            - PARU2
+        LEAF: # Leaf production and size parameters
+            - PHL2
+            - PHF3
+            - LA1S
+            - LAFV
+            - LAFR
+            - SLAS
+        LSEN: # Leaf senescence parameters
+            - LSPHS
+            - LSPHE
+        TILL: # Tiller production parameters
+            - TIL#S
+            - TIPHE
+            - TIFAC
+        TDTH: # Tiller death parameters
+            - TDPHS
+            - TDPHE
+            - TDFAC
+        ROOT: # Root growth parameter
+            - RDGS
+        CANOPY: # Canopy parameters
+            - HTSTD
+            - AWNS
+            - KCAN
+        COMP: # Composition parameters
+            - RS%S
+            - GN%S
+            - GN%MN
+        KILL: # Kill temperature parameter
+            - TKFH

@@ -1,0 +1,106 @@
+### Contains the barley CERES model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CERES Barley CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - P1V
+            - P1D
+            - P5
+        G:
+            - G1
+            - G2
+            - G3
+        PHINT:
+            - PHINT
+
+# Arguments for the CERES Barley ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+            # - Values
+        PHEN: # Phenology parameters
+            - P1
+            - P2FR1
+            - P2
+            - P3
+            - P4FR1
+            - P4FR2
+            - P4
+        VERN: # Vernalization parameter
+            - VEFF
+        RUE: # Radiation use efficiency parameters
+            - PARUE
+            - PARU2
+        LEAF: # Leaf production and size parameters
+            - PHL2
+            - PHF3
+            - LA1S
+            - LAFV
+            - LAFR
+            - SLAS
+        LSEN: # Leaf senescence parameters
+            - LSPHS
+            - LSPHE
+        TILL: # Tiller production parameters
+            - TIL#S
+            - TIPHE
+            - TIFAC
+        TDTH: # Tiller death parameters
+            - TDPHS
+            - TDPHE
+            - TDFAC
+        ROOT: # Root growth parameter
+            - RDGS
+        CANOPY: # Canopy parameters
+            - HTSTD
+            - AWNS
+            - KCAN
+        COMP: # Composition parameters
+            - RS%S
+            - GN%S
+            - GN%MN
+        KILL: # Kill temperature parameter
+            - TKFH
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Emergence (DAP): phenology
+        Anthesis (DAP): phenology
+        Maturity (DAP): phenology
+        Product wt (kg dm/ha;no loss): yield
+        Product unit weight (g dm): yield
+        Product number (no/m2): yield
+        Product number (no/group): yield
+        Product harvest index (ratio): yield
+        Maximum leaf area index: lai
+        Canopy (tops) wt (kg dm/ha): biomass
+        Vegetative wt (kg dm/ha): biomass
+        Product N (kg/ha): yield
+        Product N (%): yield
+        Final leaf number (one axis): phenology
+        Final shoot number (#/m2): yield
+        Root wt (kg dm/ha): biomass
+        Assimilate wt (kg dm/ha): biomass
+        Senesced wt (kg dm/ha): biomass
+        Reserves wt (kg dm/ha): biomass
+        N uptake (kg/ha): nitrogen
+        N senesced (kg/ha): nitrogen
+        Above-ground N (kg/ha): nitrogen
+        Root N (kg/ha): nitrogen
+        Vegetative N (kg/ha): nitrogen
+        Product N harvest index (ratio): yield
+        Vegetative N (%): nitrogen
+        Leaf+stem wt,anthesis (kg dm/ha): biomass
+        Leaf+stem N,anthesis (kg/ha): nitrogen
+        Leaf N,anthesis (%): nitrogen

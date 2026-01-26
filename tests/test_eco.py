@@ -18,8 +18,8 @@ def test_eco(tmp_path):
     eco_file = str(eco_file)
     output_dir = str(output_dir)
 
-    # Call the dpest.wheat.ceres.eco function
-    result = dpest.wheat.ceres.eco(
+    # Call the dpest.eco function
+    result = dpest.eco(
         PHEN='P1, P2FR1',
         VERN='VEFF',
         ecotype='CAWH01',
@@ -65,7 +65,7 @@ def test_eco_missing_arguments_file(capsys, tmp_path):
     if yml_path.exists():
         yml_path.rename(yml_backup)
     try:
-        result = dpest.wheat.ceres.eco(
+        result = dpest.eco(
             PHEN='P1, P2FR1',
             VERN='VEFF',
             ecotype='CAWH01',
@@ -86,7 +86,7 @@ def test_eco_missing_ecotype(capsys, tmp_path):
     eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    result = dpest.wheat.ceres.eco(
+    result = dpest.eco(
         PHEN='P1, P2FR1',
         VERN='VEFF',
         eco_file_path=str(eco_file),
@@ -103,7 +103,7 @@ def test_eco_invalid_ecotype(capsys, tmp_path):
     eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    result = dpest.wheat.ceres.eco(
+    result = dpest.eco(
         PHEN='P1, P2FR1',
         VERN='VEFF',
         ecotype='INVALID',
@@ -120,7 +120,7 @@ def test_eco_invalid_parameters(capsys, tmp_path):
     eco_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.ECO"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    result = dpest.wheat.ceres.eco(
+    result = dpest.eco(
         P='INVALID_PARAM',
         PHEN='P1, P2FR1',
         VERN='VEFF',
@@ -140,7 +140,7 @@ def test_eco_default_new_template_file_extension(capsys, tmp_path):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Don't provide new_template_file_extension
-    result = dpest.wheat.ceres.eco(
+    result = dpest.eco(
         PHEN='P1, P2FR1',
         VERN='VEFF',
         ecotype='CAWH01',
@@ -157,7 +157,7 @@ def test_eco_default_header_start(capsys, tmp_path):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Don't provide header_start
-    result = dpest.wheat.ceres.eco(
+    result = dpest.eco(
         PHEN='P1, P2FR1',
         VERN='VEFF',
         ecotype='CAWH01',
@@ -175,7 +175,7 @@ def test_eco_empty_parameters_grouped(tmp_path):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Call WITHOUT any parameter group arguments (P=..., G=..., etc.)
-    result = dpest.wheat.ceres.eco(
+    result = dpest.eco(
         ecotype='CAWH01',
         eco_file_path=str(eco_file),
         output_path=str(output_dir),

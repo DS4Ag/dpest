@@ -1,0 +1,24 @@
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Anthesis day (dap): phenology
+        Physiological maturity day (dap): phenology
+        Yield at harvest maturity (kg [dm]/ha): yield
+        Number at maturity (no/m2): yield
+        Unit wt at maturity (g [dm]/unit): yield
+        Number at maturity (no/unit): yield
+        Tops weight at maturity (kg [dm]/ha): biomass
+        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
+        Leaf area index, maximum: lai
+        Harvest index at maturity: yield
+        Grain N at maturity (kg/ha): nitrogen
+        Tops N at maturity (kg/ha): nitrogen
+        Stem N at maturity (kg/ha): nitrogen
+        Grain N at maturity (%): nitrogen
+        Tops weight at anthesis (kg [dm]/ha): biomass
+        Tops N at anthesis (kg/ha): nitrogen
+        Leaf number per stem at maturity: yield
+        Emergence day (dap): phenology

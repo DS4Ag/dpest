@@ -1,0 +1,48 @@
+The same here: ### Contains the tanier TANIER model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the TANIER Cultivar template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - P1
+            - P3
+            - P4
+            - P5
+        G:
+            - PCINT
+            - PCGRD
+        OTHER:
+            - G2
+            - G3
+            - G4
+            - PHINT
+
+
+~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Anthesis day (dap): phenology
+        Physiological maturity day (dap): phenology
+        Tuber fresh weight (Mg [fm]/ha) harvest: yield
+        Tuber dry weight (kg [dm]/ha) harvest: yield
+        Unit wt at maturity (g [dm]/unit): yield
+        Number at maturity (no/m2): yield
+        Leaf area index, maximum: lai
+        Tops weight at anthesis (kg [dm]/ha): biomass
+        Tops N at anthesis (kg/ha): nitrogen
+        Total wt, harvest (kg [dm]/ha): biomass
+        By-product removed during harvest (kg [dm]/ha): biomass
+        Harvest index at maturity: yield
+        Leaf number per stem, maximum: yield
+        Tuber N at harvest (kg/ha): nitrogen
+        Tuber+stem+leaf N at harvest (kg/ha): nitrogen
+        Tops N at maturity (kg/ha): nitrogen
+        Tuber N at harvest (%): nitrogen

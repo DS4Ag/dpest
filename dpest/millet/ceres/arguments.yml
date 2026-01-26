@@ -1,0 +1,41 @@
+### Contains the millet CERES model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CERES Millet CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - P1
+            - P2O
+            - P2R
+            - P5
+        G:
+            - G1
+            - G4
+            - GT
+            - G5
+        PHINT:
+            - PHINT
+
+# Arguments for the CERES Millet ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        TEMP: # Temperature response parameters
+            - TBASE
+            - TOPT
+            - ROPT
+        DEV: # Development timing parameters
+            - DJTI
+            - GDDE
+        RUE: # Radiation use efficiency parameter
+            - RUE
+        CANOPY: # Canopy parameter
+            - KCAN

@@ -1,0 +1,47 @@
+### Contains the potato SUBSTOR model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the SUBSTOR Potato CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        G:
+            - G2
+            - G3
+            - PD
+        P:
+            - P2
+            - TC
+
+# Arguments for the SUBSTOR Potato ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        RUE: # Radiation use efficiency parameters
+            - RUE1
+            - RUE2
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Tuber initiation day (dap): phenology
+        Physiological maturity day (dap): phenology
+        Tuber dry weight (kg [dm]/ha) harvest: yield
+        Tuber fresh weight (Mg [fm]/ha) harvest: yield
+        Total wt, harvest (kg [dm]/ha): biomass
+        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
+        Leaf area index, maximum: lai
+        Tuber N at harvest (kg/ha): nitrogen
+        Tuber+stem+leaf N at harvest (kg/ha): nitrogen
+        Tops N at maturity (kg/ha): nitrogen
+        Tuber N at harvest (%): nitrogen
+        Emergence day (dap): phenology

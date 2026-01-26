@@ -1,0 +1,67 @@
+### Contains the sugarbeet CERES model .CUL and .ECO default parameter groups
+### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CERES Sugarbeet CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - P1
+            - P2
+            - P5
+        G:
+            - G2
+            - G3
+        PHINT:
+            - PHINT
+
+# Arguments for the CERES Sugarbeet ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        TEMP: # Temperature response parameters
+            - TBASE
+            - TOPT
+            - ROPT
+            - TSEN
+            - CDAY
+        PHOTO: # Photoperiod and development timing
+            - P2O
+            - DJTI
+        EMERG: # Emergence parameters
+            - GDDE
+        FILL: # Filling duration parameter
+            - DSGFT
+        RUE: # Radiation use efficiency parameter
+            - RUE
+        CANOPY: # Canopy parameters
+            - KCAN
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Anthesis day (dap): phenology
+        Physiological maturity day (dap): phenology
+        Yield at harvest maturity (kg [dm]/ha): yield
+        Number at maturity (no/m2): yield
+        Unit wt at maturity (g [dm]/unit): yield
+        Number at maturity (no/unit): yield
+        Tops weight at maturity (kg [dm]/ha): biomass
+        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
+        Leaf area index, maximum: lai
+        Harvest index at maturity: yield
+        Tops N at maturity (kg/ha): nitrogen
+        Stem N at maturity (kg/ha): nitrogen
+        Tops weight at anthesis (kg [dm]/ha): biomass
+        Tops N at anthesis (kg/ha): nitrogen
+        Leaf number per stem at maturity: yield
+        Emergence day (dap): phenology

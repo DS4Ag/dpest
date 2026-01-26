@@ -1,0 +1,50 @@
+### Contains the cassava CROPSIM model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CROPSIM-Cassava CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    PARAMETERS:
+        PHOTO:      # Photoperiod and branching timing
+            - PPS1    # Photoperiod sensitivity, phase 1
+            - B01ND   # Duration from planting to first branch (node)
+            - B12ND   # Duration first–second branch (node)
+            - B23ND   # Duration second–third branch (node)
+            - B34ND   # Duration third–fourth branch (node)
+            - B45ND   # Duration fourth–fifth branch (node)
+            - B56ND   # Duration fifth–sixth branch (node)
+        STORAGE:    # Storage root number and allocation
+            - SR#WT   # Storage root number per unit canopy weight
+            - SRFR    # Fraction of assimilate to storage root
+            - HMPC    # Harvest product moisture (%)
+        LEAF_DEV:   # Leaf appearance and size
+            - PHINT   # Leaf tip appearance interval
+            - LA1S    # First-leaf area
+            - LAXS    # Maximum potential leaf area
+            - LAXND   # Node at max leaf area
+            - LAXN2   # Node where area begins to decline
+            - LAFS    # End-of-cycle leaf area
+            - LAFND   # Node at end-of-cycle leaf area
+            - SLAS    # Specific lamina area
+            - LLIFA   # Leaf life from expansion to senescence
+            - LPEFR   # Petiole fraction of leaf
+        STEM:       # Stem allocation
+            - STFR    # Stem fraction of canopy assimilate
+
+# Arguments for the CROPSIM-Cassava ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    PARAMETERS:
+        RADIATION:  # Radiation use and canopy size
+            - PARUE  # PAR conversion factor
+            - HTSTD  # Standard canopy height
+        STORAGE_EV: # Storage root onset and N concentration
+            - DUSRI  # Degree days when storage root number set
+            - SRN%S  # Standard storage root N concentration
+        BRANCH_FORK:
+            - BR1FX  # Branch number per fork 1
+            - BR2FX  # Branch number per fork 2
+            - BR3FX  # Branch number per fork 3
+            - BR4FX  # Branch number per fork 4
+            - BR5FX  # Branch number per fork 5
+            - BR6FX  # Branch number per fork 6

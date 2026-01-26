@@ -1,0 +1,69 @@
+### Contains the sweet corn CERES model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CERES Sweet Corn CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - P1
+            - P2
+            - P5
+        G:
+            - G2
+            - G3
+        PHINT:
+            - PHINT
+
+# Arguments for the CERES Sweet Corn ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        TEMP: # Temperature response parameters
+            - TBASE
+            - TOPT
+            - ROPT
+            - TSEN
+            - CDAY
+        PHOTO: # Photoperiod and development timing
+            - P2O
+            - DJTI
+        EMERG: # Emergence parameter
+            - GDDE
+        FILL: # Filling duration parameter
+            - DSGFT
+        RUE: # Radiation use efficiency parameter
+            - RUE
+        CANOPY: # Canopy parameter
+            - KCAN
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Anthesis day (dap): phenology [web:11]
+        Physiological maturity day (dap): phenology [web:11]
+        Yield at harvest maturity (kg [dm]/ha): yield [web:11]
+        Number at maturity (no/m2): yield [web:11]
+        Unit wt at maturity (g [dm]/unit): yield [web:11]
+        Number at maturity (no/unit): yield [web:11]
+        Tops weight at maturity (kg [dm]/ha): biomass [web:11]
+        By-product produced (stalk) at maturity (kg[dm]/ha): biomass [web:11]
+        Leaf area index, maximum: lai [web:11]
+        Harvest index at maturity: yield [web:11]
+        Grain N at maturity (kg/ha): nitrogen [web:11]
+        Tops N at maturity (kg/ha): nitrogen [web:11]
+        Stem N at maturity (kg/ha): nitrogen [web:11]
+        Grain N at maturity (%): nitrogen [web:11]
+        Tops weight at anthesis (kg [dm]/ha): biomass [web:11]
+        Tops N at anthesis (kg/ha): nitrogen [web:11]
+        Leaf number per stem at maturity: yield [web:11]
+        Emergence day (dap): phenology [web:11]

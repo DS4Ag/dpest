@@ -1,0 +1,142 @@
+### Contains the sugarcane CANEGRO model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CANEGRO Sugarcane CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        RUE:        # Radiation conversion / biomass accumulation
+            - MaxPARCE
+        PART:       # Biomass partitioning (aerial vs stalk vs sucrose)
+            - APFMX
+            - STKPFMAX
+            - SUCA
+        SUC_TEMP:   # Sucrose partitioning temperature response
+            - TBFT
+        CANOPY_LEAF: # Leaf canopy size and number
+            - LFMAX
+            - MXLFAREA
+            - MXLFARNO
+        LEAF_PHENO: # Leaf phyllochron and tiller phenology
+            - PI1
+            - PI2
+            - PSWITCH
+            - TDELAY
+            - TAR0
+            - POPTT16
+        CROP_PHENO: # Plant/ratoon emergence and stalk timing
+            - TTPLNTEM
+            - TTRATNEM
+            - CHUPIBASE
+            - TT_POPGROWTH
+        EXT_GROWTH: # Elongation and lodging thresholds
+            - LER0
+            - SER0
+            - LG_AMBASE
+        WATER_UPT:  # Water-uptake related cultivar parameter
+            - AQP_UP5
+
+# Arguments for the CANEGRO Sugarcane ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        SUC_ACCUM:    # Sucrose accumulation and stress sensitivity
+            - DELTTMAX
+            - SWDF2AMP
+        CANESIM_WS:   # Canopy water-stress reduction (CANESIM)
+            - CS_CNREDUC
+            - CS_CNPERIOD
+            - Tthalfa
+        HEIGHT_GROWTH: # Canopy height / extension
+            - DPERdT
+        LIGHT_EXT:    # Light extinction and leaf-position effects
+            - EXTCFN
+            - EXTCFST
+            - LFNMXEXT
+        LEAF_AREA_FORM: # Leaf-area and width polynomials
+            - AREAMX_CF(2)
+            - AREAMX_CF(3)
+            - WIDCOR
+            - WMAX_CF(1)
+            - WMAX_CF(2)
+            - WMAX_CF(3)
+        POP_DYN:      # Tiller/stalk population and senescence
+            - POPCF(1)
+            - POPCF(2)
+            - POPDECAY
+        TEMP_BASES:   # Base temperatures for processes
+            - TTBASEEM
+            - TTBASELFEX
+            - TTBASEPOP
+            - TBASEPER
+        LODGING:      # Lodging magnitude and effects
+            - LG_AMRANGE
+            - LG_GP_REDUC
+            - LG_FI_REDUC
+        LEAF_LEN_WID: # Maximum leaf length/width and their curves
+            - LMAX_CF(1)
+            - LMAX_CF(2)
+            - LMAX_CF(3)
+            - MAXLFLENGTH
+            - MAXLFWIDTH
+        TEMP_GE_EM:   # Temperature response, germination/emergence
+            - TBASE_GE_EM
+            - TOPT_GE_EM
+            - TFin_GE_EM
+        TEMP_LFEM:    # Temperature response, early leaf/emergence
+            - TBASE_LFEM
+            - TOPT_LFEM
+            - TFin_LFEM
+        TEMP_TLREM:   # Temperature response, tiller removal
+            - TBASE_TLREM
+            - TOPT_TLREM
+            - TFin_TLREM
+        TEMP_LFSEN:   # Temperature response, leaf senescence
+            - TBASE_LFSEN
+            - TOPT_LFSEN
+            - TFin_LFSEN
+        TEMP_STKEX:   # Temperature response, stalk extension
+            - TBASE_STKEX
+            - TOPT_STKEX
+            - TFin_STKEX
+        TEMP_LFEX:    # Temperature response, leaf expansion
+            - TBASE_LFEX
+            - TOPT_LFEX
+            - TFin_LFEX
+        TEMP_REX:     # Temperature response, root extension
+            - TBASE_REX
+            - TOPT_REX
+            - TFin_REX
+        TEMP_PHOT:    # Temperature response, photosynthesis
+            - TOPT_PHOT
+            - TOPT_PHO2
+            - TFin_PHOT
+        TEMP_RESP:    # Temperature response, respiration
+            - TBASE_RESP
+            - TOPT_RESP
+            - TFin_RESP
+
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Sucrose dry mass at harvest (t/ha): yield
+        Aerial dry biomass at harvest (t/ha): biomass
+        Stalk (millable) dry mass at harvest (t/ha): biomass
+        Trash (residue) dry mass at harvest (t/ha): biomass
+        Green leaf area index at harvest (m2/m2): lai
+        Leaf area index, maximum: lai
+        Canopy height (m): biomass
+        Harvest index at maturity: yield
+        Leaf number per stem at maturity: yield
+        Emergence day (dap): phenology
+        Fresh cane yield (t/ha): yield

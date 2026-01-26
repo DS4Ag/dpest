@@ -1,0 +1,58 @@
+### Contains the Bahia CROPGRO‑Perennial Forage model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the Bahia CULTIVAR template file function (PRFRM048.CUL)
+CULTIVAR_TPL_FILE:
+
+    PARAMETERS:
+        P:        # Phenology parameters
+            - CSDL      # Critical short day length
+            - PPSEN     # Photoperiod sensitivity
+            - EM-FL     # Emergence to first flower
+            - FL-SH     # First flower to first pod
+            - FL-SD     # First flower to first seed
+            - SD-PM     # First seed to physiological maturity
+            - FL-LF     # First flower to end of leaf expansion
+        G:        # Growth and partitioning parameters
+            - LFMAX     # Maximum leaf photosynthesis rate
+            - SLAVR     # Specific leaf area
+            - SIZLF     # Maximum leaf size
+            - XFRT      # Max fraction to seed+shell
+            - WTPSD     # Maximum seed weight
+            - SFDUR     # Seed filling duration
+            - SDPDV     # Seeds per pod
+            - PODUR     # Duration to final pod load
+            - THRSH     # Threshing percentage
+            - SDPRO     # Seed protein fraction
+            - SDLIP     # Seed oil fraction
+
+# Arguments for the Bahia ECOTYPE template file function (PRFRM048.ECO)
+ECOTYPE_TPL_FILE:
+
+    PARAMETERS:
+        DEV:      # Development and phenology
+            - MG        # Maturity group
+            - TM        # Temperature adaptation
+            - THVAR     # Min reproductive rate under short days
+            - PL-EM     # Planting to emergence
+            - EM-V1     # Emergence to first true leaf
+            - V1-JU     # First leaf to end juvenile
+            - JU-R0     # Floral induction requirement
+            - PM06      # Fraction flower–pod (peanut-only, unused)
+            - PM09      # Fraction seed–maturity when last seed can form
+            - LNGSH     # Shell growth duration
+            - R7-R8     # Physiological to harvest maturity
+            - FL-VS     # First flower to last leaf on main stem
+        MORPH:    # Canopy and morphology
+            - TRIFL     # Leaf appearance rate
+            - RWDTH     # Relative width
+            - RHGHT     # Relative height
+        PHOTO_TEMP_DORM:  # Dormancy and temperature responses
+            - R1PPO     # Change in daylength sens. after R1
+            - OPTBI     # Tmin threshold for no flowering slowdown
+            - SLOBI     # Slope of Tmin effect on flowering
+            - RDRMT     # Dormancy sens. to daylength – partitioning
+            - RDRMG     # Dormancy sens. to daylength – photosynthesis
+            - RDRMM     # Dormancy sens. to daylength – mobilization
+            - RCHDP     # Relative cold‑hardening potential
+            - LFDEL     # Leaf–stem partitioning shift with stage

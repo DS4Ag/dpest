@@ -44,7 +44,7 @@ The first step is to create the cultivar Template File (``.TPL``) for the ``MANI
 
     import dpest  
 
-    cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(
+    cultivar_parameters, cultivar_tpl_path = dpest.cul(
         P = 'P1D, P5', 
         G = 'G1, G2, G3', 
         PHINT = 'PHINT',
@@ -66,13 +66,13 @@ For this experiment, key end-of-season crop performance metrics and phenological
 .. code-block:: python
 
     # Create OVERVIEW observations INS file
-    overview_observations, overview_ins_path = dpest.wheat.overview(
+    overview_observations, overview_ins_path = dpest.overview(
         treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
         overview_file_path = './DSSAT48/Wheat/OVERVIEW.OUT'  # Path to the OVERVIEW.OUT file
     )
 
     # Create PlantGro observations INS file
-    plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
+    plantgro_observations, plantgro_ins_path = dpest.ts(
         treatment = '164.0 KG N/HA IRRIG',  # Treatment Name
         variables = ['LAID', 'CWAD', 'T#AD'],  # Variables to calibrate
         plantgro_file_path = './DSSAT48/Wheat/PlantGro.OUT'  # Path to the PlantGro.OUT file

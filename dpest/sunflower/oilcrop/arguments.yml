@@ -1,0 +1,69 @@
+### Contains the sunflower CERES model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the OILCROP-Sunflower CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - P1
+            - P2
+            - P5
+        G:
+            - G2
+            - G3
+        OIL:
+            - O1
+
+# Arguments for the OILCROP-Sunflower ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        TEMP: # Temperature response parameters
+            - TBASE
+            - TOPT
+            - ROPT
+        PHOTO: # Photoperiod and development timing
+            - P20
+            - DJTI
+        EMERG_GROWTH: # Emergence and grain-fill thermal time
+            - GDDE
+            - DSGFT
+        RUE: # Radiation use efficiency
+            - RUE
+        CANOPY: # Canopy light interception
+            - KCAN
+        COLD: # Cold damage parameters
+            - TSEN
+            - CDAY
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Anthesis day (dap): phenology
+        Physiological maturity day (dap): phenology
+        Yield at harvest maturity (kg [dm]/ha): yield
+        Number at maturity (no/m2): yield
+        Unit wt at maturity (g [dm]/unit): yield
+        Number at maturity (no/unit): yield
+        Tops weight at maturity (kg [dm]/ha): biomass
+        By-product produced (stalk) at maturity (kg[dm]/ha): biomass
+        Leaf area index, maximum: lai
+        Harvest index at maturity: yield
+        Grain N at maturity (kg/ha): nitrogen
+        Tops N at maturity (kg/ha): nitrogen
+        Stem N at maturity (kg/ha): nitrogen
+        Grain N at maturity (%): nitrogen
+        Tops weight at anthesis (kg [dm]/ha): biomass
+        Tops N at anthesis (kg/ha): nitrogen
+        Leaf number per stem at maturity: yield
+        Emergence day (dap): phenology

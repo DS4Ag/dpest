@@ -1,5 +1,4 @@
-# PST file default specifications
-
+#~~~~~~ PST file default specifications
 PST_FILE:
     OBSERVATION_GROUPS_SPECIFICATIONS:
         inctyp: relative
@@ -11,3 +10,2126 @@ PST_FILE:
         splitthresh: 1.0
         splitreldiff: 0.5
         splitaction: smaller
+#~~~~~~/ PST file default specifications
+
+#~~~~~~ INS file default specifications
+# INS file first line
+INS_FILE_VARIABLES:
+    first_line: pif
+#~~~~~~/ INS file default specifications
+
+#~~~~~~ Arguments for the CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+    FILE_VARIABLES:
+        # Variable name: value
+        cul_file_extension: .CUL
+        new_template_file_extension: TPL
+        header_start: '@VAR#'
+        tpl_first_line: ptf
+        minima: 999991
+        maxima: 999992
+#~~~~~~/ Arguments for the CULTIVAR template file function
+
+#~~~~~~ Arguments for the ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+    FILE_VARIABLES:
+        # Variable name: value
+        eco_file_extension: .ECO
+        new_template_file_extension: TPL
+        header_start: '@ECO#'
+        tpl_first_line: ptf
+        minima: 999991
+        maxima: 999992
+#~~~~~~/ Arguments for the ECOTYPE template file function
+
+#~~~~~~ Arguments for the SPECIES template file function
+SPECIES_TPL_FILE:
+    FILE_VARIABLES:
+        # Variable name: value
+        spe_file_extension: .SPE
+        new_template_file_extension: TPL
+        tpl_first_line: ptf
+#~~~~~~/ Arguments for the SPECIES template file function
+
+#~~~~~~ CUL and ECO file names for the crop and model folders
+GENOTYPE_FILES:
+    PIALO:
+        crop: pineapple
+        model: aloha
+
+    TNARO:
+        crop: tanier
+        model: aroids
+
+    TRARO:
+        crop: taro
+        model: aroids
+
+    SCCAN:
+        crop: sugarcane
+        model: canegro
+
+    SCCSP:
+        crop: sugarcane
+        model: casupro
+
+    BACER:
+        crop: barley
+        model: ceres
+
+    BSCER:
+        crop: sugarbeet
+        model: ceres
+
+    MLCER:
+        crop: millet
+        model: ceres
+
+    MZCER:
+        crop: maize
+        model: ceres
+
+    RICER:
+        crop: rice
+        model: ceres
+
+    SGCER:
+        crop: sorghum
+        model: ceres
+
+    SWCER:
+        crop: sweetcorn
+        model: ceres
+
+    TFCER:
+        crop: teff
+        model: ceres
+
+    WHCER:
+        crop: wheat
+        model: ceres
+
+    HMGRO:
+        crop: hemp
+        model: crgro
+
+    AMGRO:
+        crop: amaranth
+        model: cropgro
+
+    BCGRO:
+        crop: carinata
+        model: cropgro
+
+    BGGRO:
+        crop: bambara groundnut
+        model: cropgro
+
+    BHGRO:
+        crop: bahia
+        model: cropgro
+
+    BNGRO:
+        crop: dry bean
+        model: cropgro
+
+    BRGRO:
+        crop: brachiaria
+        model: cropgro
+
+    CBGRO:
+        crop: cabbage
+        model: cropgro
+
+    CHGRO:
+        crop: chickpea
+        model: cropgro
+
+    CIGRO:
+        crop: chia
+        model: cropgro
+
+    CNGRO:
+        crop: canola
+        model: cropgro
+
+    COGRO:
+        crop: cotton
+        model: cropgro
+
+    CPGRO:
+        crop: cowpea
+        model: cropgro
+
+    FAGRO:
+        crop: fallow
+        model: cropgro
+
+    FBGRO:
+        crop: faba bean
+        model: cropgro
+
+    GBGRO:
+        crop: green bean
+        model: cropgro
+
+    GYGRO:
+        crop: guar
+        model: cropgro
+
+    LTGRO:
+        crop: lentil
+        model: cropgro
+
+    NPGRO:
+        crop: napier grass
+        model: cropgro
+
+    PEGRO:
+        crop: pea
+        model: cropgro
+
+    PNGRO:
+        crop: peanut
+        model: cropgro
+
+    PPGRO:
+        crop: pigeonpea
+        model: cropgro
+
+    PRGRO:
+        crop: bellpepper
+        model: cropgro
+
+    QUGRO:
+        crop: quinoa
+        model: cropgro
+
+    SBGRO:
+        crop: soybean
+        model: cropgro
+
+    SFGRO:
+        crop: safflower
+        model: cropgro
+
+    SRGRO:
+        crop: strawberry
+        model: cropgro
+
+    SUGRO:
+        crop: sunflower
+        model: cropgro
+
+    TMGRO:
+        crop: tomato
+        model: cropgro
+
+    VBGRO:
+        crop: velvetbean
+        model: cropgro
+
+    BACRP:
+        crop: barley
+        model: cropsim
+
+    CSCAS:
+        crop: cassava
+        model: cropsim
+
+    WHCRP:
+        crop: wheat
+        model: cropsim
+
+    RYCER:
+        crop: rye
+        model: cscer
+
+    ALFRM:
+        crop: alfalfa
+        model: forage
+
+    BHFRM:
+        crop: bahiagrass
+        model: forage
+
+    BMFRM:
+        crop: bermudagrass
+        model: forage
+
+    BRFRM:
+        crop: brachiaria
+        model: forage
+
+    GGFRM:
+        crop: guinea grass
+        model: forage
+
+    POFRM:
+        crop: perennial peanut
+        model: forage
+
+    MZIXM:
+        crop: maize
+        model: ixim
+
+    CSYCA:
+        crop: cassava
+        model: manihot
+
+    TFAPS:
+        crop: teff
+        model: nwheat
+
+    WHAPS:
+        crop: wheat
+        model: nwheat
+
+    SUOIL:
+        crop: sunflower
+        model: oilcrop
+
+    SCSAM:
+        crop: sugarcane
+        model: samuca
+
+    PTSUB:
+        crop: potato
+        model: substor
+#~~~~~~/ CUL and ECO file names for the crop and model folders
+
+#~~~~~~ Alternatives for crop and model arguments entered by the user in some of the functions
+SIMULATION_CROP_MODELS:
+    alfalfa:
+        crop_aliases: ["alfalfa", "al"]
+        models:
+          forage: ["forage", "prfrm"]
+
+    amaranth:
+        crop_aliases: ["amaranth", "am"]
+        models:
+          cropgro: ["cropgro", "crgro"]
+
+    bambaragroundnut:
+        crop_aliases: ["bambaragroundnut", "bg"]
+        models:
+          cropgro: ["cropgro", "crgro"]
+
+    bahia:
+        crop_aliases: ["bahia", "bahiagrass", "bh"]
+        models:
+          cropgro: ["cropgro", "crgro"]
+          forage: ["forage", "prfrm"]
+
+    barley:
+        crop_aliases: ["barley", "ba"]
+        models:
+          ceres: ["ceres", "cscer"]
+          cropsim: ["cropsim", "cscrp"]
+
+    bermudagrass:
+        crop_aliases: ["bermudagrass", "bm"]
+        models:
+          forage: ["forage", "prfrm"]
+
+    brachiaria:
+      crop_aliases: ["brachiaria", "br"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+        forage: ["forage", "prfrm"]
+
+    cabbage:
+      crop_aliases: ["cabbage", "cb"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    canola:
+      crop_aliases: ["canola", "cn"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    carinata:
+      crop_aliases: ["carinata", "bc"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    cassava:
+      crop_aliases: ["cassava", "cs"]
+      models:
+        cropsim: ["cscas", "cropsim"]
+        manihot: ["manihot", "csyca"]
+
+    chickpea:
+      crop_aliases: ["chickpea", "ch"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    chia:
+      crop_aliases: ["chia", "ci"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    cotton:
+      crop_aliases: ["cotton", "co"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    cowpea:
+      crop_aliases: ["cowpea", "cp"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    drybean:
+      crop_aliases: ["drybean", "bn"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    fababean:
+      crop_aliases: ["fababean", "fb"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    fallow:
+      crop_aliases: ["fallow", "fa"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    greenbean:
+      crop_aliases: ["greenbean", "greanbean", "gb"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    guar:
+      crop_aliases: ["guar", "gy"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    guineagrass:
+      crop_aliases: ["guineagrass", "gg"]
+      models:
+        forage: ["forage", "prfrm"]
+
+    hemp:
+      crop_aliases: ["hemp", "hm"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    lentil:
+      crop_aliases: ["lentil", "lt"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    maize:
+      crop_aliases: ["maize", "mz"]
+      models:
+        ceres: ["ceres", "mzcer"]
+        ixim: ["ixim", "mzixm"]
+
+    millet:
+      crop_aliases: ["millet", "ml"]
+      models:
+        ceres: ["ceres", "mlcer"]
+
+    napiergrass:
+      crop_aliases: ["napiergrass", "np"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    pea:
+      crop_aliases: ["pea", "pe"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    peanut:
+      crop_aliases: ["peanut", "pn"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    perennialpeanut:
+      crop_aliases: ["perennialpeanut", "po"]
+      models:
+        forage: ["forage", "prfrm"]
+
+    pineapple:
+      crop_aliases: ["pineapple", "pi"]
+      models:
+        aloha: ["aloha", "pialo"]
+
+    pigeonpea:
+      crop_aliases: ["pigeonpea", "pp"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    potato:
+      crop_aliases: ["potato", "pt"]
+      models:
+        substor: ["substor", "ptsub"]
+
+    quinoa:
+      crop_aliases: ["quinoa", "qu"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    rice:
+      crop_aliases: ["rice", "ri"]
+      models:
+        ceres: ["ceres", "ricer"]
+
+    rye:
+      crop_aliases: ["rye", "ry"]
+      models:
+        ceres: ["ceres", "cscer"]
+
+    safflower:
+      crop_aliases: ["safflower", "sf"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    sorghum:
+      crop_aliases: ["sorghum", "sg"]
+      models:
+        ceres: ["ceres", "sgcer"]
+
+    soybean:
+      crop_aliases: ["soybean", "sb"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    strawberry:
+      crop_aliases: ["strawberry", "sr"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    sugarbeet:
+      crop_aliases: ["sugarbeet", "bs"]
+      models:
+        ceres: ["ceres", "bscer"]
+
+    sugarcane:
+      crop_aliases: ["sugarcane", "sc"]
+      models:
+        canegro: ["canegro", "sccan"]
+        casupro: ["casupro", "sccsp"]
+        samuca: ["samuca", "scsam"]
+
+    sunflower:
+      crop_aliases: ["sunflower", "su"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+        oilcrop: ["oilcrop", "suoil"]
+
+    sweetcorn:
+      crop_aliases: ["sweetcorn", "sw"]
+      models:
+        ceres: ["ceres", "swcer"]
+
+    tanier:
+      crop_aliases: ["tanier", "tn"]
+      models:
+        aroids: ["aroids", "tnaro"]
+
+    taro:
+      crop_aliases: ["taro", "tr"]
+      models:
+        aroids: ["aroids", "traro"]
+
+    teff:
+      crop_aliases: ["teff", "tf"]
+      models:
+        nwheat: ["nwheat", "tfaps"]
+        ceres: ["ceres", "tfcer"]
+
+    tomato:
+      crop_aliases: ["tomato", "tm"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    velvetbean:
+      crop_aliases: ["velvetbean", "vb"]
+      models:
+        cropgro: ["cropgro", "crgro"]
+
+    wheat:
+      crop_aliases: ["wheat", "wh"]
+      models:
+        ceres: ["ceres", "cscer"]
+        cropsim: ["cropsim", "cscrp"]
+        nwheat: ["nwheat", "whaps"]
+
+#~~~~~~ / Alternatives for crop and model arguments entered by the user in some of the functions
+
+#~~~~~~ Classification from the DATA.CDE file for plrantgro, plantn functions
+VARIABLES_CLASSIFICATION_GLOBAL:
+    # Variable: group
+
+    # *SUMMARY
+    ADAP: phenology
+    ADAT: phenology
+    Z60D: phenology
+    ANTH: phenology
+    FL1D: phenology
+    ADAY: phenology
+    ADOY: phenology
+    AMDY: phenology
+    B1DAP: phenology
+    B2DAP: phenology
+    B3DAP: phenology
+    B4DAP: phenology
+    B5DAP: phenology
+    B1DAT: phenology
+    B2DAT: phenology
+    B3DAT: phenology
+    B4DAT: phenology
+    B5DAT: phenology
+    BADMF: biomass
+    BADMH: biomass
+    BR#SH: plant_struct
+    BWAH: biomass
+    BWAM: biomass
+    CFAH: yield
+    CH4EM: carbon
+    CHTA: plant_struct
+    CNAA: nitrogen
+    CNAM: nitrogen
+    CO2A: weather
+    CO2EM: carbon
+    CPAM: phosphorus
+    CRST: phenology
+    CWAA: biomass
+    CWAM: biomass
+    DMPEM: productivity
+    DMPIM: productivity
+    DMPPM: productivity
+    DMPTM: productivity
+    DPNAM: productivity
+    DPNUM: productivity
+    DRCM: water_flux
+    DWAP: biomass
+    DAYLA: weather
+    E#AM: plant_struct
+    E#UM: plant_struct
+    EDAP: phenology
+    EDAT: phenology
+    ELEV: weather
+    EPCM: water_flux
+    EPCP: water_flux
+    ESCM: water_flux
+    ESCP: water_flux
+    ETCM: water_flux
+    ETCP: water_flux
+    EWAM: yield
+    EWUM: yield
+    EYLDH: yield
+    FBWAH: biomass
+    FCWAM: biomass
+    FDAP: phenology
+    FDAT: phenology
+    FHWAM: yield
+    FNAM: metadata
+    FPWAM: yield
+    FRN%M: nitrogen
+    FRNAM: nitrogen
+    FWAH: yield
+    GL%M: yield
+    GN%M: nitrogen
+    GNAM: nitrogen
+    H#AM: plant_struct
+    H#GM: plant_struct
+    H#UM: plant_struct
+    HDAP: phenology
+    HDAT: phenology
+    HIAM: yield
+    HINM: nitrogen
+    HIPM: yield
+    HPRH: quality
+    HWAH: yield
+    HWAHF: yield
+    HWAM: yield
+    HWUM: yield
+    HYAH: yield
+    HYEAR: phenology
+    IDAP: phenology
+    IDAT: phenology
+    IR#M: management
+    IRCM: management
+    KI#M: management
+    KICM: potassium
+    KUPC: potassium
+    L#SM: plant_struct
+    L#SX: plant_struct
+    LAIH: lai
+    LAIX: lai
+    LIWAM: yield
+    LINTP: quality
+    LONG: weather
+    LWAH: biomass
+    MDAP: phenology
+    MDAT: phenology
+    N2OEM: nitrogen
+    NDCH: phenology
+    NFXM: nitrogen
+    NI#M: management
+    NIAM: nitrogen
+    NICM: nitrogen
+    NLCM: nitrogen
+    NUCM: nitrogen
+    NMINC: nitrogen
+    OCAM: carbon
+    OCTAM: carbon
+    ONAM: nitrogen
+    ONTAM: nitrogen
+    OPAM: phosphorus
+    OPTAM: phosphorus
+    OZONX: weather
+    P#AM: plant_struct
+    PD1P: phenology
+    PD1T: phenology
+    PDAT: phenology
+    PDFP: phenology
+    PDFT: phenology
+    PETP: water_flux
+    PI#M: management
+    PICM: phosphorus
+    PM%M: phenology
+    PRCM: weather
+    PRCP: weather
+    PUPC: phosphorus
+    PWAM: yield
+    R1AT: phenology
+    R2AT: phenology
+    R3AT: phenology
+    R4AT: phenology
+    R5AT: phenology
+    R6AT: phenology
+    R7AT: phenology
+    R8AP: phenology
+    R8AT: phenology
+    R9AT: phenology
+    RECM: management
+    RNAH: nitrogen
+    ROCM: water_flux
+    SDAH: biomass
+    SDAT: phenology
+    SKAM: potassium
+    SNAM: nitrogen
+    SPAM: phosphorus
+    SRADA: weather
+    SWAH: biomass
+    SWXM: soil_water
+    T#AM: plant_struct
+    TAVGA: weather
+    TCEQM: carbon
+    TDAP: phenology
+    TDAT: phenology
+    THAM: yield
+    TMINA: weather
+    TMNA: weather
+    TMAXA: weather
+    TMXA: weather
+    TN%H: nitrogen
+    TNAH: nitrogen
+    TNAM: metadata
+    TWAH: biomass
+    UN%H: nitrogen
+    UNAM: nitrogen
+    UWAH: yield
+    UYAH: yield
+    VN%M: nitrogen
+    VNAM: nitrogen
+    VWATM: biomass
+    WSTA: metadata
+    WYEAR: metadata
+    XLAT: weather
+    YDWAH: yield
+    YPEM: productivity
+    YPIM: productivity
+    YPNAM: productivity
+    YPNUM: productivity
+    YPPM: productivity
+    YPTM: productivity
+
+    NDCH1: phenology
+    TMAX1: weather
+    TMIN1: weather
+    TAVG1: weather
+    SRAD1: weather
+    PRCP1: weather
+    ETCP1: water_flux
+    ESCP1: water_flux
+    EPCP1: water_flux
+    PETP1: water_flux
+
+    NDCH2: phenology
+    TMAX2: weather
+    TMIN2: weather
+    TAVG2: weather
+    SRAD2: weather
+    PRCP2: weather
+    ETCP2: water_flux
+    ESCP2: water_flux
+    EPCP2: water_flux
+    PETP2: water_flux
+
+    NDCH3: phenology
+    TMAX3: weather
+    TMIN3: weather
+    TAVG3: weather
+    SRAD3: weather
+    PRCP3: weather
+    ETCP3: water_flux
+    ESCP3: water_flux
+    EPCP3: water_flux
+    PETP3: water_flux
+
+    NDCH4: phenology
+    TMAX4: weather
+    TMIN4: weather
+    TAVG4: weather
+    SRAD4: weather
+    PRCP4: weather
+    ETCP4: water_flux
+    ESCP4: water_flux
+    EPCP4: water_flux
+    PETP4: water_flux
+
+    # *GROWTH
+    A#PD: plant_struct
+    AMLWT: biomass
+    ATLWT: biomass
+    BADMH: biomass
+    BWAD: biomass
+    CAID: lai
+    CDAD: biomass
+    CDAY: phenology
+    CDVD: phenology
+    CFAD: yield
+    CHTD: plant_struct
+    CHTCM: plant_struct
+    CMDMD: biomass
+    CRAD: biomass
+    CRWAD: biomass
+    CWAD: biomass
+    CWID: plant_struct
+    CWPD: biomass
+    CWSI: stress_fact
+    DAP: phenology
+    DAS: phenology
+    DCCD: phenology
+    DLAID: lai
+    DLW_1: biomass
+    DTTC: phenology
+    DTTD: phenology
+    DU: phenology
+    DWTCO: biomass
+    DWTLO: biomass
+    DWTSO: biomass
+    DYLFD: env_factors
+    E#AD: plant_struct
+    EAID: lai
+    EWAD: yield
+    EWSD: stress_fact
+    EY#AD: plant_struct
+    EY#UD: plant_struct
+    EYWAD: yield
+    EYWUD: yield
+    FHL%: biomass
+    FWAD: biomass
+    FLWAD: biomass
+    G#AD: yield
+    G#AD2: yield
+    GL%D: yield
+    G_RESP: biomass
+    GSTD: phenology
+    GWAD: yield
+    GWGD: yield
+    H#AD: plant_struct
+    HCRD: yield
+    HERB: biomass
+    HIAD: yield
+    HIDC: yield
+    HIPD: yield
+    HWAD: yield
+    HWUD: yield
+    HYAD: yield
+    KSTD: stress_fact
+    L#S1D: plant_struct
+    L#SD: plant_struct
+    LAD_1: lai
+    LAID: lai
+    LAITD: lai
+    LAWD: plant_struct
+    LDAD: biomass
+    LF%D: biomass
+    LLAID: lai
+    LN%D: nitrogen
+    LN_1: plant_struct
+    LNUM: plant_struct
+    LRSD: phenology
+    LWAD: biomass
+    LWD_1: biomass
+    M_RESP: biomass
+    MLAG1: lai
+    MLFWT: biomass
+    MPLA: lai
+    MPLAG: lai
+    MSTMWT: biomass
+    NFLF2: nitrogen
+    NFTID: nitrogen
+    NSPAV: stress_fact
+    NSTD: stress_fact
+    NDEMD: nitrogen
+    NUPRD: nitrogen
+    NWAD: biomass
+    O#AD: plant_struct
+    OWAD: biomass
+    OWGD: biomass
+    P#AD: plant_struct
+    PARCE: env_factors
+    PLA: lai
+    PMWD: biomass
+    PRSD: biomass
+    PS1D: stress_fact
+    PS2D: stress_fact
+    PWAD: yield
+    PWDD: yield
+    PWTD: yield
+    Q1%D: biomass
+    QS%D: biomass
+    QWAD: biomass
+    QDAD: biomass
+    RDAD: biomass
+    RDPD: plant_struct
+    RGRD: biomass
+    RL10D: plant_struct
+    RL1D: plant_struct
+    RL2D: plant_struct
+    RL3D: plant_struct
+    RL4D: plant_struct
+    RL5D: plant_struct
+    RL6D: plant_struct
+    RL7D: plant_struct
+    RL8D: plant_struct
+    RL9D: plant_struct
+    RL10: plant_struct
+    RSCD: biomass
+    RSFPD: stress_fact
+    RSPD: biomass
+    RSTD: phenology
+    RWAD: biomass
+    SDAD: biomass
+    SDDMD: biomass
+    SEAD: biomass
+    SH%D: yield
+    SHAD: yield
+    SLAD: plant_struct
+    SLFT: stress_fact
+    SSTKH: biomass
+    STD_1: biomass
+    STTD: phenology
+    STTG: phenology
+    SUAD: yield
+    SUGD: biomass
+    SUID: yield
+    SUMDTT: phenology
+    SUW_1: yield
+    SWAD: biomass
+    SWD_1: biomass
+    SWF_1: biomass
+    T#AD: plant_struct
+    T#SD: plant_struct
+    TCDIF: env_factors
+    TDIF: env_factors
+    TDRW: biomass
+    TFDD: env_factors
+    TKILL: env_factors
+    TLA_1: lai
+    TLAG1: lai
+    TLFWT: biomass
+    TLW_1: biomass
+    TPLA: lai
+    TPLAG: lai
+    TPSM: plant_struct
+    TRAD: biomass
+    TSTMWT: biomass
+    TT: phenology
+    TWUPD: stress_fact
+    UWAD: yield
+    UYAD: yield
+    VCN%: nitrogen
+    VMN%: nitrogen
+    VRNFD: env_factors
+    VWAD: biomass
+    WAVRD: stress_fact
+    WFGD: stress_fact
+    WFPD: stress_fact
+    WFTID: stress_fact
+    WLVG: biomass
+    WSGD: stress_fact
+    WSPAV: stress_fact
+    WSPD: stress_fact
+    WUPRD: stress_fact
+
+    # *NITROGEN
+    AMLC: nitrogen
+    AMLS: nitrogen
+    CNAD: nitrogen
+    CPROT: nitrogen
+    GN%D: nitrogen
+    GNAD: nitrogen
+    FRN%D: nitrogen
+    FRNAD: nitrogen
+    LCNF: nitrogen
+    lfshthNSheath: nitrogen
+    LN%RD: nitrogen
+    LNAD: nitrogen
+    N2EC: nitrogen
+    N2ED: nitrogen
+    N2GED: nitrogen
+    N2FLC: nitrogen
+    N2FLD: nitrogen
+    N2F10: nitrogen
+    N2F1D: nitrogen
+    N2F2D: nitrogen
+    N2F3D: nitrogen
+    N2F4D: nitrogen
+    N2F5D: nitrogen
+    N2F6D: nitrogen
+    N2F7D: nitrogen
+    N2F8D: nitrogen
+    N2F9D: nitrogen
+    NAPC: nitrogen
+    NFact1: nitrogen
+    NFact2: nitrogen
+    NFact3: nitrogen
+    NFact4: nitrogen
+    NDNC: nitrogen
+    NDND: nitrogen
+    NDN10: nitrogen
+    NDN1D: nitrogen
+    NDN2D: nitrogen
+    NDN3D: nitrogen
+    NDN4D: nitrogen
+    NDN5D: nitrogen
+    NDN6D: nitrogen
+    NDN7D: nitrogen
+    NDN8D: nitrogen
+    NDN9D: nitrogen
+    NFXC: nitrogen
+    NFXD: nitrogen
+    NH10: nitrogen
+    NH1D: nitrogen
+    NH2D: nitrogen
+    NH3D: nitrogen
+    NH4D: nitrogen
+    NH5D: nitrogen
+    NH6D: nitrogen
+    NH7D: nitrogen
+    NH8D: nitrogen
+    NH9D: nitrogen
+    NHTD: nitrogen
+    NI10: nitrogen
+    NI1D: nitrogen
+    NI2D: nitrogen
+    NI3D: nitrogen
+    NI4D: nitrogen
+    NI5D: nitrogen
+    NI6D: nitrogen
+    NI7D: nitrogen
+    NI8D: nitrogen
+    NI9D: nitrogen
+    NIAD: nitrogen
+    NIMC: nitrogen
+    NITC: nitrogen
+    NITRD: nitrogen
+    NIT10: nitrogen
+    NIT1D: nitrogen
+    NIT2D: nitrogen
+    NIT3D: nitrogen
+    NIT4D: nitrogen
+    NIT5D: nitrogen
+    NIT6D: nitrogen
+    NIT7D: nitrogen
+    NIT8D: nitrogen
+    NIT9D: nitrogen
+    NITD: nitrogen
+    NLCD: nitrogen
+    NLCC: nitrogen
+    NMNC: nitrogen
+    NNMNC: nitrogen
+    NOAD: nitrogen
+    NOEC: nitrogen
+    NOED: nitrogen
+    NOGED: nitrogen
+    NOFLC: nitrogen
+    NOFLD: nitrogen
+    NOF10: nitrogen
+    NOF1D: nitrogen
+    NOF2D: nitrogen
+    NOF3D: nitrogen
+    NOF4D: nitrogen
+    NOF5D: nitrogen
+    NOF6D: nitrogen
+    NOF7D: nitrogen
+    NOF8D: nitrogen
+    NOF9D: nitrogen
+    NT10: nitrogen
+    NT1D: nitrogen
+    NT2D: nitrogen
+    NT3D: nitrogen
+    NT4D: nitrogen
+    NT5D: nitrogen
+    NT6D: nitrogen
+    NT7D: nitrogen
+    NT8D: nitrogen
+    NT9D: nitrogen
+    NUAC: nitrogen
+    NUAD: nitrogen
+    NUPC: nitrogen
+    NURTD: nitrogen
+    OXRN: nitrogen
+    QNAD: nitrogen
+    QN%D: nitrogen
+    R#AC: management
+    RADN: weather
+    RCNF: nitrogen
+    RN%CD: nitrogen
+    RN%D: nitrogen
+    RN%LD: nitrogen
+    RN%RD: nitrogen
+    RNUA: nitrogen
+    ROOTN: nitrogen
+    RSNAD: nitrogen
+    RSVN: nitrogen
+    SCNF: nitrogen
+    SENC0: carbon
+    SENCS: carbon
+    SENL0: carbon
+    SENLS: carbon
+    SENN0: nitrogen
+    SENNS: nitrogen
+    SENNT: nitrogen
+    SENWT: biomass
+    SHND: nitrogen
+    SHNAD: nitrogen
+    SN%D: nitrogen
+    SN%RD: nitrogen
+    SNAD: nitrogen
+    SNNPD: nitrogen
+    SNWPD: biomass
+    TUNA: nitrogen
+    UN%D: nitrogen
+    UNAD: nitrogen
+    VN%D: nitrogen
+    VNAD: nitrogen
+
+    # *WATER
+    DA3D: weather
+    DAYD: weather
+    DRNC: water_flux
+    DTR: weather
+    DTWT: soil_water
+    DTWTM: soil_water
+    EFAA: water_flux
+    EMAA: water_flux
+    EMAC: water_flux
+    Enit: water_flux
+    Enoon: water_flux
+    EOAA: water_flux
+    EOAC: water_flux
+    EOAD: water_flux
+    EOPA: water_flux
+    EOPD: water_flux
+    EOSA: water_flux
+    EPAA: water_flux
+    EPAC: water_flux
+    EPAD: water_flux
+    ES10D: water_flux
+    ES1D: water_flux
+    ES2D: water_flux
+    ES3D: water_flux
+    ES4D: water_flux
+    ES5D: water_flux
+    ES6D: water_flux
+    ES7D: water_flux
+    ES8D: water_flux
+    ES9D: water_flux
+    ESAA: water_flux
+    ESAC: water_flux
+    ESAD: water_flux
+    ETAA: water_flux
+    ETAC: water_flux
+    ETAD: water_flux
+    ETnit: water_flux
+    ETNOON: water_flux
+    H2OA: soil_water
+    IR#C: management
+    IRRC: water_flux
+    IRRAC: water_flux
+    KCAA: water_flux
+    KBSA: water_flux
+    KEAA: water_flux
+    LATFC: water_flux
+    MCFD: soil_water
+    MDEPD: soil_water
+    MWAD: soil_water
+    MWTD: soil_water
+    PREC: weather
+    REFA: weather
+    ROFC: water_flux
+    ROFD: water_flux
+    ROSD: water_flux
+    SEDM: soil_water
+    SNOWD: soil_water
+    SRAA: weather
+    SW1D: soil_water
+    SW2D: soil_water
+    SW3D: soil_water
+    SW4D: soil_water
+    SW5D: soil_water
+    SW6D: soil_water
+    SW7D: soil_water
+    SW8D: soil_water
+    SW9D: soil_water
+    SW10D: soil_water
+    SW11D: soil_water
+    SW12D: soil_water
+    SW13D: soil_water
+    SW14D: soil_water
+    SW15D: soil_water
+    SW16D: soil_water
+    SW17D: soil_water
+    SW18D: soil_water
+    SW19D: soil_water
+    SW20D: soil_water
+    LL1D: soil_water
+    LL2D: soil_water
+    LL3D: soil_water
+    LL4D: soil_water
+    LL5D: soil_water
+    LL6D: soil_water
+    LL7D: soil_water
+    LL8D: soil_water
+    LL9D: soil_water
+    LL10D: soil_water
+    LL11D: soil_water
+    LL12D: soil_water
+    LL13D: soil_water
+    LL14D: soil_water
+    LL15D: soil_water
+    LL16D: soil_water
+    LL17D: soil_water
+    LL18D: soil_water
+    LL19D: soil_water
+    LL20D: soil_water
+    DUL1D: soil_water
+    DUL2D: soil_water
+    DUL3D: soil_water
+    DUL4D: soil_water
+    DUL5D: soil_water
+    DUL6D: soil_water
+    DUL7D: soil_water
+    DUL8D: soil_water
+    DUL9D: soil_water
+    DUL10D: soil_water
+    DUL11D: soil_water
+    DUL12D: soil_water
+    DUL13D: soil_water
+    DUL14D: soil_water
+    DUL15D: soil_water
+    DUL16D: soil_water
+    DUL17D: soil_water
+    DUL18D: soil_water
+    DUL19D: soil_water
+    DUL20D: soil_water
+    SAT1D: soil_water
+    SAT2D: soil_water
+    SAT3D: soil_water
+    SAT4D: soil_water
+    SAT5D: soil_water
+    SAT6D: soil_water
+    SAT7D: soil_water
+    SAT8D: soil_water
+    SAT9D: soil_water
+    SAT10D: soil_water
+    SAT11D: soil_water
+    SAT12D: soil_water
+    SAT13D: soil_water
+    SAT14D: soil_water
+    SAT15D: soil_water
+    SAT16D: soil_water
+    SAT17D: soil_water
+    SAT18D: soil_water
+    SAT19D: soil_water
+    SAT20D: soil_water
+    BD1D: soil_phys
+    BD2D: soil_phys
+    BD3D: soil_phys
+    BD4D: soil_phys
+    BD5D: soil_phys
+    BD6D: soil_phys
+    BD7D: soil_phys
+    BD8D: soil_phys
+    BD9D: soil_phys
+    BD10D: soil_phys
+    BD11D: soil_phys
+    BD12D: soil_phys
+    BD13D: soil_phys
+    BD14D: soil_phys
+    BD15D: soil_phys
+    BD16D: soil_phys
+    BD17D: soil_phys
+    BD18D: soil_phys
+    BD19D: soil_phys
+    BD20D: soil_phys
+    SWTD: soil_water
+    SWXD: soil_water
+    TCADD: weather
+    TCnt: weather
+    TCAN(h): weather
+    TDFC: water_flux
+    TDFD: water_flux
+    TMINA: weather
+    TMNA: weather
+    TMAXA: weather
+    TMXA: weather
+    TSRNIT: weather
+    TSURF: weather
+    TS0D: weather
+    TS10: weather
+    TS1D: weather
+    TS2D: weather
+    TS3D: weather
+    TS4D: weather
+    TS5D: weather
+    TS6D: weather
+    TS7D: weather
+    TS8D: weather
+    TS9D: weather
+    WINNIT: weather
+    WINDHR: weather
+
+    # *CARBON
+    CGRD: carbon
+    CHAD: carbon
+    CSHn: carbon
+    CONDSH: carbon
+    CSHt: carbon
+    CSLn: carbon
+    CONDSL: carbon
+    CSLt: carbon
+    CL%D: carbon
+    CMAD: carbon
+    CS%D: carbon
+    CR%D: carbon
+    Enit: water_flux
+    EHR: water_flux
+    ENN: water_flux
+    ETnt: water_flux
+    ETn: water_flux
+    GMT: energy_flux
+    GN: energy_flux
+    GC%D: carbon
+    GRAD: carbon
+    HUM1: carbon
+    HUM2: carbon
+    HUM3: carbon
+    HUM4: carbon
+    HUM5: carbon
+    LH1n: energy_flux
+    LH2n: energy_flux
+    LH3n: energy_flux
+    LH1t: energy_flux
+    LH2t: energy_flux
+    LH3t: energy_flux
+    LHN: energy_flux
+    LHT: energy_flux
+    LI%D: carbon
+    LI%N: carbon
+    LMHN: carbon
+    LMLN: carbon
+    LSHn: lai
+    LAISH: lai
+    LSHt: lai
+    LSLt: lai
+    LAISL: lai
+    LSLn: lai
+    MRAD: carbon
+    N%HN: nitrogen
+    N%LN: nitrogen
+    NHU1: nitrogen
+    NHU2: nitrogen
+    NHU3: nitrogen
+    NHU4: nitrogen
+    NHU5: nitrogen
+    OMAC: carbon
+    ONAC: nitrogen
+    OPAC: phosphorus
+    PHAD: carbon
+    PHAN: carbon
+    QC%D: carbon
+    QHAD: carbon
+    RSHN: energy_flux
+    RSHT: energy_flux
+    RSLN: energy_flux
+    RSLT: energy_flux
+    RSSN: energy_flux
+    RSST: energy_flux
+    SCDD: carbon
+    SHN: energy_flux
+    SHT: energy_flux
+    SH1N: energy_flux
+    SH2N: energy_flux
+    SH3N: energy_flux
+    SH1T: energy_flux
+    SN2T: energy_flux
+    SN3T: energy_flux
+    SLHN: carbon
+    SLLN: carbon
+    SNDD: nitrogen
+    SOCD: carbon
+    SOND: nitrogen
+    SOPD: phosphorus
+    SPDD: phosphorus
+    TCNN: weather
+    TDNC: nitrogen
+    TDND: nitrogen
+    TEMt: weather
+    TAIRHR: weather
+    TFOM: carbon
+    TFON: nitrogen
+    TGAV: weather
+    TGNN: weather
+    TGON: weather
+    Tnit: weather
+    THR: weather
+    TNN: water_flux
+    TSR1n: weather
+    TSR1t: weather
+    TSR2n: weather
+    TSR2t: weather
+    TSR3n: weather
+    TSR3t: weather
+    TWAD: biomass
+    WDNN: weather
+    WINDHR: weather
+    WINn: weather
+
+    # *PESTS
+    CASM: stress_fact
+    CEW: pests
+    CLAI: stress_fact
+    CLFM: stress_fact
+    CPO%: stress_fact
+    CRLF: stress_fact
+    CRLV: stress_fact
+    CRTM: stress_fact
+    CSD#: stress_fact
+    CSDM: stress_fact
+    CSH#: stress_fact
+    CSHM: stress_fact
+    CSTM: stress_fact
+    DASM: stress_fact
+    DLA: stress_fact
+    DLA%: stress_fact
+    DLAI: stress_fact
+    DLFM: stress_fact
+    DPO%: stress_fact
+    DRLF: stress_fact
+    DRLV: stress_fact
+    DRTM: stress_fact
+    DSD#: stress_fact
+    DSDM: stress_fact
+    DSH#: stress_fact
+    DSHM: stress_fact
+    DSTM: stress_fact
+    FAW: pests
+    IBCUT: pests
+    LFMIN: pests
+    PCLA: stress_fact
+    PDLA: stress_fact
+    PRP: stress_fact
+    PSTDS: stress_fact
+    RTWM: pests
+    SGSB: pests
+    SL: pests
+    VBC5: pests
+    VBC6: pests
+    UFCEW: pests
+    UFRKN: pests
+    UFSBL: pests
+    UFSKB: pests
+    UFVBC: pests
+
+    # *EXPERIMENTAL DATA
+    AP1D: phenology
+    BR1D: phenology
+    B1DAT: phenology
+    BR2D: phenology
+    B2DAT: phenology
+    BR3D: phenology
+    B3DAT: phenology
+    BR4D: phenology
+    B4DAT: phenology
+    BR1P: phenology
+    B1DAP: phenology
+    BR2P: phenology
+    B2DAP: phenology
+    BR3P: phenology
+    B3DAP: phenology
+    BR4P: phenology
+    B4DAP: phenology
+    CDWA: biomass
+    CHN%: nitrogen
+    CHWA: biomass
+    DRID: phenology
+    DWAD: biomass
+    EDAT0: phenology
+    EDAT1: phenology
+    EDAT2: phenology
+    EEMD: phenology
+    EGWA: biomass
+    EGWS: biomass
+    G#PD: yield
+    G#SD: yield
+    GW%M: yield
+    GWAM: yield
+    GWGM: yield
+    GWPM: yield
+    GYAM: yield
+    GYPM: yield
+    GYVM: yield
+    HWAC: yield
+    HYAM: yield
+    L#IR: plant_struct
+    LAASH: lai
+    LAFD: lai
+    LAIXD: phenology
+    LAIXT: lai
+    LALD: lai
+    LALN: lai
+    LAPD: lai
+    LARD: phenology
+    LF3D: phenology
+    LF5D: phenology
+    LLFD: phenology
+    LWAM: biomass
+    LWASH: biomass
+    LWPD: biomass
+    NAPSH: plant_struct
+    PARID: env_factors
+    RLAD: plant_struct
+    RLWD: plant_struct
+    RWLD: plant_struct
+    S#AD: plant_struct
+    S#PD: plant_struct
+    S#AH: plant_struct
+    SCWA: biomass
+    SDWT: yield
+    SHTH: plant_struct
+    SP#P: plant_struct
+    SPDAP: phenology
+    SPDAT: phenology
+    SWPD: biomass
+    T#AD1: plant_struct
+    T#AD2: plant_struct
+    T#AD3: plant_struct
+    T#MX: plant_struct
+    T#MXD: phenology
+    T#PD: plant_struct
+    TDECD: phenology
+    TDWA: biomass
+    TNIM: nitrogen
+    TSPD: phenology
+    TWAM: biomass
+    VWAM: biomass
+    Z21D: phenology
+    Z30D: phenology
+    Z31D: phenology
+    Z37D: phenology
+    Z39D: phenology
+
+    # *USER
+    ABUND: management
+    DLYR3: soil_phys
+    EFAC: water_flux
+    EFAD: water_flux
+    FALG: env_factors
+    FALI: env_factors
+    FDEN: nitrogen
+    FL3C: nitrogen
+    FL3N: nitrogen
+    FL4N: nitrogen
+    FL4C: nitrogen
+    FLBD: soil_phys
+    FLOD: soil_water
+    FLNI: nitrogen
+    FLPH: env_factors
+    FLTI: env_factors
+    FLUR: nitrogen
+    FROD: water_flux
+    FUHY: nitrogen
+    INFD: water_flux
+    IRRD: water_flux
+    IRRAD: water_flux
+    TL#C: management
+    TLBD: soil_phys
+    TLDD: management
+
+    # *WEATHER
+    CLDD: weather
+    CO2D: weather
+    DAYLD: weather
+    OZON7: weather
+    PARD: weather
+    PRED: weather
+    CPRED: weather
+    SRAD: weather
+    TAVD: weather
+    TDWD: weather
+    TDYD: weather
+    TGAD: weather
+    TGRD: weather
+    TMEAN: weather
+    TMND: weather
+    TMXD: weather
+    TWLD: weather
+    VPD: weather
+    VPDF: weather
+    WDSD: weather
+    WDATE: weather
+
+    # *OTHER MODELS
+    ACO2: weather
+    AWAD: biomass
+    CHNAD: nitrogen
+    CHWAD: biomass
+    CN%D: nitrogen
+    CNAD: nitrogen
+    CO2FD: env_factors
+    DAYLF: env_factors
+    DNAG: nitrogen
+    DOY: phenology
+    DWAG: biomass
+    HIND: nitrogen
+    HNAD: nitrogen
+    HNAM: nitrogen
+    HNCD: nitrogen
+    HN%D: nitrogen
+    HN%M: nitrogen
+    LA%D: env_factors
+    LAIPD: lai
+    LAISD: lai
+    NFGD: nitrogen
+    NFPD: nitrogen
+    NFSD: nitrogen
+    NFTD: nitrogen
+    NFUD: nitrogen
+    NSTD: stress_fact
+    PARUD: env_factors
+    PMAD: yield
+    PTF: biomass
+    PTFD: biomass
+    RNAD: nitrogen
+    RNCD: nitrogen
+    RS%D: biomass
+    RSAD: biomass
+    RSFP: stress_fact
+    RSWAD: biomass
+    SAID: plant_struct
+    SDNAD: nitrogen
+    SDNCD: nitrogen
+    SDWAD: biomass
+    SDN%D: nitrogen
+    SGDMD: biomass
+    SLND: nitrogen
+    SNCD: nitrogen
+    SNN0C: nitrogen
+    SNN0D: nitrogen
+    SNN1C: nitrogen
+    SNN1D: nitrogen
+    SNNTC: nitrogen
+    SNPTC: biomass
+    SNW0C: biomass
+    SNW0D: biomass
+    SNW1C: biomass
+    SNW1D: biomass
+    SNXD: nitrogen
+    SSAD: biomass
+    TFGD: env_factors
+    TFGEM: env_factors
+    TFPD: env_factors
+    TNAD: nitrogen
+    TRRD: biomass
+    TRWUD: stress_fact
+    TWUPD: stress_fact
+    VNCD: nitrogen
+    VN%D: nitrogen
+    VN%LD: nitrogen
+    VN%CD: nitrogen
+    VRNF: env_factors
+    WFGE: stress_fact
+    WFSD: stress_fact
+    WFTD: stress_fact
+    WSTD: stress_fact
+    YEAR: phenology
+    RCANE: phenology
+    DDLMD: biomass
+    DDTMD: biomass
+    SEQR: phenology
+    TTTOT: phenology
+    BBDMD: biomass
+    CSTAT: phenology
+    GLI%D: env_factors
+    TLI%D: env_factors
+    TRWUP: stress_fact
+    EOP: env_factors
+    COAD: yield
+    COAM: yield
+    XWAD: yield
+    XO%D: yield
+    HSAM: yield
+
+   # *SOIL ORGANIC MATTER
+    CO20C: carbon
+    CO2SC: carbon
+    CO2TC: carbon
+    CO2TD: carbon
+    HRCH: carbon
+    HRNH: nitrogen
+    HRPH: phosphorus
+    LC0D: carbon
+    LC1D: carbon
+    LC2D: carbon
+    LC3D: carbon
+    LC4D: carbon
+    LC5+D: carbon
+    LCTD: carbon
+    LN0D: nitrogen
+    LN1D: nitrogen
+    LN2D: nitrogen
+    LN3D: nitrogen
+    LN4D: nitrogen
+    LN5+D: nitrogen
+    LNTD: nitrogen
+    LP0D: phosphorus
+    LP1D: phosphorus
+    LP2D: phosphorus
+    LP3D: phosphorus
+    LP4D: phosphorus
+    LP5+D: phosphorus
+    LPTD: phosphorus
+    MEC0D: carbon
+    MEC1D: carbon
+    MEC2D: carbon
+    MEC3D: carbon
+    MEC4D: carbon
+    MEC5+D: carbon
+    MECTD: carbon
+    MEN0D: nitrogen
+    MEN1D: nitrogen
+    MEN2D: nitrogen
+    MEN3D: nitrogen
+    MEN4D: nitrogen
+    MEN5+D: nitrogen
+    MENTD: nitrogen
+    MEP0D: phosphorus
+    MEP1D: phosphorus
+    MEP2D: phosphorus
+    MEP3D: phosphorus
+    MEP4D: phosphorus
+    MEP5+D: phosphorus
+    MEPTD: phosphorus
+    RESC: carbon
+    RESNC: nitrogen
+    RESPC: phosphorus
+    S1C0D: carbon
+    S1C1D: carbon
+    S1C2D: carbon
+    S1C3D: carbon
+    S1C4D: carbon
+    S1C5+D: carbon
+    S1CTD: carbon
+    S1N0D: nitrogen
+    S1N1D: nitrogen
+    S1N2D: nitrogen
+    S1N3D: nitrogen
+    S1N4D: nitrogen
+    S1N5+D: nitrogen
+    S1NTD: nitrogen
+    S1P0D: phosphorus
+    S1P1D: phosphorus
+    S1P2D: phosphorus
+    S1P3D: phosphorus
+    S1P4D: phosphorus
+    S1P5+D: phosphorus
+    S1PTD: phosphorus
+    S2C1D: carbon
+    S2C2D: carbon
+    S2C3D: carbon
+    S2C4D: carbon
+    S2C5+D: carbon
+    S2CTD: carbon
+    S2N1D: nitrogen
+    S2N2D: nitrogen
+    S2N3D: nitrogen
+    S2N4D: nitrogen
+    S2N5+D: nitrogen
+    S2NTD: nitrogen
+    S23P1D: phosphorus
+    S23P2D: phosphorus
+    S23P3D: phosphorus
+    S23P4D: phosphorus
+    S23P+D: phosphorus
+    S23PTD: phosphorus
+    S3C1D: carbon
+    S3C2D: carbon
+    S3C3D: carbon
+    S3C4D: carbon
+    S3C5+D: carbon
+    S3CTD: carbon
+    S3N1D: nitrogen
+    S3N2D: nitrogen
+    S3N3D: nitrogen
+    S3N4D: nitrogen
+    S3N5+D: nitrogen
+    S3NTD: nitrogen
+    SC%20D: carbon
+    SC%40D: carbon
+    SC0D: carbon
+    SC1D: carbon
+    SC2D: carbon
+    SC3D: carbon
+    SC4D: carbon
+    SC5+D: carbon
+    SCS20D: carbon
+    SCS40D: carbon
+    SCTD: carbon
+    SL%20D: carbon
+    SL%40D: carbon
+    SLC20D: carbon
+    SLC40D: carbon
+    SN%20D: nitrogen
+    SN%40D: nitrogen
+    SN0D: nitrogen
+    SN1D: nitrogen
+    SN2D: nitrogen
+    SN3D: nitrogen
+    SN4D: nitrogen
+    SN5+D: nitrogen
+    SNS20D: nitrogen
+    SNS40D: nitrogen
+    SNTD: nitrogen
+    SNWLD: carbon
+    SNWSD: carbon
+    SENCC: carbon
+    SOMCT: carbon
+    SOMNT: nitrogen
+    SOMPT: phosphorus
+    SP%20D: phosphorus
+    SP%40D: phosphorus
+    SP0D: phosphorus
+    SP1D: phosphorus
+    SP2D: phosphorus
+    SP3D: phosphorus
+    SP4D: phosphorus
+    SP5+D: phosphorus
+    SPS20D: phosphorus
+    SPS40D: phosphorus
+    SPTD: phosphorus
+    STC0D: carbon
+    STC1D: carbon
+    STC2D: carbon
+    STC3D: carbon
+    STC4D: carbon
+    STC5+D: carbon
+    STCTD: carbon
+    STN0D: nitrogen
+    STN1D: nitrogen
+    STN2D: nitrogen
+    STN3D: nitrogen
+    STN4D: nitrogen
+    STN5+D: nitrogen
+    STNTD: nitrogen
+    STP0D: phosphorus
+    STP1D: phosphorus
+    STP2D: phosphorus
+    STP3D: phosphorus
+    STP4D: phosphorus
+    STP5+D: phosphorus
+    STPTD: phosphorus
+
+   # *PLANT PHOSPHORUS
+    NTOPD: phosphorus
+    PHFR1: phosphorus
+    PHFR2: phosphorus
+    PPAD: phosphorus
+    PLPPD: phosphorus
+    PRTMD: phosphorus
+    PRTOD: phosphorus
+    PSDMD: phosphorus
+    PSDOD: phosphorus
+    PSHMD: phosphorus
+    PSHOD: phosphorus
+    PSLMD: phosphorus
+    PSLOD: phosphorus
+    PST1A: phosphorus
+    PST2A: phosphorus
+    PSTRAT: phosphorus
+    PTDD: phosphorus
+    PUPD: phosphorus
+    RTPAD: phosphorus
+    RTPPD: phosphorus
+    SDPAD: phosphorus
+    SDPPD: phosphorus
+    SHPAD: phosphorus
+    SHPPD: phosphorus
+    SHWAD: biomass
+    SHRTD: plant_struct
+    SLPAD: phosphorus
+    SLPPD: phosphorus
+    SNP0C: phosphorus
+    SNP1C: phosphorus
+
+    # *SOIL PHOSPHORUS
+    PACTD: phosphorus
+    PAPC: phosphorus
+    PAV1D: phosphorus
+    PAV2D: phosphorus
+    PAV3D: phosphorus
+    PAV4D: phosphorus
+    PAV5D: phosphorus
+    PAVLD: phosphorus
+    PIAD: phosphorus
+    PIMC: phosphorus
+    PIMD: phosphorus
+    PLABD: phosphorus
+    PMNC: phosphorus
+    PMND: phosphorus
+    PSOLD: phosphorus
+    PSTAD: phosphorus
+    PUP1D: phosphorus
+    PUP2D: phosphorus
+    PUP3D: phosphorus
+    PUP4D: phosphorus
+    PUP5D: phosphorus
+    PLAB1: phosphorus
+    PLAB2: phosphorus
+    PLAB3: phosphorus
+    PLAB4: phosphorus
+    PLAB5: phosphorus
+
+    # *SOIL POTASSIUM
+    KAPC: potassium
+    KAPD: potassium
+    KAV1D: potassium
+    KAV2D: potassium
+    KAV3D: potassium
+    KAV4D: potassium
+    KAV5D: potassium
+    KAVLD: potassium
+    KTOTD: potassium
+    KUP1D: potassium
+    KUP2D: potassium
+    KUP3D: potassium
+    KUP4D: potassium
+    KUP5D: potassium
+    KUPC: potassium
+    KUPD: potassium
+
+    # *FRESH WEIGHT
+    PDMCD: biomass
+    AFPWD: biomass
+    ADPWD: biomass
+    PAGED: phenology
+    FCULD: biomass
+    FSZ1D: biomass
+    FSZ2D: biomass
+    FSZ3D: biomass
+    FSZ4D: biomass
+    FSZ5D: biomass
+    FSZ6D: biomass
+    XMAGE: phenology
+    CHNUM: management
+    TOSHN: plant_struct
+    TOWSH: biomass
+    MTDSH: biomass
+    HSHEL: biomass
+    TOPOW: biomass
+    HPODW: biomass
+    CHPDT: biomass
+    CPODN: biomass
+    TOFPW: biomass
+    MTFPW: biomass
+    MTDPW: biomass
+    HFPOW: biomass
+    CHFPW: biomass
+    CMFNM: plant_struct
+    TOSDN: plant_struct
+    TOWSD: biomass
+    MTDSD: biomass
+    HSDWT: biomass
+    ADPWM: biomass
+    AFPWM: biomass
+    FHWAD: biomass
+    FPWAD: biomass
+    RTFPW: biomass
+    RTDPW: biomass
+    MFWAD: biomass
+    NFWAD: plant_struct
+    PAGEM: phenology
+    PDMCM: biomass
+    PDMCH: biomass
+    SMFMH: biomass
+
+    # *CANEGRO - South Africa
+    AELH: biomass
+    BADMD: biomass
+    BRDMD: biomass
+    DL#D: plant_struct
+    LAIGD: lai
+    LAIGH: lai
+    LDDMD: biomass
+    LDGFD: stress_fact
+    LGDMD: biomass
+    PGRD: biomass
+    RDMD: biomass
+    RTLD: plant_struct
+    SHTD: plant_struct
+    SMDMD: biomass
+    SMFMD: biomass
+    STKH: biomass
+    SU%DMD: yield
+    SU%FMD: yield
+    SUCH: yield
+    SUCMD: yield
+    TRSH: biomass
+    TTEBC: phenology
+    TTLEC: phenology
+    TTSPC: phenology
+    LGNAD: nitrogen
+    LDNAD: nitrogen
+    LGN%D: nitrogen
+    LDN%D: nitrogen
+
+    # *Dynamic soil properties
+    BD1: soil_phys
+    BD2: soil_phys
+    BD3: soil_phys
+    BD4: soil_phys
+    ROCN: soil_phys
+    CRAIN: water_flux
+    DLAYR1: soil_phys
+    DLAYR2: soil_phys
+    DLAYR3: soil_phys
+    DLAYR4: soil_phys
+    DUL1: soil_water
+    DUL2: soil_water
+    DUL3: soil_water
+    DUL4: soil_water
+    KECHGE1: soil_phys
+    KECHGE2: soil_phys
+    KECHGE3: soil_phys
+    KECHGE4: soil_phys
+    LL1: soil_water
+    LL2: soil_water
+    LL3: soil_water
+    LL4: soil_water
+    SAT1: soil_water
+    SAT2: soil_water
+    SAT3: soil_water
+    SAT4: soil_water
+    SOLCOV: soil_water
+    SUMKE: soil_phys
+    SWCN1: soil_water
+    SWCN2: soil_water
+    SWCN3: soil_water
+    SWCN4: soil_water
+    TOTAW: soil_water
+
+    # *Leaves
+    LNUM: plant_struct
+    AREAP: lai
+    AREA1: lai
+    AREAT: lai
+    AREAS: lai
+    T#PL: plant_struct
+    T#AL: plant_struct
+    WFLF: stress_fact
+    WFLFP: stress_fact
+    NFLF: nitrogen
+    NFLFP: nitrogen
+    AFLF: stress_fact
+    TFLF: env_factors
+    DAYSG: phenology
+
+    # *MOW & GRAZING
+    MOW: biomass
+    MVS: phenology
+    RSHT: plant_struct
+    RSPLF: biomass
+
+    # *FORAGES
+    FHC%H: biomass
+    FHLGH: biomass
+    FHL%H: biomass
+    FHN%H: nitrogen
+    FHNAH: nitrogen
+    FHNO: management
+    FHWAH: biomass
+    RCWAH: biomass
+    RLAIH: lai
+    RLWAH: biomass
+    RSWAH: biomass
+    RSRWH: biomass
+    RRTWH: biomass
+    RLAIH: lai
+
+     # *Greenhouse Gas Emissions
+    CCEQC: carbon
+    CH4BLC: carbon
+    CH4BLD: carbon
+    CH4COC: carbon
+    CH4COD: carbon
+    CH4DID: carbon
+    CH4EBD: carbon
+    CH4EC: carbon
+    CH4ED: carbon
+    CH4GED: carbon
+    CH4LCC: carbon
+    CH4LCD: carbon
+    CH4PLD: carbon
+    CH4PRD: carbon
+    CH4SBD: carbon
+    CH4SFD: carbon
+    CH4STD: carbon
+    CO2EC: carbon
+    CO2ED: carbon
+    CO2GED: carbon
+    CO2ENC: carbon
+    CO2END: carbon
+    CO2TC: carbon
+    CO2TD: carbon
+    MCEQC: carbon
+    N2ODC: nitrogen
+    N2ODD: nitrogen
+    N2OEC: nitrogen
+    N2OED: nitrogen
+    N2OGED: nitrogen
+    N2OFC: nitrogen
+    N2OFD: nitrogen
+    N2ONC: nitrogen
+    N2OND: nitrogen
+    N2O10: nitrogen
+    N2O1D: nitrogen
+    N2O2D: nitrogen
+    N2O3D: nitrogen
+    N2O4D: nitrogen
+    N2O5D: nitrogen
+    N2O6D: nitrogen
+    N2O7D: nitrogen
+    N2O8D: nitrogen
+    N2O9D: nitrogen
+    NCEQC: carbon
+    TCEQC: carbon
+
+#~~~~~~/ Classification from the DATA.CDE file for plrantgro, plantn functions

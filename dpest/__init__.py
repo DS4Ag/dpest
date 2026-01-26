@@ -2,5 +2,8 @@ from . import wheat
 from . import functions
 from .pst import pst
 from .overview import overview
-from .plantgro import plantgro
-from .uplantgro import uplantgro
+from .ts import ts
+from .cul import cul
+from .eco import eco
+from .uts import uts
+from .spe import spe

@@ -1,0 +1,44 @@
+### Contains the pineapple ALOHA model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the ALOHA Pineapple CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - P1
+            - P2
+            - P3
+            - P4
+            - P5
+            - P6
+        PHINT:
+            - PHINT
+        G:
+            - G2
+            - G3
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Forcing or flowering date (dap): phenology
+        Physiological maturity day (dap): phenology
+        Harvest day (dap): phenology
+        Yield fresh weight at harvest (t/ha): yield
+        Yield dry weight at harvest (t/ha): yield
+        Above-ground biomass at forcing (pineapple, t/ha): biomass
+        Aerial biomass (green+dead), dm at harvest (t/ha): biomass
+        Vegetative dry matter at maturity (t/ha): biomass
+        Leaf area index, maximum: lai
+        Leaf number per stem at maturity: yield
+        Harvest index at maturity: yield
+        Eye number at maturity (no/m2): yield
+        Eye number at maturity (no/fruit): yield
+        Eye weight (g): yield
+        Tops N at maturity (kg/ha): nitrogen

@@ -1,6 +1,6 @@
 import os
 import subprocess
-from dpest import uplantgro
+from dpest import uts
 
 # User-editable section for system DSSAT installation
 dssat_install_dir = r'C:\DSSAT48'  # System DSSAT installation folder

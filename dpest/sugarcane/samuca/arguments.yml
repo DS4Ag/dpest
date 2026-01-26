@@ -1,0 +1,110 @@
+### Contains the sugarcane SAMUCA model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the SAMUCA Sugarcane CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:
+            - N_LF_STK_EM
+            - N_LF_IT_FORM
+            - MAXDGL
+            - CHUSTK
+            - CHUPEAK
+            - CHUDEC
+            - CHUMAT
+            - POPMAT
+            - POPPEAK
+            - TILLOCHRON
+            - PLASTOCHRON
+            - INIT_LF_AREA
+            - MAX_INI_LA
+            - MID_TT_IT_GRO
+            - END_TT_IT_GRO
+            - MID_TT_LF_GRO
+            - END_TT_LF_GRO
+        G:
+            - MAXGL
+            - AMAX
+            - EFF
+            - SLA
+            - MLA
+            - MAX_IT_DW
+
+# Arguments for the SAMUCA Sugarcane ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        CANOPY: # Leaf/canopy structure and light
+            - NS_LF_TIL
+            - N_LF_MAX_ILA
+            - LTTHRESHOLD
+            - FDEADLF
+        TEMP_PHO: # Photosynthesis temperature response
+            - TB0PHO
+            - TB1PHO
+            - TB2PHO
+            - TBFPHO
+        TEMP_EXP: # Expansion temperature response
+            - TBPER
+            - TBMAX_PER
+        ROOT: # Rooting depth
+            - RDM
+        EXP_RATE: # Expansion rate
+            - DPERCOEFF
+            - MAX_PER_IT
+        WSTRESS: # Water stress response
+            - RWUEP1
+            - RWUEP2
+            - T_MAX_WS_PHO
+            - T_MID_WS_PHO
+            - T_MIN_WS_PHO
+            - T_MAX_WS_EXP
+            - T_MID_WS_EXP
+            - T_MIN_WS_EXP
+        SUGAR_PART: # Sugar/structural partitioning and composition
+            - FRAC_SUC_BG
+            - FRAC_HEX_BG
+            - INIT_PD_RAT
+            - IT_STR_TB_INI
+            - IT_STR_TO1
+            - IT_STR_TO2
+            - IT_STR_TB_END
+            - IT_STR_PF_MAX
+            - IT_STR_PF_MIN
+            - IT_STR_PF_TB
+            - IT_STR_PF_TM
+            - IT_STR_PF_TE
+            - IT_STR_PF_D
+            - IT_STR_T_RED
+            - IT_STR_W_RED
+            - DSWAT_DDWS
+            - DSWAT_DSUC
+            - HEX_MIN
+            - SUC_ACC_INI
+            - DSUC_FRAC_TS
+            - TT_CHUMAT_LT
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Sucrose dry mass at harvest (t/ha): yield
+        Aerial dry biomass at harvest (t/ha): biomass
+        Stalk (millable) dry mass at harvest (t/ha): biomass
+        Trash (residue) dry mass at harvest (t/ha): biomass
+        Green leaf area index at harvest (m2/m2): lai
+        Leaf area index, maximum: lai
+        Canopy height (m): biomass
+        Harvest index at maturity: yield
+        Leaf number per stem at maturity (no/stem): yield
+        Emergence day (dap): phenology
+        Fresh cane yield (t/ha): yield

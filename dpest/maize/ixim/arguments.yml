@@ -1,0 +1,69 @@
+### Contains the IXIM-Maize (MZIXM048) cultivar and ecotype parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the IXIM-Maize CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    PARAMETERS:
+        PHENO:          # Phenology and thermal time
+            - P1        # Emergence–end juvenile thermal time
+            - P2        # Photoperiod delay per hour > 12.5 h
+            - P5        # Silking–physiological maturity thermal time
+            - PHINT     # Phyllochron (leaf tip interval)
+        GRAIN_SET_FILL: # Grain number and filling
+            - G2        # Max kernel number on top ear
+            - G3        # Kernel filling rate
+        LEAF_LONGEVITY:
+            - AX        # Area of largest leaf
+            - ALL       # Longevity (thermal time) of most long‑lived leaf
+
+# Arguments for the IXIM-Maize ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    PARAMETERS:
+        TEMP_DEV:       # Temperature and development
+            - TBASE     # Base temperature
+            - TOPT      # Optimum veg temperature
+            - ROPT      # Optimum repro temperature
+            - P2O       # Critical photoperiod
+            - DJTI      # Min days end juvenile–tassel init (non‑photo‑sens.)
+            - GDDE      # GDD per cm depth to emergence
+            - DSGFT     # GDD silking–effective grain filling
+        RADIATION_CANOPY:
+            - RUE       # Radiation use efficiency
+            - KCAN      # Canopy extinction coefficient
+        PARTITIONING:   # C partitioning among organs
+            - PSTM      # Stem partitioning factor
+            - PEAR      # Ear partitioning factor
+        COLD_DAMAGE:    # Cold stress response
+            - TSEN      # Critical temperature for leaf damage
+            - CDAY      # Cold days parameter
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Anthesis day (dap): phenology
+        Physiological maturity day (dap): phenology
+        Emergence day (dap): phenology
+
+        Yield at harvest maturity (kg [dm]/ha): yield
+        Number at maturity (no/m2): yield
+        Unit wt at maturity (g [dm]/unit): yield
+        Number at maturity (no/unit): yield
+        Harvest index at maturity: yield
+
+        Tops weight at maturity (kg [dm]/ha): biomass
+        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
+        Tops weight at anthesis (kg [dm]/ha): biomass
+
+        Leaf area index, maximum: lai
+        Leaf number per stem at maturity: phenology
+
+        Grain N at maturity (kg/ha): nitrogen
+        Tops N at maturity (kg/ha): nitrogen
+        Stem N at maturity (kg/ha): nitrogen
+        Grain N at maturity (%): nitrogen
+        Tops N at anthesis (kg/ha): nitrogen

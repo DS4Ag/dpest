@@ -1,0 +1,120 @@
+### TFAPS048: DSSAT-Teff (APSIM-Nwheat based)
+### Contains the TEFF APSIM-style .CUL and .ECO parameter groups
+### and the OVERVIEW.OUT variables classification
+
+# Arguments for the TFAPS048 CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+  PARAMETERS:
+
+    PHENO:          # Phenology and sensitivities
+      - VSEN        # Vernalization sensitivity
+      - PPSEN       # Photoperiod sensitivity
+      - P1          # Emergence–end juvenile thermal time
+      - P5          # Grainfill start–maturity thermal time
+      - PHINT       # Phyllochron interval
+
+    GRAIN_SET:      # Grain number and growth
+      - GRNO        # 100‑kernel number per g stem at start of grain fill
+      - MXFIL       # Potential kernel growth rate
+      - STMMX       # Max stem dry weight per tiller
+
+    LEAF_TRAITS:
+      - SLAP1       # Leaf area to mass ratio at emergence
+
+
+# Arguments for the TFAPS048 ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+  PARAMETERS:
+
+    TEMP_DEV:       # Temperature and development
+      - TBASE       # Base temperature below which no development occurs
+      - TOPT        # Optimum temperature for development (veg)
+      - ROPT        # Optimum temperature for reproductive stages
+      - TTOP        # Temperature above which development stops
+      - P2O         # Critical photoperiod
+      - VREQ        # Vernalization requirement
+      - GDDE        # GDD per cm seed depth to emergence
+      - DSGFT       # GDD end ear growth–start grain fill
+
+    RADIATION_CANOPY:  # Radiation and canopy structure
+      - RUE1        # Pre‑anthesis RUE
+      - RUE2        # Post‑anthesis RUE
+      - KVAL1       # Pre‑anthesis extinction coefficient
+      - KVAL2       # Post‑anthesis extinction coefficient
+      - SLAP2       # Leaf area:mass at end leaf growth
+
+    TILLERING_LEAF: # Tiller and leaf growth
+      - TC1P1       # Base tiller number term
+      - TC1P2       # Tiller number slope term
+      - DTNP1       # Post‑terminal spike tiller term
+      - PLGP1       # Potential leaf growth param 1
+      - PLGP2       # Potential leaf growth param 2
+
+    ROOT_AERATION:  # Root growth vs aeration deficit
+      - P2AF        # AD threshold for root effect
+      - P3AF        # Unaffected root length
+      - P4AF        # Days to accumulate AD for root effect
+      - P5AF        # Power term at AF1
+      - P6AF        # Days to accumulate AD for crop growth effect
+      - ADLAI       # AD threshold affecting LAI
+      - ADTIL       # AD threshold affecting tillering
+      - ADPHO       # AD threshold affecting photosynthesis
+
+    CARBON_N:       # C remobilisation and N uptake
+      - STEMN       # Fraction stem C remobilised
+      - MXNUP       # Max daily N uptake
+      - MXNCR       # Max grain N:C ratio
+      - WFNU        # Water effect power term on N supply
+      - PNUPR       # Potential N uptake rate
+      - EXNO3       # NO3 supply exponent
+      - MNNO3       # Minimum NO3 supply factor
+      - EXNH4       # NH4 supply exponent
+      - MNNH4       # Minimum NH4 supply factor
+
+    GRAIN_INIT:     # Initial grain properties and targets
+      - INGWT       # Initial 100‑grain weight
+      - INGNC       # Initial grain N concentration
+      - FREAR       # Min stem‑weight fraction for remobilisation
+      - MNNCR       # Minimum grain N:C ratio
+      - GPPSS       # Stage to start GPP accumulation
+      - GPPES       # Stage to stop GPP accumulation
+      - MXGWT       # Max kernel‑weight modifier
+      - MNRTN       # Min root N for grain N initialisation
+      - NOMOB       # Non‑mobile stem fraction
+
+    ROOT_DEPTH:     # Root depth response to stress
+      - RTDP1       # Soil‑water effect term
+      - RTDP2       # Crop‑stress effect term
+
+    OZONE_COLD:     # Ozone and cold‑damage response
+      - FOZ1        # Ozone effect rate on photosynthesis
+      - SFOZ1       # Ozone effect rate on leaf senescence
+      - TSEN        # Critical temperature for leaf damage
+      - CDAY        # Cold‑days parameter
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Anthesis day (dap): phenology
+        Physiological maturity day (dap): phenology
+        Yield at harvest maturity (kg [dm]/ha): yield
+        Number at maturity (no/m2): yield
+        Unit wt at maturity (g [dm]/unit): yield
+        Number at maturity (no/unit): yield
+        Tops weight at maturity (kg [dm]/ha): biomass
+        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
+        Leaf area index, maximum: lai
+        Harvest index at maturity: yield
+        Grain N at maturity (kg/ha): nitrogen
+        Tops N at maturity (kg/ha): nitrogen
+        Stem N at maturity (kg/ha): nitrogen
+        Grain N at maturity (%): nitrogen
+        Tops weight at anthesis (kg [dm]/ha): biomass
+        Tops N at anthesis (kg/ha): nitrogen
+        Leaf number per stem at maturity: yield
+        Emergence day (dap): phenology

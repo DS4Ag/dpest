@@ -1,0 +1,94 @@
+### Contains the tomato CROPGRO model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CROPGRO Tomato CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    # Casification into groups of CULTIVAR parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        P:        # Phenology parameters
+            - CSDL
+            - PPSEN
+            - EM-FL
+            - FL-SH
+            - FL-SD
+            - SD-PM
+            - FL-LF
+        G:        # Growth and partitioning parameters
+            - LFMAX
+            - SLAVR
+            - SIZLF
+            - XFRT
+            - WTPSD
+        SEED:     # Fruit/seed-related duration and numbers
+            - SFDUR
+            - SDPDV
+            - PODUR
+        COMP:     # Seed composition parameters
+            - THRSH
+            - SDPRO
+            - SDLIP
+
+# Arguments for the CROPGRO Tomato ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    # Casification into groups of ECOTYPE parameters
+    PARAMETERS:
+        # Parameter_group:
+        # - Values
+        DEV:      # Development timing parameters
+            - MG
+            - TM
+            - THVAR
+            - PL-EM
+            - EM-V1
+            - V1-JU
+            - JU-R0
+            - PM06
+            - PM09
+            - LNGSH
+            - R7-R8
+            - FL-VS
+        MORPH:    # Morphology and canopy scaling
+            - TRIFL
+            - RWDTH
+            - RHGHT
+        PHOTO:    # Photoperiod and temperature sensitivity
+            - R1PPO
+            - OPTBI
+            - SLOBI
+        HARV:     # Multi-harvest behavior
+            - XMAGE
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Anthesis day (dap): phenology [web:11]
+        First pod day (dap): phenology [web:11]
+        First seed day (dap): phenology [web:11]
+        Physiological maturity day (dap): phenology [web:11]
+        Harvest maturity day (dap): phenology [web:11]
+        Yield at harvest maturity (kg [dm]/ha): yield [web:11]
+        Pod/Ear/Panicle weight at maturity (kg [dm]/ha): yield [web:11]
+        Tops weight at anthesis (kg [dm]/ha): biomass [web:11]
+        Tops weight at maturity (kg [dm]/ha): biomass [web:11]
+        By-product produced (stalk) at maturity (kg[dm]/ha): biomass [web:11]
+        Number at maturity (no/m2): yield [web:11]
+        Unit wt at maturity (g [dm]/unit): yield [web:11]
+        Number at maturity (no/unit): yield [web:11]
+        Harvest index at maturity: yield [web:11]
+        Threshing % at maturity: yield [web:11]
+        Leaf area index, maximum: lai [web:11]
+        Leaf number per stem at maturity: yield [web:11]
+        Canopy height (m): biomass [web:11]
+        Tops N at anthesis (kg/ha): nitrogen [web:11]
+        Tops N at maturity (kg/ha): nitrogen [web:11]
+        Stem N at maturity (kg/ha): nitrogen [web:11]
+        Grain N at maturity (kg/ha): nitrogen [web:11]
+        Grain N at maturity (%): nitrogen [web:11]
+        Grain oil at maturity (%): yield [web:62]

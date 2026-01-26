@@ -1,0 +1,95 @@
+### Contains the wheat CROPSIM model .CUL and .ECO default parameter groups
+#### and the OVERVIEW.OUT variables classification
+
+# Arguments for the CROPSIM-Wheat CULTIVAR template file function
+CULTIVAR_TPL_FILE:
+
+    PARAMETERS:
+        PHENO:        # Phenology phase durations
+            - P1      # Sowing–end juvenile
+            - P2      # End juvenile–floral initiation
+            - P3      # Floral init.–end leaf growth (part of P3+P4)
+            - P4      # End leaf growth–anthesis (part of P3+P4)
+            - P5      # Anthesis–end grain filling
+            - P6      # End grain filling–physiol. maturity
+            - P7      # Maturity–start dormancy
+            - P8      # Start dormancy–harvest ready
+        VERN:         # Vernalization response
+            - VREQ    # Vernalization requirement
+            - VBASE   # Base vernalization before effect
+            - VEFF    # Effect of unvernalized state
+        PHOTO:        # Photoperiod sensitivity by phase
+            - PPS1
+            - PPS2
+        LEAF_DEV:     # Leaf appearance
+            - PHINT   # Phyllochron
+        LEAF_SIZE:    # Leaf area and expansion
+            - LA1S    # Area of first leaf
+            - LAFV    # Leaf area factor, vegetative
+            - LAFR    # Leaf area factor, reproductive
+        SHOOT_GRAIN:  # Biomass and yield formation
+            - SHWTS   # Standard shoot dry weight at maturity
+            - G#WTS   # Grain number per unit canopy weight
+            - GWTS    # Standard grain weight
+
+# Arguments for the CROPSIM-Wheat ECOTYPE template file function
+ECOTYPE_TPL_FILE:
+
+    PARAMETERS:
+        RADIATION:   # Radiation use efficiency
+            - PARUE  # Standard PAR conversion
+            - PARU2  # PAR conversion after change
+        LEAF_APPEAR: # Leaf appearance & SLA & senescence
+            - PHL2   # Leaf number at PHINT change
+            - PHF3   # PHINT multiplier later in season
+            - SLAS   # Specific leaf area
+            - LSENI  # Leaf senescence rate (intermediate)
+            - LSPHS  # Leaf senescence final phase start
+            - LSPHE  # Leaf senescence final phase end
+        TILLERING:   # Tiller production and death
+            - TIL#S  # Tiller production start leaf
+            - TILPE  # Tiller production end stage
+            - TIFAC  # Tiller initiation factor
+            - TDPHS  # Tiller death phase start
+            - TDPHE  # Tiller death phase end
+            - TDFAC  # Tiller death factor
+            - TDSF   # Tiller death stress factor
+        ROOT_CANOPY: # Roots and canopy structure
+            - RDGS   # Root depth growth rate
+            - HTSTD  # Standard canopy height
+            - AWNS   # Awn score
+            - KCAN   # PAR extinction coefficient
+        COMPOSITION: # Reserves and grain composition
+            - RS%A   # Reserves at anthesis
+            - GN%S   # Standard grain N
+            - GN%MN  # Minimum grain N
+            - GM%H   # Grain moisture at harvest
+            - TKFH   # Cold tolerance when hardened
+        STEM_SEN:    # Stem senescence window
+            - SSPHS  # Stem senescence phase start
+            - SSPHE  # Stem senescence phase end
+
+#~~~~~~ OVERVIEW
+OVERVIEW_FILE:
+
+    # Classification into groups of the OVERVIEW file variables
+    VARIABLES_CLASSIFICATION:
+        # Variable: group
+        Anthesis day (dap): phenology
+        Physiological maturity day (dap): phenology
+        Yield at harvest maturity (kg [dm]/ha): yield
+        Number at maturity (no/m2): yield
+        Unit wt at maturity (g [dm]/unit): yield
+        Number at maturity (no/unit): yield
+        Tops weight at maturity (kg [dm]/ha): biomass
+        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
+        Leaf area index, maximum: lai
+        Harvest index at maturity: yield
+        Grain N at maturity (kg/ha): nitrogen
+        Tops N at maturity (kg/ha): nitrogen
+        Stem N at maturity (kg/ha): nitrogen
+        Grain N at maturity (%): nitrogen
+        Tops weight at anthesis (kg [dm]/ha): biomass
+        Tops N at anthesis (kg/ha): nitrogen
+        Leaf number per stem at maturity: yield
+        Emergence day (dap): phenology
