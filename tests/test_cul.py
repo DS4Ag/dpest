@@ -1,6 +1,5 @@
 import dpest
 from pathlib import Path
-from dpest.functions import get_crop_model_arguments_file_path
 
 def test_cul(tmp_path):
     """Test generation of cultivar template files."""
@@ -56,23 +55,20 @@ def test_cul(tmp_path):
 
 
 def test_cul_missing_arguments_file(capsys, tmp_path):
-    """Test printed error when crop-model arguments.yml is missing."""
+    """Test printed error when top-level dpest/arguments.yml is missing."""
     repo_root = Path(__file__).parent.parent
     cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Determine crop/model from the same logic cul uses:
-    # for WHCER048.CUL, genotype_key = "WHCER"
-    # and in dpest/arguments.yml GENOTYPE_FILES['WHCER'] gives crop/model.
-    # To avoid reimplementing that, just call the helper directly.
-    crop = "wheat"
-    model = "ceres"
-    crop_yml = Path(get_crop_model_arguments_file_path(crop, model))
-    backup = crop_yml.with_suffix(crop_yml.suffix + ".bak")
+    # dpest root where cul.py and arguments.yml live
+    dpest_root = Path(dpest.__file__).parent
+    top_level_yml = dpest_root / "arguments.yml"
+    backup = dpest_root / "arguments.yml.bak"
 
-    if crop_yml.exists():
-        crop_yml.rename(backup)
+    # Temporarily remove the main arguments.yml
+    if top_level_yml.exists():
+        top_level_yml.rename(backup)
 
     try:
         result = dpest.cul(
@@ -83,7 +79,19 @@ def test_cul_missing_arguments_file(capsys, tmp_path):
             cul_file_path=str(cul_file),
             output_path=str(output_dir),
         )
+
         captured = capsys.readouterr()
+
+        # cul catches FileNotFoundError and prints it as:
+        # "FileNotFoundError: YAML file not found: <path>"
+        expected_prefix = "FileNotFoundError: YAML file not found:"
+        assert expected_prefix in captured.out
+        assert result is None
+    finally:
+        # Restore the original YAML
+        if backup.exists():
+            backup.rename(top_level_yml)
+
 
         # cul wraps FileNotFoundError and prints it, returning None
         expected = "FileNotFoundError: YAML file not found for crop wheat and model ceres"
