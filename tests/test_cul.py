@@ -1,5 +1,6 @@
 import dpest
 from pathlib import Path
+from dpest.functions import get_crop_model_arguments_file_path
 
 def test_cul(tmp_path):
     """Test generation of cultivar template files."""
@@ -55,21 +56,23 @@ def test_cul(tmp_path):
 
 
 def test_cul_missing_arguments_file(capsys, tmp_path):
-    """Test printed error when wheat/ceres arguments.yml is missing."""
+    """Test printed error when crop-model arguments.yml is missing."""
     repo_root = Path(__file__).parent.parent
     cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # dpest root (where cul.py lives)
-    dpest_root = Path(dpest.__file__).parent
-    # directory where the crop-model arguments.yml lives
-    module_dir = dpest_root / "wheat" / "ceres"
-    yml_path = module_dir / "arguments.yml"
-    yml_backup = module_dir / "arguments.yml.bak"
+    # Determine crop/model from the same logic cul uses:
+    # for WHCER048.CUL, genotype_key = "WHCER"
+    # and in dpest/arguments.yml GENOTYPE_FILES['WHCER'] gives crop/model.
+    # To avoid reimplementing that, just call the helper directly.
+    crop = "wheat"
+    model = "ceres"
+    crop_yml = Path(get_crop_model_arguments_file_path(crop, model))
+    backup = crop_yml.with_suffix(crop_yml.suffix + ".bak")
 
-    if yml_path.exists():
-        yml_path.rename(yml_backup)
+    if crop_yml.exists():
+        crop_yml.rename(backup)
 
     try:
         result = dpest.cul(
@@ -81,11 +84,14 @@ def test_cul_missing_arguments_file(capsys, tmp_path):
             output_path=str(output_dir),
         )
         captured = capsys.readouterr()
-        assert "FileNotFoundError: YAML file not found" in captured.out
+
+        # cul wraps FileNotFoundError and prints it, returning None
+        expected = "FileNotFoundError: YAML file not found for crop wheat and model ceres"
+        assert expected in captured.out
         assert result is None
     finally:
-        if yml_backup.exists():
-            yml_backup.rename(yml_path)
+        if backup.exists():
+            backup.rename(crop_yml)
 
 def test_cul_missing_cultivar(capsys, tmp_path):
     """Test printed error when cultivar is not provided."""
