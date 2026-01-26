@@ -24,7 +24,7 @@ def test_ts(tmp_path):
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD'],
-        plantgro_file_path=plantgro_file,
+        ts_file_path=plantgro_file,
         output_path=str(output_dir)
     )
 
@@ -61,7 +61,7 @@ def test_ts_with_optional_parameters(tmp_path):
 
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         suffix='TRT1',
         variables=['LAID', 'CWAD'],
@@ -69,7 +69,7 @@ def test_ts_with_optional_parameters(tmp_path):
             'LAID': 'lai',
             'CWAD': 'biomass'
         },
-        plantgro_ins_first_line="pif #",
+        ts_ins_first_line="pif #",
         mrk='@',
         smk='#'
     )
@@ -89,7 +89,7 @@ def test_ts_variable_filtering(tmp_path):
 
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables=test_vars
     )
@@ -105,7 +105,7 @@ def test_ts_missing_treatment_argument(tmp_path, capsys):
 
     result = dpest.ts(
         treatment=None,
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path)
     )
     captured = capsys.readouterr()
@@ -119,7 +119,7 @@ def test_ts_special_characters_in_treatment(tmp_path, capsys):
 
     result = dpest.ts(
         treatment='164.0 KG N/HA (IRRIGATED)',
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path)
     )
 
@@ -143,7 +143,7 @@ def test_ts_variables_accepts_string(tmp_path):
 
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
+        te_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables='LAID'
     )
@@ -160,7 +160,7 @@ def test_ts_invalid_suffix(tmp_path, suffix_value, error_msg, capsys):
 
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables=['LAID'],
         suffix=suffix_value
@@ -174,7 +174,7 @@ def test_ts_file_not_found(tmp_path, capsys):
     non_existent_file = tmp_path / "nonexistent.OUT"
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(non_existent_file),
+        ts_file_path=str(non_existent_file),
         output_path=str(tmp_path),
         variables=['LAID']
     )
@@ -187,7 +187,7 @@ def test_ts_missing_yaml_file(tmp_path, capsys):
     non_existent_file = tmp_path / "nonexistent.OUT"
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(non_existent_file),
+        ts_file_path=str(non_existent_file),
         output_path=str(tmp_path),
         variables=['LAID']
     )
@@ -202,7 +202,7 @@ def test_ts_nonexistent_treatment(tmp_path, capsys):
 
     result = dpest.ts(
         treatment='NON_EXISTENT_TREATMENT',
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables=['LAID']
     )
@@ -222,7 +222,7 @@ def test_ts_empty_variables(tmp_path, capsys):
 
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables=[]
     )
@@ -240,7 +240,7 @@ def test_ts_invalid_markers(tmp_path, mrk, smk, expected_error, capsys):
 
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables=['LAID'],
         mrk=mrk,
@@ -257,7 +257,7 @@ def test_ts_duplicate_markers(tmp_path, capsys):
     plantgro_file = repo_root / "tests/DSSAT48/Wheat/PlantGro.OUT"
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables=['LAID'],
         mrk='#',
@@ -275,7 +275,7 @@ def test_ts_mrk_smk_same_character(tmp_path, capsys):
     # Use valid markers that are identical
     result = dpest.ts(
         treatment='164.0 KG N/HA IRRIG',
-        plantgro_file_path=str(plantgro_file),
+        ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables=['LAID'],
         mrk='#',
@@ -296,7 +296,7 @@ def test_ts_different_output_formats(tmp_path):
     for mrk, smk in valid_markers:
         result = dpest.ts(
             treatment='164.0 KG N/HA IRRIG',
-            plantgro_file_path=str(plantgro_file),
+            ts_file_path=str(plantgro_file),
             output_path=str(tmp_path),
             variables=['LAID'],
             mrk=mrk,

@@ -1,2 +1,22 @@
 __pycache__/
 *.pyc
+# Local / generated files
+.idea/
+.pdm-python
+pdm.lock
+run_dessat.mp4
+graphics/
+dpest/t_df.csv
+dpest/test_*.py
+*.ins
+*.pst
+*.TPL
+examples/wheat/ceres/.ipynb_checkpoints/
+*.obf
+*.pmt
+dpest_JOSS*.docx
+test_steps.txt
+PEST_COMANDS_NEW_RELEASE.txt
+docs/conf_copy.py
+dpest/create_folders.py
+dpest/wheat/ceres/ceres.py
