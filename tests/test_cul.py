@@ -61,7 +61,7 @@ def test_cul_missing_arguments_file(capsys, tmp_path):
     cul_file = repo_root / "tests/DSSAT48/Genotype/WHCER048.CUL"
     output_dir = tmp_path / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    module_dir = Path(dpest.wheat.ceres.__file__).parent
+    module_dir = Path(dpest.__file__).parent
     yml_path = module_dir / "arguments.yml"
     yml_backup = module_dir / "arguments.yml.bak"
     if yml_path.exists():
