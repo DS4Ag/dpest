@@ -155,7 +155,7 @@ def test_overview_special_characters_in_treatment(tmp_path, capsys):
 
     if result is None:
         captured = capsys.readouterr()
-        assert "No data found for treatment" in captured.out
+        assert "Treatment '164.0 KG N/HA (IRRIGATED)' not found in:" in captured.out
     else:
         df, ins_path = result
         assert not df.empty
@@ -235,7 +235,7 @@ def test_overview_nonexistent_treatment(tmp_path, capsys):
         output_path=str(tmp_path)
     )
     captured = capsys.readouterr()
-    assert "No data found for treatment" in captured.out
+    assert "Treatment 'NON_EXISTENT_TREATMENT' not found in:" in captured.out
     assert result is None
 
 

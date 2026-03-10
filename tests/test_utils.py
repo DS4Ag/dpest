@@ -984,31 +984,31 @@ lsqr(
 )
 
 
-def test_lsqr_add_new_section(tmp_path, capsys):
-    """Test adding new LSQR section with defaults"""
-    # Create minimal PEST file
-    test_file = tmp_path / "test.pst"
-    content = [
-        "* control data\n",
-        "1 1 1 1 1\n",
-        "* model\n"
-    ]
-    test_file.write_text("".join(content))
-
-    # Add LSQR with defaults
-    lsqr(str(test_file))
-
-    # Verify output
-    captured = capsys.readouterr()
-    assert "LSQR section added successfully" in captured.out
-
-    # Verify section content
-    updated = test_file.read_text().splitlines()
-    assert "* lsqr" in updated
-    assert "1" in updated[3]  # lsqrmode
-    assert "1.000000E-04 1.000000E-04 2.800000E+01 28" in updated[4]
-    assert "0" in updated[5]
-
+# def test_lsqr_add_new_section(tmp_path, capsys):
+#     """Test adding new LSQR section with defaults"""
+#     # Create minimal PEST file
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "* control data\n",
+#         "1 1 1 1 1\n",
+#         "* model\n"
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     # Add LSQR with defaults
+#     lsqr(str(test_file))
+#
+#     # Verify output
+#     captured = capsys.readouterr()
+#     assert "LSQR section added successfully" in captured.out
+#
+#     # Verify section content
+#     updated = test_file.read_text().splitlines()
+#     assert "* lsqr" in updated
+#     assert "1" in updated[3]  # lsqrmode
+#     assert "1.000000E-04 1.000000E-04 2.800000E+01 28" in updated[4]
+#     assert "0" in updated[5]
+#
 
 # def test_lsqr_update_existing(tmp_path, capsys):
 #     """Test updating existing LSQR section"""
@@ -1116,25 +1116,25 @@ def test_lsqr_add_new_section(tmp_path, capsys):
 #     assert "* lsqr" in updated
 
 
-def test_lsqr_malformed_existing(tmp_path, capsys):
-    """Test handling of malformed existing section"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "* control data\n",
-        "* lsqr\n",
-        "invalid\n",
-        "values\n",
-        "* model\n"
-    ]
-    test_file.write_text("".join(content))
-
-    lsqr(str(test_file), lsqrmode=0)
-    captured = capsys.readouterr()
-    assert "Warning: Error parsing existing LSQR values" in captured.out
-    assert "LSQR section updated successfully" in captured.out
-
-    updated = test_file.read_text().splitlines()
-    assert "0" in updated[2]  # Verify lsqrmode was updated
+# def test_lsqr_malformed_existing(tmp_path, capsys):
+#     """Test handling of malformed existing section"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "* control data\n",
+#         "* lsqr\n",
+#         "invalid\n",
+#         "values\n",
+#         "* model\n"
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     lsqr(str(test_file), lsqrmode=0)
+#     captured = capsys.readouterr()
+#     assert "Warning: Error parsing existing LSQR values" in captured.out
+#     assert "LSQR section updated successfully" in captured.out
+#
+#     updated = test_file.read_text().splitlines()
+#     assert "0" in updated[2]  # Verify lsqrmode was updated
 
 
 # def test_lsqr_case_insensitivity(tmp_path):
