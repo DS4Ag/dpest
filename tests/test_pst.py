@@ -91,9 +91,11 @@ def test_pst(tmp_path):
         lines = file.readlines()
         assert lines[0].strip().lower().startswith("pcf"), "PEST file must start with 'pcf'"
         content = ''.join(lines).lower()
+
+        # Required sections under the new default (SVD, not LSQR)
         required_sections = [
             '* control data',
-            '* lsqr',
+            '* singular value decomposition',
             '* parameter groups',
             '* parameter data',
             '* observation groups',

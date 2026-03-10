@@ -8,6 +8,10 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
     values follow the recommendations from the PEST manual (Doherty 2015) for finite-
     difference derivatives and least-squares problems.
 
+    When LSQR is enabled (``LSQRMODE = 1``), this function will remove any existing
+    ``* singular value decomposition`` section to avoid confusion and ensure that
+    only LSQR is active in the control file.
+
     **Required Arguments:**
     =======
 
@@ -77,63 +81,8 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
         * ``None``
 
         The function updates the ``PEST control file (.PST)`` in place, either modifying an
-        existing ``* lsqr`` section or inserting a new one.
-
-    **Examples:**
-    =======
-
-    1. **Adding an LSQR Section Using Recommended Defaults:**
-
-       .. code-block:: python
-
-          from dpest.utils import lsqr
-
-          lsqr(
-              pst_path = "PEST_CONTROL.pst"
-          )
-
-       This example adds an LSQR section using:
-       ``lsqrmode = 1``,
-       ``lsqr_atol = 1e-4``,
-       ``lsqr_btol = 1e-4``,
-       ``lsqr_conlim = 1000.0``,
-       ``lsqr_itnlim = 4 * npar``,
-       ``lsqrwrite = 0``,
-       where ``npar`` is the number of adjustable parameters in the PST file.
-
-    2. **Updating Specific LSQR Parameters in an Existing PEST Control File:**
-
-       .. code-block:: python
-
-          from dpest.utils import lsqr
-
-          lsqr(
-              pst_path   = "PEST_CONTROL.pst",
-              lsqr_atol  = 1e-6,
-              lsqr_btol  = 1e-6,
-              lsqr_conlim= 2000.0
-          )
-
-       This example updates only the specified LSQR parameters (``LSQR_ATOL``,
-       ``LSQR_BTOL``, and ``LSQR_CONLIM``) while preserving existing values for
-       other LSQR parameters. The function modifies the existing LSQR section if
-       present, or creates a new one with appropriate defaults.
-
-    3. **Disabling LSQR Mode While Maintaining Other Settings:**
-
-       .. code-block:: python
-
-          from dpest.utils import lsqr
-
-          lsqr(
-              pst_path  = "PEST_CONTROL.pst",
-              lsqrmode  = 0
-          )
-
-       This example disables LSQR mode (``LSQRMODE = 0``) while keeping other LSQR
-       parameters at their current or default values. If no LSQR section exists, it
-       will be created with LSQR disabled and recommended defaults for the other
-       parameters.
+        existing ``* lsqr`` section or inserting a new one. If LSQR is enabled, any existing
+        SVD section is removed.
     """
     try:
         import os
@@ -162,7 +111,6 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
         control_data_end_idx = None
         for i, line in enumerate(lines):
             if line.strip().lower().startswith('* control data'):
-                # Find the end of control data section
                 j = i + 1
                 while j < len(lines) and not lines[j].strip().startswith('*'):
                     j += 1
@@ -215,8 +163,6 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
                             existing_lsqr["lsqrwrite"] = int(lsqrwrite_line[0])
                 except Exception as e:
                     print(f"Warning: Error parsing existing LSQR values: {e}")
-                    # If parsing fails, we'll rely on defaults or user-provided values
-
                 break
 
         # If no existing LSQR section, set defaults that depend on npar
@@ -237,28 +183,35 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
         if lsqr_values["lsqr_itnlim"] is None:
             lsqr_values["lsqr_itnlim"] = 4 * npar
 
-        # Convert numpy integer-like types to plain int, if needed
+        # Normalize integer-like types
         if isinstance(lsqr_values["lsqr_itnlim"], numbers.Integral):
             lsqr_values["lsqr_itnlim"] = int(lsqr_values["lsqr_itnlim"])
 
         # Validate LSQR values
         if lsqr_values["lsqrmode"] not in [0, 1]:
             raise ValueError("lsqrmode must be 0 or 1")
-
         if lsqr_values["lsqr_atol"] < 0:
             raise ValueError("lsqr_atol must be greater than or equal to 0")
-
         if lsqr_values["lsqr_btol"] < 0:
             raise ValueError("lsqr_btol must be greater than or equal to 0")
-
         if lsqr_values["lsqr_conlim"] < 0:
             raise ValueError("lsqr_conlim must be greater than or equal to 0")
-
-        if not isinstance(lsqr_values["lsqr_itnlim"], numbers.Integral) or lsqr_values["lsqr_itnlim"] <= 0:
+        if lsqr_values["lsqr_itnlim"] <= 0:
             raise ValueError("lsqr_itnlim must be an integer greater than 0")
-
         if lsqr_values["lsqrwrite"] not in [0, 1]:
             raise ValueError("lsqrwrite must be 0 or 1")
+
+        # If LSQR is enabled, remove any existing SVD section entirely
+        if lsqr_values["lsqrmode"] == 1:
+            i = 0
+            while i < len(lines):
+                if lines[i].strip().lower().startswith('* singular value decomposition'):
+                    # Remove 4-line SVD block
+                    del lines[i:i+4]
+                    print("Info: LSQR enabled; existing SVD section removed.")
+                    # Do not increment i, list has shrunk; but break is fine since we assume one SVD section
+                    break
+                i += 1
 
         # Format LSQR section
         lsqr_section = [
@@ -270,15 +223,8 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
 
         # Update or add LSQR section
         if lsqr_exists:
-            # Replace existing section
             lines[lsqr_start_idx:lsqr_start_idx + 4] = lsqr_section
         else:
-            # Check for existing SVD section
-            svd_exists = any(line.strip().lower().startswith('* singular value decomposition') for line in lines)
-            if lsqr_values["lsqrmode"] == 1 and svd_exists:
-                print("Warning: LSQR and SVD cannot both be active. Enabling LSQR will require SVDMODE = 0 in the SVD section.")
-
-            # Insert LSQR section after control data section
             lines[control_data_end_idx:control_data_end_idx] = lsqr_section
 
         # Write updated file
