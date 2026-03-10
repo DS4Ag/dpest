@@ -8,11 +8,13 @@
 [![codecov](https://codecov.io/gh/DS4Ag/dpest/branch/main/graph/badge.svg)](https://codecov.io/gh/DS4Ag/dpest)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.08188/status.svg)](https://doi.org/10.21105/joss.08188)
 
-A Python package for automating PEST (Parameter ESTimation) file creation for DSSAT crop model calibration using time series data.
+A Python package for automating PEST (Parameter ESTimation) input file creation for DSSAT crop model calibration using time series and end-of-season data.
 
 ## What is dpest?
 
-`dpest` is a Python package designed to automate the creation of [PEST (Parameter Estimation and Uncertainty Analysis)](https://pesthomepage.org/) control files for calibrating [DSSAT (Decision Support System for Agrotechnology Transfer)](https://dssat.net/) crop models. Currently, `dpest` is capable of calibrating DSSAT wheat models only.  It generates template files for cultivar and ecotype parameters, instruction files for `OVERVIEW.OUT` and `PlantGro.OUT`, and the main PEST control file. A utility module is also included to extend `PlantGro.OUT` files for complete time series compatibility. 
+`dpest` is a Python package designed to automate the creation of [PEST (Parameter Estimation and Uncertainty Analysis)](https://pesthomepage.org/) input files for calibrating [DSSAT (Decision Support System for Agrotechnology Transfer)](https://dssat.net/) crop models. It generates template files for cultivar and ecotype parameters, instruction files for DSSAT output files (end-of-season and time series), and the main PEST control file. A utility module is also included to post-process DSSAT time-series outputs and to conveniently edit model-independent PEST settings.
+
+Originally developed for CERES-Wheat, `dpest` now supports any DSSAT model.
 
 ### Documentation
 
@@ -21,10 +23,13 @@ For detailed usage instructions and module references, see the full documentatio
 ## Key Features
 
 *   Automated generation of `PEST control files (.PST)`.
-*   Compatibility with DSSAT wheat models.
+*   Support for multiple DSSAT crops and models, not only CERES-Wheat.
 *   Creation of `PEST template files (.TPL)` for cultivar and ecotype parameters.
-*   Generation of `PEST instruction files (.INS)` for key DSSAT output files.
-*   Utility module to extend `PlantGro.OUT` files for complete time series.
+*   Generation of `PEST instruction files (.INS)` for:
+    * end-of-season outputs (e.g. `OVERVIEW.OUT`)
+    * time-series outputs (e.g. `PlantGro.OUT`, `PlantN.OUT`, `PlantC.OUT` and other DSSAT time-series files)
+*   Utility modules to post-process DSSAT time-series outputs and edit common PEST settings directly in `.pst` files.
+
 
 ## Installation
 
@@ -120,27 +125,28 @@ The following steps provide a brief overview of how to use `dpest`.
 
     ```
     from dpest.wheat.ceres import cul, eco
-    from dpest.wheat import overview, plantgro
-    from dpest import pst
-    from dpest.wheat.utils import uplantgro
-
+    from dpest import overview, ts, spe, pst, uts
+    
     # Now you can use the functions directly:
     cul(...)
     eco(...)
     overview(...)
-    plantgro(...)
+    ts(...)
+    spe(...)
     pst(...)
-    uplantgro(...)
+    uts(...)
     ```
 
 4.  **Use the Modules**
 
-    *   **`cul()`**: This module creates `PEST template files (.TPL)` for CERES-Wheat cultivar parameters. Use it to generate template files for cultivar calibration.
-    *   **`eco()`**: This module creates `PEST template files (.TPL)` for CERES-Wheat ecotype parameters. Use it to generate template files for ecotype calibration.
-    *   **`overview()`**: This module creates `PEST instruction files (.INS)` for reading observed (*measured*) values of key end-of-season crop performance metrics and key phenological observations from the `OVERVIEW.OUT` file. The instruction file tells PEST how to extract model-generated observations from the `OVERVIEW.OUT` file, compare them with the observations from the DSSAT `A file`, and adjust model parameters accordingly.
-    *   **`plantgro()`**: This module creates `PEST instruction files (.INS)` for reading observed (*measured*) values of plant growth dynamics from the `PlantGro.OUT` file. The instruction file tells PEST how to extract time-series data from the `PlantGro.OUT file`, compare that data with the time-series data provided in the DSSAT `T file`, and adjust model parameters accordingly.
-    *   **`pst()`**: enerates the main `PEST control file (.PST)` to guide the entire calibration process. It integrates the  `PEST template files (.TPL)` and `PEST instruction files (.INS)`, defines calibration parameters, observation groups, weights, PEST control variables and model run command.
-    *   **`uplantgro()`**: modifies the DSSAT output file (`PlantGro.OUT`) to prevent PEST errors when simulated crop maturity occurs before the final measured observation. This ensures PEST can compare all available time-series data, even when the model predicts maturity earlier than observed in the field.
+     *   **`cul()`**: Creates `PEST template files (.TPL)` for cultivar parameters based on DSSAT `.CUL` genotype files.
+     *   **`eco()`**: Creates `PEST template files (.TPL)` for ecotype parameters based on DSSAT `.ECO` genotype files.
+     *   **`spe()`**: Creates `PEST instruction files (.INS)` for ecotype parameters based on DSSAT `.SPE` genotype files.
+     *   **`overview()`**: Creates `PEST instruction files (.INS)` for reading observed (*measured*) values of key end-of-season crop performance metrics and phenology from the `OVERVIEW.OUT` file.
+     *   **`ts()`**: Creates `PEST instruction files (.INS)` for reading time-series data from DSSAT output files such as `PlantGro.OUT`, `PlantN.OUT`, `PlantC.OUT` and other time-series `.OUT` files, using user-selected variables and treatments.
+     *   **`pst()`**: Generates the main `PEST control file (.PST)` and integrates template files, instruction files, parameters, observations, and the model command line.
+     *   **`uts()`**: Post-processes DSSAT time-series outputs (e.g. `PlantGro.OUT`) to prevent PEST errors when simulated crop maturity occurs before the final measured observation, ensuring complete time-series comparison.
+
 
 5.  **Create Template Files and Instruction Files:** Use the `dpest` modules to generate `PEST template files (.TPL)` for cultivar and ecotype parameters, and `PEST instruction files (.INS)` for the `OVERVIEW.OUT` and `PlantGro.OUT` files.
 
@@ -148,7 +154,7 @@ The following steps provide a brief overview of how to use `dpest`.
 import dpest
 
 # 1. Create CULTIVAR parameters TPL file
-cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(
+cultivar_parameters, cultivar_tpl_path = dpest.cul(
     P = 'P1D, P5', # How the user should enter the parameters
     G = 'G1, G2, G3', 
     PHINT = 'PHINT',
@@ -157,12 +163,12 @@ cultivar_parameters, cultivar_tpl_path = dpest.wheat.ceres.cul(
 )
 
 # 2. Create OVERVIEW observations INS file
-overview_observations,  overview_ins_path = dpest.wheat.overview(
+overview_observations,  overview_ins_path = dpest.overview(
     treatment = '164.0 KG N/HA IRRIG', #Treatment Name
     overview_file_path = 'C:/DSSAT48/Wheat/OVERVIEW.OUT' #Path to the OVERVIEW.OUT file
 )
 # 3. Create PlantGro observations INS file
-plantgro_observations, plantgro_ins_path = dpest.wheat.plantgro(
+plantgro_observations, plantgro_ins_path = dpest.ts(
     treatment = '164.0 KG N/HA IRRIG', #Treatment Name
     variables = ['LAID', 'CWAD', 'T#AD'] #Variables to calibrate
     plantgro_file_path = 'C:/DSSAT48/Wheat/PlantGro.OUT', #Path to the PlantGro.OUT file

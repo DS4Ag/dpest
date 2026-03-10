@@ -83,6 +83,62 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
         The function updates the ``PEST control file (.PST)`` in place, either modifying an
         existing ``* lsqr`` section or inserting a new one. If LSQR is enabled, any existing
         SVD section is removed.
+
+    **Examples:**
+    =======
+
+    1. **Adding an LSQR Section Using Recommended Defaults:**
+
+       .. code-block:: python
+
+          from dpest.utils import lsqr
+
+          # PEST_CONTROL.pst already exists (e.g., created by dpest.pst)
+          lsqr(
+              pst_path = "PEST_CONTROL.pst"
+          )
+
+       This example adds an LSQR section using:
+       ``lsqrmode = 1``,
+       ``lsqr_atol = 1e-4``,
+       ``lsqr_btol = 1e-4``,
+       ``lsqr_conlim = 1000.0``,
+       ``lsqr_itnlim = 4 * npar``,
+       ``lsqrwrite = 0``,
+       and removes any existing ``* singular value decomposition`` section.
+
+    2. **Updating Specific LSQR Parameters in an Existing PEST Control File:**
+
+       .. code-block:: python
+
+          from dpest.utils import lsqr
+
+          lsqr(
+              pst_path   = "PEST_CONTROL.pst",
+              lsqr_atol  = 1e-6,
+              lsqr_btol  = 1e-6,
+              lsqr_conlim= 2000.0,
+              lsqr_itnlim= 50
+          )
+
+       This example updates only the specified LSQR parameters (``LSQR_ATOL``,
+       ``LSQR_BTOL``, ``LSQR_CONLIM``, and ``LSQR_ITNLIM``) while preserving existing
+       values for other LSQR parameters.
+
+    3. **Disabling LSQR Mode While Maintaining Other Settings:**
+
+       .. code-block:: python
+
+          from dpest.utils import lsqr
+
+          lsqr(
+              pst_path  = "PEST_CONTROL.pst",
+              lsqrmode  = 0
+          )
+
+       This example disables LSQR mode (``LSQRMODE = 0``) while keeping other LSQR
+       parameters at their current or default values. Any existing SVD section is
+       left unchanged because LSQR is not being activated.
     """
     try:
         import os

@@ -54,6 +54,60 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
         The function updates the ``PEST control file (.PST)`` in place. It will either modify
         an existing ``* singular value decomposition`` section or insert a new one. If SVD
         is enabled, any existing LSQR section is removed.
+
+    **Examples:**
+    =======
+
+    1. **Adding an SVD Section Using Recommended Defaults:**
+
+       .. code-block:: python
+
+          from dpest.utils import svd
+
+          # PEST_CONTROL.pst already exists (e.g., created by dpest.pst)
+          svd(
+              pst_path = "PEST_CONTROL.pst"
+          )
+
+       This example adds an SVD section using:
+       ``svdmode = 1``,
+       ``maxsing = npar`` (number of adjustable parameters),
+       ``eigthresh = 5e-7``,
+       ``eigwrite = 0``,
+       and removes any existing ``* lsqr`` section.
+
+    2. **Customizing SVD Parameters in an Existing PEST Control File:**
+
+       .. code-block:: python
+
+          from dpest.utils import svd
+
+          svd(
+              pst_path  = "PEST_CONTROL.pst",
+              maxsing   = 500,
+              eigthresh = 1e-4,
+              eigwrite  = 1
+          )
+
+       This example updates the specified SVD parameters (``MAXSING``, ``EIGTHRESH``,
+       and ``EIGWRITE``) while preserving the existing or default value of ``SVDMODE``.
+       If SVD is enabled (``SVDMODE = 1``), any LSQR section is removed so only SVD
+       remains active.
+
+    3. **Disabling SVD While Keeping Other Settings:**
+
+       .. code-block:: python
+
+          from dpest.utils import svd
+
+          svd(
+              pst_path = "PEST_CONTROL.pst",
+              svdmode  = 0
+          )
+
+       This example disables SVD (``SVDMODE = 0``) while keeping current or default
+       values for ``MAXSING``, ``EIGTHRESH``, and ``EIGWRITE``. Any LSQR section is
+       left unchanged because SVD is not being activated.
     """
     try:
         import os
