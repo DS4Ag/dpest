@@ -213,7 +213,7 @@ Example Usage
    :caption: Update the PEST template calibration file
    :hidden:
 
-   dpest.utils
+   utils
 
 .. toctree::
    :maxdepth: 2
