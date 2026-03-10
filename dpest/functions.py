@@ -150,7 +150,7 @@ def find_ecotype(file_content, head_line, ecotype, ecotype_file):
         if ecotype == eco_num:
             return idx
 
-    return f"The ecotype {ecotype} wasn't founded on file {ecotype_file}"
+    return f"The ecotype {ecotype} wasn't founded in file {ecotype_file}"
 
 
 def find_parameter_position(line, parameter=None):
@@ -776,7 +776,9 @@ def get_header_and_first_sim(file_path, treatment, treatment_dict=None):
         treatment_dict = simulations_lines(file_path)
 
     if treatment not in treatment_dict:
-        raise ValueError(f"Treatment '{treatment}' not found in {file_path}")
+        raise ValueError(
+            f"No data found for treatment '{treatment}' in: {overview_file_path}"
+        )
 
     # Range of lines that belong to this treatment (start/end indices produced by simulations_lines)
     start_i, end_i = treatment_dict[treatment]

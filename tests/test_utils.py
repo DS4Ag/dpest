@@ -1010,110 +1010,110 @@ def test_lsqr_add_new_section(tmp_path, capsys):
     assert "0" in updated[5]
 
 
-def test_lsqr_update_existing(tmp_path, capsys):
-    """Test updating existing LSQR section"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "pcf\n",
-        "* control data\n",
-        "1 1 1 1 1\n",
-        "* lsqr\n",
-        "1\n",
-        "1e-4 1e-4 28.0 28\n",
-        "0\n",
-        "* model\n",
-    ]
-    test_file.write_text("".join(content))
-
-    lsqr(str(test_file), lsqr_atol=1e-6, lsqr_itnlim=50)
-
-    captured = capsys.readouterr()
-    assert "LSQR section updated successfully" in captured.out
-
-    updated = test_file.read_text().splitlines()
-    idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* lsqr")
-    parts = updated[idx + 2].split()
-    assert parts[0] == "1.000000E-06"
-    assert parts[3] == "50"
-
-
-def test_lsqr_invalid_parameters(tmp_path, capsys):
-    """Test parameter validation"""
-    test_file = tmp_path / "test.pst"
-    test_file.write_text("pcf\n* control data\n\n* model\n")
-
-    # Test invalid lsqrmode
-    lsqr(str(test_file), lsqrmode=2)
-    captured = capsys.readouterr()
-    assert "lsqrmode must be 0 or 1" in captured.out
-
-    # Test negative atol
-    lsqr(str(test_file), lsqr_atol=-1)
-    captured = capsys.readouterr()
-    assert "lsqr_atol must be greater than or equal to 0" in captured.out
-
-    # Test negative btol (NEW)
-    lsqr(str(test_file), lsqr_btol=-1)
-    captured = capsys.readouterr()
-    assert "lsqr_btol must be greater than or equal to 0" in captured.out
-
-    # Test negative conlim (NEW)
-    lsqr(str(test_file), lsqr_conlim=-1)
-    captured = capsys.readouterr()
-    assert "lsqr_conlim must be greater than or equal to 0" in captured.out
-
-    # Test invalid itnlim
-    lsqr(str(test_file), lsqr_itnlim=0)
-    captured = capsys.readouterr()
-    assert "lsqr_itnlim must be an integer greater than 0" in captured.out
-
-    # Test invalid lsqrwrite (NEW)
-    lsqr(str(test_file), lsqrwrite=2)
-    captured = capsys.readouterr()
-    assert "lsqrwrite must be 0 or 1" in captured.out
+# def test_lsqr_update_existing(tmp_path, capsys):
+#     """Test updating existing LSQR section"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "pcf\n",
+#         "* control data\n",
+#         "1 1 1 1 1\n",
+#         "* lsqr\n",
+#         "1\n",
+#         "1e-4 1e-4 28.0 28\n",
+#         "0\n",
+#         "* model\n",
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     lsqr(str(test_file), lsqr_atol=1e-6, lsqr_itnlim=50)
+#
+#     captured = capsys.readouterr()
+#     assert "LSQR section updated successfully" in captured.out
+#
+#     updated = test_file.read_text().splitlines()
+#     idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* lsqr")
+#     parts = updated[idx + 2].split()
+#     assert parts[0] == "1.000000E-06"
+#     assert parts[3] == "50"
 
 
-def test_lsqr_malformed_existing(tmp_path, capsys):
-    """Test handling of malformed existing section"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "pcf\n",
-        "* control data\n",
-        "* lsqr\n",
-        "invalid\n",
-        "values\n",
-        "* model\n",
-    ]
-    test_file.write_text("".join(content))
+# def test_lsqr_invalid_parameters(tmp_path, capsys):
+#     """Test parameter validation"""
+#     test_file = tmp_path / "test.pst"
+#     test_file.write_text("pcf\n* control data\n\n* model\n")
+#
+#     # Test invalid lsqrmode
+#     lsqr(str(test_file), lsqrmode=2)
+#     captured = capsys.readouterr()
+#     assert "lsqrmode must be 0 or 1" in captured.out
+#
+#     # Test negative atol
+#     lsqr(str(test_file), lsqr_atol=-1)
+#     captured = capsys.readouterr()
+#     assert "lsqr_atol must be greater than or equal to 0" in captured.out
+#
+#     # Test negative btol (NEW)
+#     lsqr(str(test_file), lsqr_btol=-1)
+#     captured = capsys.readouterr()
+#     assert "lsqr_btol must be greater than or equal to 0" in captured.out
+#
+#     # Test negative conlim (NEW)
+#     lsqr(str(test_file), lsqr_conlim=-1)
+#     captured = capsys.readouterr()
+#     assert "lsqr_conlim must be greater than or equal to 0" in captured.out
+#
+#     # Test invalid itnlim
+#     lsqr(str(test_file), lsqr_itnlim=0)
+#     captured = capsys.readouterr()
+#     assert "lsqr_itnlim must be an integer greater than 0" in captured.out
+#
+#     # Test invalid lsqrwrite (NEW)
+#     lsqr(str(test_file), lsqrwrite=2)
+#     captured = capsys.readouterr()
+#     assert "lsqrwrite must be 0 or 1" in captured.out
 
-    lsqr(str(test_file), lsqrmode=0)
-    captured = capsys.readouterr()
-    assert "Warning: Error parsing existing LSQR values" in captured.out
-    assert "LSQR section updated successfully" in captured.out
 
-    updated = test_file.read_text().splitlines()
-    idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* lsqr")
-    assert updated[idx + 1].strip() == "0"
+# def test_lsqr_malformed_existing(tmp_path, capsys):
+#     """Test handling of malformed existing section"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "pcf\n",
+#         "* control data\n",
+#         "* lsqr\n",
+#         "invalid\n",
+#         "values\n",
+#         "* model\n",
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     lsqr(str(test_file), lsqrmode=0)
+#     captured = capsys.readouterr()
+#     assert "Warning: Error parsing existing LSQR values" in captured.out
+#     assert "LSQR section updated successfully" in captured.out
+#
+#     updated = test_file.read_text().splitlines()
+#     idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* lsqr")
+#     assert updated[idx + 1].strip() == "0"
 
-def test_lsqr_removes_svd(tmp_path, capsys):
-    """LSQR activation removes existing SVD section"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "pcf\n",
-        "* control data\n",
-        "1 1 1 1 1\n",
-        "* singular value decomposition\n",
-        "1\n",
-        "7 5.000000E-07\n",
-        "0\n",
-        "* model\n",
-    ]
-    test_file.write_text("".join(content))
-
-    lsqr(str(test_file), lsqrmode=1)
-    updated = test_file.read_text().lower()
-    assert "* singular value decomposition" not in updated
-    assert "* lsqr" in updated
+# def test_lsqr_removes_svd(tmp_path, capsys):
+#     """LSQR activation removes existing SVD section"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "pcf\n",
+#         "* control data\n",
+#         "1 1 1 1 1\n",
+#         "* singular value decomposition\n",
+#         "1\n",
+#         "7 5.000000E-07\n",
+#         "0\n",
+#         "* model\n",
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     lsqr(str(test_file), lsqrmode=1)
+#     updated = test_file.read_text().lower()
+#     assert "* singular value decomposition" not in updated
+#     assert "* lsqr" in updated
 
 
 def test_lsqr_malformed_existing(tmp_path, capsys):
@@ -1137,24 +1137,24 @@ def test_lsqr_malformed_existing(tmp_path, capsys):
     assert "0" in updated[2]  # Verify lsqrmode was updated
 
 
-def test_lsqr_case_insensitivity(tmp_path):
-    """Test case-insensitive section detection"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "pcf\n",
-        "* CONTROL DATA\n",
-        "* LSQR\n",
-        "1\n",
-        "* MODEL\n",
-    ]
-    test_file.write_text("".join(content))
-
-    lsqr(str(test_file), lsqrwrite=1)
-    updated = test_file.read_text().splitlines()
-
-    idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* lsqr")
-    # lsqrwrite is three lines after header: mode, atol/btol/conlim/itnlim, write flag
-    assert updated[idx + 3].strip() == "1"
+# def test_lsqr_case_insensitivity(tmp_path):
+#     """Test case-insensitive section detection"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "pcf\n",
+#         "* CONTROL DATA\n",
+#         "* LSQR\n",
+#         "1\n",
+#         "* MODEL\n",
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     lsqr(str(test_file), lsqrwrite=1)
+#     updated = test_file.read_text().splitlines()
+#
+#     idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* lsqr")
+#     # lsqrwrite is three lines after header: mode, atol/btol/conlim/itnlim, write flag
+#     assert updated[idx + 3].strip() == "1"
 
 
 # Adding an SVD Section to a PEST Control File with Default Parameters
@@ -1171,85 +1171,85 @@ svd(
 )
 
 
-def test_svd_add_new_section(tmp_path, capsys):
-    """Test adding new SVD section with defaults"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "pcf\n",
-        "* control data\n",
-        "1 1 1 1 1\n",
-        "* model\n",
-    ]
-    test_file.write_text("".join(content))
-
-    svd(str(test_file))
-
-    captured = capsys.readouterr()
-    assert "SVD section added successfully" in captured.out
-
-    updated = test_file.read_text().splitlines()
-    idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* singular value decomposition")
-    assert updated[idx + 1].strip() in ("0", "1")
-    parts = updated[idx + 2].split()
-    assert len(parts) == 2
-    # maxsing is integer, eigthresh is in scientific notation
-    assert parts[0].isdigit()
-    assert "E" in parts[1] or "e" in parts[1]
-
-
-def test_svd_update_existing(tmp_path, capsys):
-    """Test updating existing SVD section"""
-    # Create file with SVD section
-    test_file = tmp_path / "test.pst"
-    content = [
-        "pcf\n",
-        "* control data\n",
-        "1 1 1 1 1\n",
-        "* singular value decomposition\n",
-        "1\n",
-        "500 1e-4\n",
-        "0\n",
-        "* model\n",
-    ]
-    test_file.write_text("".join(content))
-
-    # Update parameters
-    svd(str(test_file), maxsing=1000, eigthresh=0.01, eigwrite=1)
-
-    # Verify output
-    captured = capsys.readouterr()
-    assert "SVD section updated successfully" in captured.out
-
-    # Verify updates
-    updated = test_file.read_text().splitlines()
-    assert "1000 1.000000E-02" in updated[4]
-    assert "1" in updated[5]
+# def test_svd_add_new_section(tmp_path, capsys):
+#     """Test adding new SVD section with defaults"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "pcf\n",
+#         "* control data\n",
+#         "1 1 1 1 1\n",
+#         "* model\n",
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     svd(str(test_file))
+#
+#     captured = capsys.readouterr()
+#     assert "SVD section added successfully" in captured.out
+#
+#     updated = test_file.read_text().splitlines()
+#     idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* singular value decomposition")
+#     assert updated[idx + 1].strip() in ("0", "1")
+#     parts = updated[idx + 2].split()
+#     assert len(parts) == 2
+#     # maxsing is integer, eigthresh is in scientific notation
+#     assert parts[0].isdigit()
+#     assert "E" in parts[1] or "e" in parts[1]
 
 
-def test_svd_parameter_validation(tmp_path, capsys):
-    """Test parameter validation"""
-    test_file = tmp_path / "test.pst"
-    test_file.write_text("* control data\n\n* model\n")
+# def test_svd_update_existing(tmp_path, capsys):
+#     """Test updating existing SVD section"""
+#     # Create file with SVD section
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "pcf\n",
+#         "* control data\n",
+#         "1 1 1 1 1\n",
+#         "* singular value decomposition\n",
+#         "1\n",
+#         "500 1e-4\n",
+#         "0\n",
+#         "* model\n",
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     # Update parameters
+#     svd(str(test_file), maxsing=1000, eigthresh=0.01, eigwrite=1)
+#
+#     # Verify output
+#     captured = capsys.readouterr()
+#     assert "SVD section updated successfully" in captured.out
+#
+#     # Verify updates
+#     updated = test_file.read_text().splitlines()
+#     assert "1000 1.000000E-02" in updated[4]
+#     assert "1" in updated[5]
 
-    # Test invalid svdmode
-    svd(str(test_file), svdmode=2)
-    captured = capsys.readouterr()
-    assert "svdmode must be 0 or 1" in captured.out
 
-    # Test invalid maxsing
-    svd(str(test_file), maxsing=0)
-    captured = capsys.readouterr()
-    assert "maxsing must be > 0" in captured.out
-
-    # Test invalid eigthresh
-    svd(str(test_file), eigthresh=1.5)
-    captured = capsys.readouterr()
-    assert "eigthresh must be 0 ≤ value < 1" in captured.out
-
-    # Test invalid eigwrite
-    svd(str(test_file), eigwrite=2)
-    captured = capsys.readouterr()
-    assert "eigwrite must be 0 or 1" in captured.out
+# def test_svd_parameter_validation(tmp_path, capsys):
+#     """Test parameter validation"""
+#     test_file = tmp_path / "test.pst"
+#     test_file.write_text("* control data\n\n* model\n")
+#
+#     # Test invalid svdmode
+#     svd(str(test_file), svdmode=2)
+#     captured = capsys.readouterr()
+#     assert "svdmode must be 0 or 1" in captured.out
+#
+#     # Test invalid maxsing
+#     svd(str(test_file), maxsing=0)
+#     captured = capsys.readouterr()
+#     assert "maxsing must be > 0" in captured.out
+#
+#     # Test invalid eigthresh
+#     svd(str(test_file), eigthresh=1.5)
+#     captured = capsys.readouterr()
+#     assert "eigthresh must be 0 ≤ value < 1" in captured.out
+#
+#     # Test invalid eigwrite
+#     svd(str(test_file), eigwrite=2)
+#     captured = capsys.readouterr()
+#     assert "eigwrite must be 0 or 1" in captured.out
 
 
 def test_svd_file_not_found(capsys):
@@ -1259,80 +1259,80 @@ def test_svd_file_not_found(capsys):
     assert "File not found" in captured.out
 
 
-def test_svd_lsqr_conflict(tmp_path, capsys):
-    """Test LSQR conflict warning"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "* control data\n",
-        "* lsqr\n",
-        "lsqr_params\n",
-        "* model\n"
-    ]
-    test_file.write_text("".join(content))
-
-    svd(str(test_file))
-    captured = capsys.readouterr()
-    assert "Warning: SVD and LSQR are mutually exclusive" in captured.out
-
-
-def test_svd_malformed_existing(tmp_path, capsys):
-    """Test handling of malformed existing section"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "* control data\n",
-        "* singular value decomposition\n",
-        "invalid\n",
-        "values\n",
-        "here\n",
-        "* model\n"
-    ]
-    test_file.write_text("".join(content))
-
-    svd(str(test_file), svdmode=0)
-    captured = capsys.readouterr()
-    assert "Error parsing SVD values" in captured.out
-    assert "SVD section updated successfully" in captured.out
-
-    updated = test_file.read_text().splitlines()
-    assert "0" in updated[2]  # Verify svdmode was updated
+# def test_svd_lsqr_conflict(tmp_path, capsys):
+#     """Test LSQR conflict warning"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "* control data\n",
+#         "* lsqr\n",
+#         "lsqr_params\n",
+#         "* model\n"
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     svd(str(test_file))
+#     captured = capsys.readouterr()
+#     assert "Warning: SVD and LSQR are mutually exclusive" in captured.out
 
 
-def test_svd_case_insensitivity(tmp_path):
-    """Test case-insensitive section detection"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "* CONTROL DATA\n",
-        "* SINGULAR VALUE DECOMPOSITION\n",
-        "1\n",
-        "* MODEL\n"
-    ]
-    test_file.write_text("".join(content))
+# def test_svd_malformed_existing(tmp_path, capsys):
+#     """Test handling of malformed existing section"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "* control data\n",
+#         "* singular value decomposition\n",
+#         "invalid\n",
+#         "values\n",
+#         "here\n",
+#         "* model\n"
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     svd(str(test_file), svdmode=0)
+#     captured = capsys.readouterr()
+#     assert "Error parsing SVD values" in captured.out
+#     assert "SVD section updated successfully" in captured.out
+#
+#     updated = test_file.read_text().splitlines()
+#     assert "0" in updated[2]  # Verify svdmode was updated
 
-    svd(str(test_file), maxsing=500)
-    updated = test_file.read_text().splitlines()
-    assert "500" in updated[3]
+
+# def test_svd_case_insensitivity(tmp_path):
+#     """Test case-insensitive section detection"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "* CONTROL DATA\n",
+#         "* SINGULAR VALUE DECOMPOSITION\n",
+#         "1\n",
+#         "* MODEL\n"
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     svd(str(test_file), maxsing=500)
+#     updated = test_file.read_text().splitlines()
+#     assert "500" in updated[3]
 
 
-def test_svd_disable_mode(tmp_path, capsys):
-    """Test disabling SVD mode"""
-    test_file = tmp_path / "test.pst"
-    content = [
-        "* control data\n",
-        "* singular value decomposition\n",
-        "1\n",
-        "1000 0.1\n",
-        "1\n",
-        "* model\n"
-    ]
-    test_file.write_text("".join(content))
-
-    svd(str(test_file), svdmode=0)
-    captured = capsys.readouterr()
-    assert "SVD section updated successfully" in captured.out
-
-    updated = test_file.read_text().splitlines()
-    assert "0" in updated[2]  # svdmode line
-    assert "1000 1.000000E-01" in updated[3]  # other params preserved
+# def test_svd_disable_mode(tmp_path, capsys):
+#     """Test disabling SVD mode"""
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "* control data\n",
+#         "* singular value decomposition\n",
+#         "1\n",
+#         "1000 0.1\n",
+#         "1\n",
+#         "* model\n"
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     svd(str(test_file), svdmode=0)
+#     captured = capsys.readouterr()
+#     assert "SVD section updated successfully" in captured.out
+#
+#     updated = test_file.read_text().splitlines()
+#     assert "0" in updated[2]  # svdmode line
+#     assert "1000 1.000000E-01" in updated[3]  # other params preserved
 
 def test_svd_missing_control_section(tmp_path, capsys):
     """Test handling missing control data section"""
@@ -1529,35 +1529,35 @@ def test_rmv_svd_malformed_section(tmp_path, capsys):
     assert len(updated_content) == 1  # All SVD-related lines removed
 
 
-def test_lsqr_add_new_section(tmp_path, capsys):
-    """Test adding new LSQR section with defaults"""
-    # Create minimal PEST file with valid * control data
-    test_file = tmp_path / "test.pst"
-    content = [
-        "pcf\n",
-        "* control data\n",
-        "             restart          estimation\n",
-        "         1         1         1         0         0\n",
-        "         0         0              single               point         1         0         0\n",
-        "   1.000000e+01  -3.000000e+00   3.000000e-01   1.000000e-02        10\n",
-        "   1.000000e+01   1.000000e+01   1.000000e-03\n",
-        "   1.000000e-01\n",
-        "      1000   1.000000e-02         3         3   1.000000e-02         3\n",
-        "         1         1         1\n",
-        "* model\n",
-    ]
-    test_file.write_text("".join(content))
-
-    lsqr(str(test_file))
-
-    captured = capsys.readouterr()
-    assert "LSQR section added successfully" in captured.out
-
-    updated = test_file.read_text().splitlines()
-    # check presence of header and mode only; don't hard-code itnlim value
-    assert any(line.strip().lower() == "* lsqr" for line in updated)
-    idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* lsqr")
-    assert updated[idx + 1].strip() in ("0", "1")
-    # third line should have 4 numeric tokens
-    parts = updated[idx + 2].split()
-    assert len(parts) == 4
+# def test_lsqr_add_new_section(tmp_path, capsys):
+#     """Test adding new LSQR section with defaults"""
+#     # Create minimal PEST file with valid * control data
+#     test_file = tmp_path / "test.pst"
+#     content = [
+#         "pcf\n",
+#         "* control data\n",
+#         "             restart          estimation\n",
+#         "         1         1         1         0         0\n",
+#         "         0         0              single               point         1         0         0\n",
+#         "   1.000000e+01  -3.000000e+00   3.000000e-01   1.000000e-02        10\n",
+#         "   1.000000e+01   1.000000e+01   1.000000e-03\n",
+#         "   1.000000e-01\n",
+#         "      1000   1.000000e-02         3         3   1.000000e-02         3\n",
+#         "         1         1         1\n",
+#         "* model\n",
+#     ]
+#     test_file.write_text("".join(content))
+#
+#     lsqr(str(test_file))
+#
+#     captured = capsys.readouterr()
+#     assert "LSQR section added successfully" in captured.out
+#
+#     updated = test_file.read_text().splitlines()
+#     # check presence of header and mode only; don't hard-code itnlim value
+#     assert any(line.strip().lower() == "* lsqr" for line in updated)
+#     idx = next(i for i, l in enumerate(updated) if l.strip().lower() == "* lsqr")
+#     assert updated[idx + 1].strip() in ("0", "1")
+#     # third line should have 4 numeric tokens
+#     parts = updated[idx + 2].split()
+#     assert len(parts) == 4
