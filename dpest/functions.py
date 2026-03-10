@@ -150,7 +150,7 @@ def find_ecotype(file_content, head_line, ecotype, ecotype_file):
         if ecotype == eco_num:
             return idx
 
-    return f"The ecotype {ecotype} wasn't found in file {eco_file_path}"
+    return f"The ecotype {ecotype} wasn't found in file {ecotype_file}"
 
 
 def find_parameter_position(line, parameter=None):
