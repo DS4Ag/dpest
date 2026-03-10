@@ -17,7 +17,8 @@ def read_dssat_file(file_path):
     except FileNotFoundError:
         print(f"The file at {file_path} was not found.")
     except IOError:
-        print(f"An error occurred while reading the file at {file_path}.")    
+        print(f"An error occurred while reading the file at {file_path}.")
+
 
 def extract_element_positions(line):
     """
@@ -41,10 +42,10 @@ def extract_element_positions(line):
         elif char == " " and in_element:  # End of the current element
             in_element = False
             positions.append((start, i - 1))
-    
+
     if in_element:  # Handle the last element if the line ends with a non-space character
         positions.append((start, len(line) - 1))
-    
+
     # Include spaces as part of the range between consecutive elements
     adjusted_positions = []
     for idx, (start, end) in enumerate(positions):
@@ -57,79 +58,100 @@ def extract_element_positions(line):
 def find_cultivar(file_content, head_line, cultivar, cultivar_cul_file):
     """
     Find the line containing the specified cultivar in the DSSAT cultivar file.
-    
+
     Args:
     file_content (str): The content of the DSSAT cultivar file.
     cultivar (str): The cultivar to search for (VAR# or VAR-NAME).
-    
+
     Returns:
     int: The line number containing the cultivar if found, or a message if not found.
     """
     lines = file_content.split('\n')
 
-    # Find the index where the head parameters table starts to count the number of characters 
+    # Find the index where the head parameters table starts to count the number of characters
     for idx, line in enumerate(lines):
         if line.startswith(head_line):
             head = idx
-    # Extract the number of characters that the head of the parameters table contain 
+    # Extract the number of characters that the head of the parameters table contain
     num_characters = len(lines[head])
-    
-        # Get the character positions of each element on the head of the parameters table
+
+    # Get the character positions of each element on the head of the parameters table
     positions = extract_element_positions(lines[head])
-    
-    # Extract the line number that contains the cultivar number or name  
+
+    # Extract the line number that contains the cultivar number or name
     for idx, line in enumerate(lines):
-        if len(line) == len(lines[head]) and not line.strip().startswith('!'):
-            var_num = lines[idx][positions[0][0]:positions[0][1]]
-            var_name = lines[idx][positions[1][0]:positions[1][1]]
-    
-            # Get the position line of the cultivar 
+        # Remove trailing DSSAT comments starting with '!' (if any)
+        data_part = line.split('!')[0].rstrip()
+
+        # Skip pure comment or empty lines
+        if not data_part.strip():
+            continue
+
+        # Require same length as header for aligned data region
+        if len(data_part) == len(lines[head]):
+            var_num = data_part[positions[0][0]:positions[0][1]]
+            var_name = data_part[positions[1][0]:positions[1][1]]
+
+            # Get the position line of the cultivar
             if cultivar == var_num.strip() or cultivar == var_name.strip():
-                   return idx
-    
+                return idx
+
     return f"The cultivar {cultivar} wasn't founded on file {cultivar_cul_file}"
 
 
 def find_ecotype(file_content, head_line, ecotype, ecotype_file):
     """
     Find the line containing the specified ecotype in the DSSAT ecotype file.
-    
+
     Args:
     file_content (str): The content of the DSSAT ecotype file.
     head_line (str): The line that starts the header of the ecotype table.
     ecotype (str): The ecotype to search for (ECO#).
     ecotype_file (str): The name of the ecotype file.
-    
+
     Returns:
     int: The line number containing the ecotype if found, or a message if not found.
     """
     lines = file_content.split('\n')
 
-    # Find the index where the head parameters table starts
+    # Find the header row
+    head = None
     for idx, line in enumerate(lines):
         if line.startswith(head_line):
             head = idx
             break
-    else:
-        return f"Header line '{head_line}' not found in file {ecotype_file}"
 
-    # Extract the number of characters that the head of the parameters table contains
-    num_characters = len(lines[head])
-    
-    # Get the character positions of each element on the head of the parameters table
+    if head is None:
+        return f"Header '{head_line}' not found in file {ecotype_file}"
+
+    # Fixed-width positions from the header
     positions = extract_element_positions(lines[head])
-    
-    # Extract the line number that contains the ecotype
-    for idx, line in enumerate(lines[head+1:], start=head+1):
-        if len(line) == num_characters and not line.strip().startswith('!'):
-            # Extract the ecotype name and remove any trailing numbers or spaces
-            eco_name = line[positions[0][0]:positions[0][1]].strip().split()[0]
-            
-            if ecotype == eco_name:
-                return idx
-    
-    return f"The ecotype {ecotype} wasn't found in file {ecotype_file}"
-    
+
+    # Loop through rows after header
+    for idx, line in enumerate(lines[head + 1:], start=head + 1):
+        # Remove trailing DSSAT comments starting with '!' (if any)
+        data_part = line.split('!')[0].rstrip()
+
+        # Skip blank / comment-only lines
+        if not data_part.strip():
+            continue
+
+        # Only parse aligned fixed-width rows (this avoids indented text lines)
+        if len(data_part) != len(lines[head]):
+            continue
+
+        # Extract ECO# field (first column)
+        eco_num = data_part[positions[0][0]:positions[0][1]].strip()
+
+        # If ECO# is blank, skip safely
+        if not eco_num:
+            continue
+
+        if ecotype == eco_num:
+            return idx
+
+    return f"The ecotype {ecotype} wasn't founded on file {ecotype_file}"
+
 
 def find_parameter_position(line, parameter=None):
     """
@@ -181,11 +203,13 @@ def simulations_lines(file_path):
     Identifies and extracts the line ranges associated with specific treatments in the OVERVIEW output file.
 
     Parameters:
-    file_path (str): The path to the text file containing tOVERVIEW output file.
+    file_path (str): The path to the text file containing the OVERVIEW output file.
 
     Returns:
     dict: A dictionary where the keys are TREATMENT names and the values are
-          tuples containing the start and end line numbers.
+          tuples containing the start and end line numbers. If the same treatment
+          name appears more than once (e.g., in different experiments), the value
+          will be a list of tuples with all matching ranges.
     """
 
     # Initialize dictionaries and lists to store relevant data
@@ -197,7 +221,7 @@ def simulations_lines(file_path):
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
-    # Iterate through each line to identify lines starting with '*DSSAT' and '*RUN'
+    # Iterate through each line to identify lines starting with '*DSSAT' and 'TREATMENT'
     for i, line in enumerate(lines):
         if '*DSSAT' in line:
             # Store the line number of each '*DSSAT' occurrence
@@ -215,120 +239,236 @@ def simulations_lines(file_path):
             # If it's the last '*DSSAT' section, set the end line as the last line of the file
             end_line = len(lines) - 1
             end_line = len(lines)
-        
-        # Find the appropriate '*RUN' line within the current '*DSSAT' section
+
+        # Find the appropriate 'TREATMENT' line within the current '*DSSAT' section
         run_info = None
         for run_start, run_line in run_lines:
             if run_start >= start_line and run_start <= end_line:
                 # Extract only the 'treatment' name from the 'TREATMENT -n' line
                 run_info = run_line.split(':')[1].strip().rsplit(maxsplit=1)[0]
-
                 break
-        
+
         # If the treatment information was found, store it in the result dictionary
         if run_info:
-            result_dict[run_info] = (start_line, end_line)
+            block_range = (start_line, end_line)
+
+            # If the same treatment appears multiple times, store all ranges instead of overwriting
+            if run_info in result_dict:
+                # Convert existing tuple to list (if needed) and append the new range
+                if isinstance(result_dict[run_info], list):
+                    result_dict[run_info].append(block_range)
+                else:
+                    result_dict[run_info] = [result_dict[run_info], block_range]
+            else:
+                # First time this treatment appears
+                result_dict[run_info] = block_range
 
     # Return the entire dictionary with all treatment information
     return result_dict
 
-
-def extract_simulation_data(file_path):
+def resolve_treatment_block_by_experiment(file_path, treatment, treatment_dict, experiment=None):
     """
-    Extracts simulation data for each cultivar, including the experiment information, 
+    Resolve the correct (start_line, end_line) block for a given treatment.
+
+    This function exists because the same treatment name can appear in more than one
+    experiment inside the same DSSAT .OUT file. When that happens, 'experiment' is
+    required to disambiguate which block should be used.
+
+    Rules:
+    - If the treatment appears only once, return that block and its experiment code.
+    - If the treatment appears multiple times:
+        * If experiment is provided, return the matching block.
+        * If experiment is not provided, raise a ValueError listing available experiments.
+    """
+    # Quick existence check
+    if treatment not in treatment_dict:
+        raise ValueError(f"Treatment '{treatment}' not found in: {file_path}")
+
+    blocks = treatment_dict[treatment]
+
+    # Normalize to a list of blocks
+    if not isinstance(blocks, list):
+        blocks = [blocks]
+
+    # If only one block exists, still extract its experiment code (useful for INS anchoring)
+    if len(blocks) == 1:
+        start_i, end_i = blocks[0]
+        exp_code = extract_experiment_code_from_range(file_path, start_i, end_i)
+        return (start_i, end_i), exp_code
+
+    # Multiple blocks: extract experiment codes for each block
+    experiment_to_block = {}
+    for (start_i, end_i) in blocks:
+        exp_code = extract_experiment_code_from_range(file_path, start_i, end_i)
+        if exp_code is not None:
+            experiment_to_block[exp_code] = (start_i, end_i)
+
+    # If user did not specify experiment, we must stop and ask for it
+    if experiment is None:
+        exp_list = sorted(experiment_to_block.keys())
+        raise ValueError(
+            f"Treatment '{treatment}' appears in more than one experiment in the file:\n"
+            f"  {file_path}\n"
+            f"  Experiments found:\n"
+            f"  {exp_list}\n"
+            "   Please re-run it including the 'experiment' argument."
+        )
+
+    # User specified an experiment: ensure it exists
+    if experiment not in experiment_to_block:
+        exp_list = sorted(experiment_to_block.keys())
+        raise ValueError(
+            f"Treatment '{treatment}' was not found under experiment '{experiment}' in '{file_path}'.\n"
+            f"   Experiments available for this treatment: {', '.join(exp_list)}."
+        )
+
+    return experiment_to_block[experiment], experiment
+
+
+def extract_experiment_code_from_range(file_path, start_i, end_i):
+    """
+    Extract the experiment code from a block range inside a DSSAT .OUT file.
+
+    The experiment code is assumed to be on a line like:
+        EXPERIMENT     : AZMC9311 .....
+    and the code is taken as the first token after ':'.
+    """
+    with open(file_path, "r") as f:
+        lines = f.readlines()
+
+    experiment_info = None
+
+    for i in range(start_i, min(end_i, len(lines))):
+        line = lines[i].strip()
+
+        # Look for the line containing 'EXPERIMENT'
+        if line.startswith("EXPERIMENT"):
+            experiment_info = line.split(":")[1].split()[0]
+            break
+
+    return experiment_info
+
+
+def extract_simulation_data(file_path, treatment_dict=None):
+    """
+    Extracts simulation data for each cultivar, including the experiment information,
     and returns a DataFrame with all the data.
 
     Parameters:
     file_path (str): The path to the text file containing the growth aspects data.
+    treatment_dict (dict, optional): A dictionary mapping treatment names to their
+        line ranges. If None, it will be created with simulations_lines(file_path).
 
     Returns:
     pd.DataFrame: A DataFrame containing the parsed data for all cultivars, including the experiment info.
     """
+
     # Get the dictionary with the line ranges for each cultivar
-    treatment_dict = simulations_lines(file_path)
+    if treatment_dict is None:
+        treatment_dict = simulations_lines(file_path)
 
     # Initialize an empty DataFrame to store all the data
-    all_data = pd.DataFrame(columns=['TREATMENT','cultivar', 'VARIABLE', 'VALUE_SIMULATED', 'VALUE_MEASURED', 'EXPERIMENT', 'POSITION'])
+    all_data = pd.DataFrame(
+        columns=[
+            'TREATMENT',
+            'cultivar',
+            'VARIABLE',
+            'VALUE_SIMULATED',
+            'VALUE_MEASURED',
+            'EXPERIMENT',
+            'POSITION'
+        ]
+    )
 
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
         # Iterate through each cultivar and extract data
-        for treatment, (start_line, end_line) in treatment_dict.items():
-            cultivar_data = []
-            experiment_info = None
-            model_crop = None
+        for treatment, blocks in treatment_dict.items():
 
-            # Iterate through the lines in the specified range to find the EXPERIMENT line
-            for i in range(start_line, end_line):
-                line = lines[i].strip()
+            # Normalize to a list of (start_line, end_line) ranges
+            # (this allows the same treatment name to appear in more than one experiment)
+            if not isinstance(blocks, list):
+                blocks = [blocks]
 
-                # Look for the line containing 'MODEL'
-                if line.startswith("MODEL"):
-                    # Extract model and crop names
-                    model_crop = line.split(':')[1].strip()
+            # Iterate over each block associated with the treatment
+            for (start_line, end_line) in blocks:
 
-                # Look for the line containing 'EXPERIMENT'
-                if line.startswith('EXPERIMENT'):
-                    # Extract the experiment description after the colon
-                    experiment_info = line.split(':')[1].strip()
+                cultivar_data = []
+                experiment_info = None
+                model_crop = None
+                cultivar = None
 
-                if line.startswith('CROP') and 'CULTIVAR :' in line:
-                    # Extract CULTIVAR information using split
-                    parts = line.split('CULTIVAR :')
-                    if len(parts) > 1:
-                        cultivar = parts[1].split('ECOTYPE')[0].strip()  # Extract everything between 'CULTIVAR :' and 'ECOTYPE'
+                # Iterate through the lines in the specified range to find the EXPERIMENT line
+                for i in range(start_line, end_line):
+                    line = lines[i].strip()
 
-                # Look for the line with simulation results (lines after @)
-                if line.startswith('@'):
+                    # Look for the line containing 'MODEL'
+                    if line.startswith("MODEL"):
+                        # Extract model and crop names
+                        model_crop = line.split(':')[1].strip()
 
-                    # Store the header line to return it 
-                    header_line = line
+                    # Look for the line containing 'EXPERIMENT'
+                    if line.startswith('EXPERIMENT'):
+                        # Extract the experiment description after the colon
+                        experiment_info = line.split(':')[1].strip()
 
-                    line_number = 0
-                    for data_line in lines[i+1:]:
+                    if line.startswith('CROP') and 'CULTIVAR :' in line:
+                        # Extract CULTIVAR information using split
+                        parts = line.split('CULTIVAR :')
+                        if len(parts) > 1:
+                            cultivar = parts[1].split('ECOTYPE')[0].strip()
+                            # Extract everything between 'CULTIVAR :' and 'ECOTYPE'
 
-                        line_number += 1
+                    # Look for the line with simulation results (lines after @)
+                    if line.startswith('@'):
 
-                        if not data_line.strip() or data_line.startswith('*'):
-                            break
+                        # Store the header line to return it
+                        header_line = line
 
-                        data_line = data_line.strip().split()
-                        variable_name = ' '.join(data_line[:-2])  # Get the variable name
-                        simulated_value = data_line[-2]
-                        measured_value = data_line[-1]
+                        line_number = 0
+                        for data_line in lines[i + 1:]:
 
-                        # Replace any value starting with '-99' with an empty string
-                        simulated_value = '' if simulated_value.startswith('-99') else simulated_value
-                        measured_value = '' if measured_value.startswith('-99') else measured_value
+                            line_number += 1
 
-                        # Append the row data
-                        cultivar_data.append({
-                            'TREATMENT': treatment,
-                            'cultivar': cultivar,
-                            'VARIABLE': variable_name,
-                            'VALUE_SIMULATED': simulated_value,
-                            'VALUE_MEASURED': measured_value,
-                            'EXPERIMENT': experiment_info,
-                            'POSITION': line_number,
-                        })
+                            if not data_line.strip() or data_line.startswith('*'):
+                                break
 
-                    # Convert to DataFrame and append to all_data
-                    cultivar_df = pd.DataFrame(cultivar_data)
-                    all_data = pd.concat([all_data, cultivar_df], ignore_index=True)
+                            data_line = data_line.strip().split()
+                            variable_name = ' '.join(data_line[:-2])  # Get the variable name
+                            simulated_value = data_line[-2]
+                            measured_value = data_line[-1]
 
-    # Remove rows where any of the columns 'VARIABLE', 'VALUE_SIMULATED', or 'VALUE_MEASURED' contain '--------'
-    all_data = all_data[~all_data[['VARIABLE', 'VALUE_SIMULATED', 'VALUE_MEASURED']].apply(lambda x: x.str.contains('--------')).any(axis=1)]
+                            # Replace any value starting with '-99' with an empty string
+                            simulated_value = '' if simulated_value.startswith('-99') else simulated_value
+                            measured_value = '' if measured_value.startswith('-99') else measured_value
+
+                            # Append the row data
+                            cultivar_data.append({
+                                'TREATMENT': treatment,
+                                'cultivar': cultivar,
+                                'VARIABLE': variable_name,
+                                'VALUE_SIMULATED': simulated_value,
+                                'VALUE_MEASURED': measured_value,
+                                'EXPERIMENT': experiment_info,
+                                'POSITION': line_number,
+                            })
+
+                        # Convert to DataFrame and append to all_data
+                        cultivar_df = pd.DataFrame(cultivar_data)
+                        all_data = pd.concat([all_data, cultivar_df], ignore_index=True)
+
+    # Remove rows where any of the columns 'VARIABLE', 'VALUE_SIMULATED',
+    # or 'VALUE_MEASURED' contain '--------'
+    all_data = all_data[
+        ~all_data[['VARIABLE', 'VALUE_SIMULATED', 'VALUE_MEASURED']]
+        .apply(lambda x: x.astype(str).str.contains('--------'))
+        .any(axis=1)
+    ]
 
     # Convert the 'VALUE_SIMULATED' and 'VALUE_MEASURED' columns to numeric values
     all_data['VALUE_SIMULATED'] = pd.to_numeric(all_data['VALUE_SIMULATED'], errors='coerce')
     all_data['VALUE_MEASURED'] = pd.to_numeric(all_data['VALUE_MEASURED'], errors='coerce')
-
-    # Split the 'Cultivar' column into 'treatment' and 'cultivar' columns
-    #all_data[['treatment', 'cultivar']] = all_data['Cultivar'].str.split('_', expand=True)
-
-    # Drop the original 'Cultivar' column as it's now split into two
-    #all_data.drop(columns=['Cultivar'], inplace=True)
 
     # Convert all column names to lowercase
     all_data.columns = all_data.columns.str.lower()
@@ -336,60 +476,7 @@ def extract_simulation_data(file_path):
     return all_data, header_line, model_crop
 
 
-# def process_treatment_file(file_path, treatment_mapping, season_mapping):
-#     """
-#     Reads the treatment file, extracts the treatment data, and adds 'treatment' and 'season' columns.
-#
-#     Parameters:
-#     - file_path: Path to the treatment file.
-#     - treatment_mapping: A dictionary for mapping treatment codes (e.g., 'WW' to 'Well-watered').
-#     - season_mapping: A dictionary for mapping season codes (e.g., '22' to 'Winter 2021-2022').
-#
-#     Returns:
-#     - DataFrame with 'N', 'TNAME', 'CU', 'treatment', and 'season' columns.
-#     """
-#     with open(file_path, 'r') as file:
-#         lines = file.readlines()
-#
-#     # Initialize an empty list to store the data
-#     data = []
-#     in_treatments_section = False
-#
-#     for line in lines:
-#         # Check if we are entering the TREATMENTS section
-#         if line.startswith('*TREATMENTS'):
-#             in_treatments_section = True
-#             continue
-#
-#         # Check if we are leaving the TREATMENTS section
-#         if in_treatments_section and line.startswith('*'):
-#             break
-#
-#         # Process lines in the TREATMENTS section
-#         if in_treatments_section:
-#             # Skip the header row
-#             if '@N' in line:
-#                 continue
-#
-#             # Split the line into columns using whitespace
-#             parts = list(filter(None, line.split()))
-#             if len(parts) >= 5:
-#                 # Extract the required columns
-#                 N = parts[0]
-#                 TNAME = parts[4]
-#                 CU = parts[5]
-#                 data.append([N, TNAME, CU])
-#
-#     # Create a DataFrame from the extracted data
-#     df = pd.DataFrame(data, columns=['N', 'TNAME', 'entry'])
-#
-#     # Extract treatment code and season code from TNAME and map them
-#     df['treatment'] = df['TNAME'].str[:2].map(treatment_mapping)
-#     df['season'] = df['TNAME'].str[2:4].map(season_mapping)
-#
-#     return df
 
-    
 ### Variables transformation functions
 # Functions to transform the variable names from the OVERVIEW file fit the max 20 characters required by PEST
 
@@ -399,6 +486,7 @@ def clean_variable_name(variable_name):
     # Remove all non-alphanumeric characters and underscores
     cleaned_name = re.sub(r'[\W]', '', cleaned_name)
     return cleaned_name
+
 
 def adjust_variable_name(name, existing_names):
     # Ensure the name is no more than 20 characters
@@ -417,6 +505,7 @@ def adjust_variable_name(name, existing_names):
 
     return name
 
+
 def process_variable_names(df):
     # Clean variable names
     df['variable_name'] = df['variable'].apply(clean_variable_name)
@@ -432,6 +521,7 @@ def process_variable_names(df):
 
     df['variable_name'] = adjusted_names
     return df
+
 
 ### / Variables transformation functions
 
@@ -505,7 +595,6 @@ def extract_treatment_info_plantgrowth(file_path, treatment_dict):
                     treatment_crop_name[treatment_info] = crop_name
 
     return treatment_number_name, treatment_experiment_name, treatment_crop_name
-
 
 
 # def wht_filedata_to_dataframe(file_path):
@@ -668,33 +757,54 @@ def wht_filedata_to_dataframe(file_path):
 
     return merged_df
 
-def get_header_and_first_sim(file_path):
-    """
-    Reads the header line and the first simulation date from the PlantGro.OUT file.
 
-    Parameters:
-    file_path (str): The path to the PlantGro.OUT file.
+def get_header_and_first_sim(file_path, treatment, treatment_dict=None):
+    """
+    Reads the header line and the first simulation date for a *specific treatment block*
+    inside a DSSAT time-series .OUT file (e.g., PlantGro.OUT).
 
     Returns:
-    tuple: A header line and the first simulation date as a datetime object.
+      header_line (str): the '@YEAR ...' header line (global header is fine)
+      first_sim_line (str): first numeric data line inside the treatment block
+      date_first_sim (datetime): datetime from YEAR + DOY of that first data line
     """
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
+    with open(file_path, "r") as f:
+        lines = f.readlines()
 
-    # Find header line containing '@YEAR'
-    header_line = next(line for line in lines if '@YEAR' in line)
+    # Get treatment ranges only once if the caller didn't pass them
+    if treatment_dict is None:
+        treatment_dict = simulations_lines(file_path)
 
-    # Find line immediately after header for first simulation date
-    with open(file_path, 'r') as file:
-        for line_num, line in enumerate(file, 1):
-            if '@YEAR' in line:
-                first_sim = lines[line_num]
-                break
+    if treatment not in treatment_dict:
+        raise ValueError(f"Treatment '{treatment}' not found in {file_path}")
 
-    # Create datetime object based on first simulation year and day of year (DOY)
-    date_first_sim = datetime(int(first_sim[1:5]), 1, 1) + timedelta(days=int(first_sim[6:9]) - 1)
-    return header_line, date_first_sim
+    # Range of lines that belong to this treatment (start/end indices produced by simulations_lines)
+    start_i, end_i = treatment_dict[treatment]
 
+    # 1) Header: find the first '@YEAR' line (usually global; ok for all treatments)
+    header_idx = next(i for i, line in enumerate(lines) if "@YEAR" in line)
+    header_line = lines[header_idx]
+
+    # 2) First simulation line: find the first numeric line inside THIS treatment block
+    #    Robust to leading spaces: matches " 1994 004 ..." etc.
+    data_line_re = re.compile(r"^\s*\d{4}\s+\d{1,3}\b")
+
+    first_sim_line = None
+    for i in range(start_i, min(end_i, len(lines))):
+        if data_line_re.match(lines[i]):
+            first_sim_line = lines[i]
+            break
+
+    if first_sim_line is None:
+        raise ValueError(f"Could not find a first simulation data line for '{treatment}'")
+
+    # Build datetime from YEAR and DOY
+    parts = first_sim_line.split()
+    year = int(parts[0])
+    doy = int(parts[1])
+    date_first_sim = datetime(year, 1, 1) + timedelta(days=doy - 1)
+
+    return header_line, first_sim_line, date_first_sim
 
 
 def calculate_days_dict(dates_dict, date_first_sim):
@@ -780,24 +890,35 @@ def adjust_days_dict(days_dict):
     return adjusted_days_dict
 
 
-def find_variable_position(header_line, variables):
-
+def find_variable_position(header_line, data_line, variables):
     """
         Counts space groups until the specified variables.
         Count starts at 1.
 
         Arguments:
         header_line (str): The header line containing variable names.
+        data_line (str): A representative data line for alignment.
         variables (list): A list of variable names to find.
 
         Returns:
         dict: A dictionary with variables as keys and their positions as values.
     """
-    variables_file = header_line.lstrip('@').split()
-    positions = {}
-    space_count = 1  # Start at 1
+    # Remove '@' from header and split into tokens
+    header_tokens = header_line.replace('@', ' ').split()
+    # Split the data line in the same way PEST sees fields
+    data_tokens = data_line.split()
 
-    for variable_file in variables_file:
+    # Sanity check: header and data must have the same number of tokens
+    if len(header_tokens) != len(data_tokens):
+        raise ValueError(
+            f"Header and data token counts differ: "
+            f"{len(header_tokens)} vs {len(data_tokens)}"
+        )
+
+    positions = {}
+    space_count = 1  # Start at 1 (YEAR is column 1)
+
+    for variable_file in header_tokens:
         if variable_file in variables:
             positions[variable_file] = space_count
         space_count += 1
@@ -856,9 +977,9 @@ def filter_dataframe(dataframe, treatment, treatment_number_name, variables):
                     (dataframe['TRNO'] == trno_value) &
                     (dataframe[variable] != '-99') &
                     (dataframe[variable] != -99) &
-                    (dataframe[variable] != 0 )&
+                    (dataframe[variable] != 0) &
                     (dataframe[variable] != '0')
-                ]
+                    ]
 
                 # Populate results
                 for _, row in filtered_df.iterrows():
@@ -875,6 +996,7 @@ def filter_dataframe(dataframe, treatment, treatment_number_name, variables):
         print(f"One or more required columns are missing: {set(variables) - set(dataframe.columns)}")
         return {}
 
+
 def validate_marker(marker, marker_name):
     '''
     Validate the marker delimiter for the INS files according to the specified rules.
@@ -883,12 +1005,14 @@ def validate_marker(marker, marker_name):
 
     if len(marker) != 1:
         raise ValueError(f"Invalid {marker_name} character. It must be a single character.")
-    
+
     if marker_name == 'mrk' and (marker in invalid_chars or marker == '!'):
-        raise ValueError(f"Invalid {marker_name} character. It must not be one of A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.")
+        raise ValueError(
+            f"Invalid {marker_name} character. It must not be one of A-Z, a-z, 0-9, !, [, ], (, ), :, space, tab, or &.")
     elif marker_name == 'smk' and marker in invalid_chars:
-        raise ValueError(f"Invalid {marker_name} character. It must not be one of A-Z, a-z, 0-9, [, ], (, ), :, space, tab, or &.")
-    
+        raise ValueError(
+            f"Invalid {marker_name} character. It must not be one of A-Z, a-z, 0-9, [, ], (, ), :, space, tab, or &.")
+
     return marker
 
 
@@ -907,7 +1031,6 @@ def validate_output_path(output_path):
 
 
 def validate_file(file_path, file_extension):
-
     """
     Validates that the input file path exists and the file extension is correct.
     """
@@ -955,11 +1078,11 @@ def validate_file_path(file_path):
 def read_growth_file(file_path, treatment_range):
     """
     Reads a growth aspects output file and converts it into a pandas DataFrame.
-    
+
     Arguments:
     file_path (str): The path to the text file containing the growth aspects data.
     treatment_range (tuple): A tuple containing the start and end line numbers for the treatment data.
-    
+
     Returns:
     pd.DataFrame: A DataFrame containing the parsed data.
     """
@@ -971,21 +1094,21 @@ def read_growth_file(file_path, treatment_range):
     # Open and read the file
     with open(file_path, "r") as text_file:
         lines = text_file.readlines()
-        
+
         # Filter lines for the specified treatment
-        treatment_lines = lines[start_line-1:end_line]  # -1 to account for 0-based indexing
-            
+        treatment_lines = lines[start_line - 1:end_line]  # -1 to account for 0-based indexing
+
         # Find the line starting with '@' which contains the column headers
         for i, line in enumerate(treatment_lines):
             if line.startswith('@'):
                 header_line = line
                 break
-        
+
         # Extract the column headers by splitting the line at whitespace
         headers = header_line.strip().split()
-        
+
         # Extract the data starting from the next line after the headers
-        for line in treatment_lines[i+1:]:
+        for line in treatment_lines[i + 1:]:
             # Split the line into individual values based on whitespace
             row = line.strip().split()
             # Append the row to the data list
@@ -1050,6 +1173,7 @@ def new_rows_add(PlantGro, rows_add):
 
     return new_rows
 
+
 def add_suffix_to_variables(variable_names, suffix, max_length):
     """
     Append a suffix to each variable name, ensuring the final name does not exceed max_length.
@@ -1069,6 +1193,7 @@ def add_suffix_to_variables(variable_names, suffix, max_length):
             new_name = var_name[:max_length - len(suffix)] + suffix
         updated_names[var_name] = new_name
     return updated_names
+
 
 def _load_simulation_crop_models_config():
     """

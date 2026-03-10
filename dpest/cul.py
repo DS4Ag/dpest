@@ -162,8 +162,6 @@ def cul(
                 model=model,
             )
 
-            print('crop_model_arguments_file: ', crop_model_arguments_file)
-
             if not os.path.isfile(crop_model_arguments_file):
                 raise FileNotFoundError(
                     f"YAML file not found for crop='{crop}' and model='{model}': "
@@ -257,21 +255,53 @@ def cul(
             # Calculate the number of available characters for the parameter
             available_space = len(char_compl) - 2
 
-            # Truncate or pad the parameter to fit within the available space
-            if len(parameter) > available_space:
-                truncated_parameter = parameter[:available_space]  # Truncate the parameter
+            # Build a 3-character base key for the parameter, padded with '-'
+            base_key = parameter.strip()
+            if len(base_key) > 3:
+                base_key = base_key[:3]
+            if len(base_key) < 3:
+                base_key = base_key.ljust(3, '-')
 
-                # Save the parameter compleate name and truncated name into a dictionary
-                parameter_par_truncated[parameter] = truncated_parameter.strip()
+            truncated_parameter = base_key
 
+            # Ensure uniqueness: if this 3-char key already exists, add a numeric suffix
+            counter = 1
+            while any(truncated_parameter.strip() == existing.strip() for existing in parameter_par_truncated.values()):
+                suffix = str(counter)
+                core = base_key
+                # Trim core if needed so core+suffix stays within 3 characters
+                if len(core) + len(suffix) > 3:
+                    core = core[:3 - len(suffix)]
+                truncated_parameter = (core + suffix).ljust(3, '-')
+                counter += 1
+
+            # Save the parameter complete name and truncated name into a dictionary
+            parameter_par_truncated[parameter] = truncated_parameter.strip()
+
+            # Determine how wide the numeric field is in the ECO line
+            field_width = par_position[1] - par_position[0] + 1
+
+            # If the field is only 3 characters wide, we can only fit "~X~"
+            if field_width <= 3:
+                short_key = truncated_parameter.strip()
+                if not short_key:
+                    short_key = '0'
+                short_key = short_key[0]
+                variable_template = f"{mrk}{short_key}{mrk}"
+            elif field_width == 4:
+                # " ~X~" (still 4 chars, but only 1-char key)
+                short_key = truncated_parameter.strip()
+                if not short_key:
+                    short_key = '0'
+                short_key = short_key[0]
+                variable_template = f" {mrk}{short_key}{mrk}"
             else:
-                truncated_parameter = parameter.ljust(available_space)  # Add spaces to the parameter
+                # field_width >= 5: " ~XXX~" with full 3-char key
+                variable_template = f" {mrk}{truncated_parameter}{mrk}"
 
-                # Save the parameter compleate name and truncated name into a dictionary
-                parameter_par_truncated[parameter] = truncated_parameter.strip()
-
-            # Construct the variable template
-            variable_template = f" {mrk}{truncated_parameter}{mrk}"
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # / Avoid overflowing 3‑char fields
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             # Extract the cultivar line to modify parameters
             cultivar_line = lines[cultivar_line_number]

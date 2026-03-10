@@ -300,24 +300,16 @@ def pst(
         pst.control_data.jacfile = 0
         pst.control_data.messfile = 0
 
-        # Set LSQR mode
+        # Set mode of operation to use
         pst.pestmode = "estimation"
 
-        # ~~~~~~~~ Add LSQR section as a custom attribute
 
-        pst.lsqr_data = {
-            "lsqrmode": 1,
-            "lsqr_atol": 1e-4,
-            "lsqr_btol": 1e-4,
-            "lsqr_conlim": 28.0,
-            "lsqr_itnlim": 28,
-            "lsqrwrite": 0
-        }
+        # ~~~~~~~~ Customize SVD section as a custom attribute
 
         # Store the original write method
         original_write = pst.write
 
-        # Define a new write method that replaces SVD with LSQR
+        # Define a new write method that updates the SVD section
         def custom_write(self, filename):
             # First, write to a temporary file
             with tempfile.NamedTemporaryFile(mode='w+', delete=False) as temp_file:
@@ -328,9 +320,39 @@ def pst(
             with open(temp_filename, 'r') as f:
                 content = f.read()
 
-            # Replace SVD section with LSQR
-            lsqr_section = f"* lsqr\n  {self.lsqr_data['lsqrmode']}\n  {self.lsqr_data['lsqr_atol']}  {self.lsqr_data['lsqr_btol']}  {self.lsqr_data['lsqr_conlim']}  {self.lsqr_data['lsqr_itnlim']}\n  {self.lsqr_data['lsqrwrite']}\n"
-            content = re.sub(r'\* singular value decomposition.*?(?=\*|$)', lsqr_section, content, flags=re.DOTALL)
+            # Compute SVD defaults based on number of parameters
+            npar = self.npar
+            svdmode = 1  # enable SVD
+            maxsing = npar  # allow up to number of parameters
+            eigthresh = 5e-7  # recommended in PEST manual for most cases
+            eigwrite = 0  # only singular values, smaller .svd file
+
+            # Build SVD section text (matches PEST format)
+            svd_section = (
+                "* singular value decomposition\n"
+                f"  {svdmode}\n"
+                f"  {maxsing}  {eigthresh:.6E}\n"
+                f"  {eigwrite}\n"
+            )
+
+            # Replace existing SVD section, or insert a new one after * control data
+            if re.search(r'\* singular value decomposition.*?(?=\*|$)',
+                         content, flags=re.DOTALL | re.IGNORECASE):
+                # Replace existing SVD block
+                content = re.sub(
+                    r'\* singular value decomposition.*?(?=\*|$)',
+                    svd_section,
+                    content,
+                    flags=re.DOTALL | re.IGNORECASE
+                )
+            else:
+                # Insert SVD block immediately after the * control data section
+                content = re.sub(
+                    r'(\* control data.*?(?=\*|$))',
+                    r'\1\n' + svd_section,
+                    content,
+                    flags=re.DOTALL | re.IGNORECASE
+                )
 
             # Write modified content to the final file
             with open(filename, 'w') as f:
@@ -342,7 +364,48 @@ def pst(
         # Replace the write method
         pst.write = custom_write.__get__(pst)
 
-        # ~~~~~~~~/ Add LSQR section as a custom attribute
+        # ~~~~~~~~/ Customize SVD section as a custom attribute
+
+        # # ~~~~~~~~ Add LSQR section as a custom attribute
+        #
+        # pst.lsqr_data = {
+        #     "lsqrmode": 1,
+        #     "lsqr_atol": 1e-4,
+        #     "lsqr_btol": 1e-4,
+        #     "lsqr_conlim": 28.0,
+        #     "lsqr_itnlim": 28,
+        #     "lsqrwrite": 0
+        # }
+        #
+        # # Store the original write method
+        # original_write = pst.write
+        #
+        # # Define a new write method that replaces SVD with LSQR
+        # def custom_write(self, filename):
+        #     # First, write to a temporary file
+        #     with tempfile.NamedTemporaryFile(mode='w+', delete=False) as temp_file:
+        #         original_write(temp_file.name)
+        #         temp_filename = temp_file.name
+        #
+        #     # Read the content of the temporary file
+        #     with open(temp_filename, 'r') as f:
+        #         content = f.read()
+        #
+        #     # Replace SVD section with LSQR
+        #     lsqr_section = f"* lsqr\n  {self.lsqr_data['lsqrmode']}\n  {self.lsqr_data['lsqr_atol']}  {self.lsqr_data['lsqr_btol']}  {self.lsqr_data['lsqr_conlim']}  {self.lsqr_data['lsqr_itnlim']}\n  {self.lsqr_data['lsqrwrite']}\n"
+        #     content = re.sub(r'\* singular value decomposition.*?(?=\*|$)', lsqr_section, content, flags=re.DOTALL)
+        #
+        #     # Write modified content to the final file
+        #     with open(filename, 'w') as f:
+        #         f.write(content)
+        #
+        #     # Remove the temporary file
+        #     os.unlink(temp_filename)
+        #
+        # # Replace the write method
+        # pst.write = custom_write.__get__(pst)
+        #
+        # # ~~~~~~~~/ Add LSQR section as a custom attribute
 
         # Set additional control data parameters
         pst.control_data.rlambda1 = 10.0

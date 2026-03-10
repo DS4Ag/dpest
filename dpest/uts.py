@@ -4,6 +4,7 @@ def uts(
         uts_file_path=None,
         treatment=None,
         variables=None,
+        experiment=None,
         nspaces_year_header=None,
         nspaces_doy_header = None,
         nspaces_columns_header = None,
@@ -17,7 +18,7 @@ def uts(
     maturity phase.
 
     This module addresses this issue by adding rows to the  **time-series** output (``.OUT``) file file with default values (0),
-    extending the simulation period to cover all measured observation dates. The format of the time-series file is preserved. The first three columns must be::
+    extending the simulation period to cover all measured observation dates. The format of the time-series file is preserved. The first three columns must be:
 
         @YEAR DOY   DAS
 
@@ -72,12 +73,23 @@ def uts(
     **Optional Arguments:**
     =======
 
+        * **experiment** (*str*, *optional*):
+        Experiment code as shown in the PlantGro.OUT header (e.g. ``"AZMC9311"``).
+        When the same treatment name appears in more than one experiment within
+        the same time-series file, this argument is used to select the correct
+        experiment block. If not provided and the treatment is unique in the file,
+        the function will use the unique experiment automatically. If the
+        treatment appears in multiple experiments and ``experiment`` is not
+        specified, a clear error is raised indicating the available experiments.
+
         * **nspaces_year_header** (*int*, *default: 5*): Number of spaces reserved for the year header in
         the ``.OUT`` file. It is unlikely that the format of the ``.OUT`` file changes in a way that
         necessitates modifying this value.
+
         * **nspaces_doy_header** (*int*, *default: 4*): Number of spaces reserved for the day-of-year header in
         the ``.OUT`` file. It is unlikely that the format of the time-series output files changes in a way
         that necessitates modifying this value.
+
         * **nspaces_columns_header** (*int*, *default: 6*): Number of spaces reserved for other columns in the
         ``.OUT`` file. It is unlikely that the format of the time-series output files changes in a way that
         necessitates modifying this value.
@@ -173,17 +185,24 @@ def uts(
             raise ValueError("nspaces_columns_header must be an integer.")
 
         # Get treatment range
-        treatment_range = simulations_lines(validated_path)[treatment]
+        treatment_dict = simulations_lines(validated_path)
+        (start_i, end_i), experiment_code = resolve_treatment_block_by_experiment(
+            file_path=validated_path,
+            treatment=treatment,
+            treatment_dict=treatment_dict,
+            experiment=experiment,
+        )
+        selected_treatment_dict = {treatment: (start_i, end_i)}
+        treatment_range = (start_i, end_i)
 
         # Read growth file
         ts_file_df = read_growth_file(validated_path, treatment_range)
 
         # Get treatment number
-        treatment_dict = simulations_lines(validated_path)
-
+        # Get treatment number
         # Get dictionaries with treatment name, treatement number, treatment and experiment code
         treatment_number_name, treatment_experiment_name, treatment_crop_name = \
-            extract_treatment_info_plantgrowth(validated_path, treatment_dict)
+            extract_treatment_info_plantgrowth(validated_path, selected_treatment_dict)
 
         crop_name_from_header = treatment_crop_name.get(treatment)
         if crop_name_from_header is None:
@@ -192,7 +211,7 @@ def uts(
         # Load simulation crop/model mappings
         sim_models = yaml_data.get(yaml_sim_models_key, {})
 
-        # Find the crop entry whose alias list (lower‑cased) contains crop_name_from_header
+        # Find the crop entry whose alias list (lower-cased) contains crop_name_from_header
         crop_code = None
         for crop_key, crop_info in sim_models.items():
             aliases = [a.lower() for a in crop_info.get('crop_aliases', [])]
@@ -206,11 +225,10 @@ def uts(
                 "Check SIMULATION_CROP_MODELS in arguments.yml."
             )
 
-        experiment_code = treatment_experiment_name.get(treatment)
         if experiment_code is None:
             raise ValueError(f"Could not determine experiment code for treatment '{treatment}'.")
 
-        # Build T‑file name: <EXPCODE><CROPCODE>T, e.g. SWSW7501 + WH + T -> SWSW7501WHT
+        # Build T-file name: <EXPCODE><CROPCODE>T, e.g. SWSW7501 + WH + T -> SWSW7501WHT
         t_file_name = f"{experiment_code}.{crop_code.upper()}T"
         t_file_path = os.path.join(os.path.dirname(validated_path), t_file_name)
 

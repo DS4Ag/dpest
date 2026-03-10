@@ -5,12 +5,14 @@ def overview(
     treatment=None,
     overview_file_path=None,
     output_path=None,
+    experiment=None,
     suffix=None,
     variables=None,
     variables_classification=None,
     overview_ins_first_line=None,
     mrk="~",
     smk="!",
+
 ):
     """
     Creates a ``PEST instruction file (.INS)``. This instruction file contains
@@ -43,6 +45,16 @@ def overview(
         * **output_path** (*str*, *default: current working directory*):
           Directory where the generated ``PEST instruction file (.INS)`` will
           be saved.
+
+        * **experiment** (*str*, *optional*):
+          Experiment code as shown in the PlantGro.OUT header (e.g. ``"AZMC9311"``).
+          When the same treatment name appears in more than one experiment within
+          the same time-series file, this argument is used to select the correct
+          experiment block. If not provided and the treatment is unique in the file,
+          the function will use the unique experiment automatically. If the
+          treatment appears in multiple experiments and ``experiment`` is not
+          specified, a clear error is raised indicating the available experiments.
+
         * **suffix** (*str*, *default: ""*): Suffix to append to the output
           filename and variable names in the .INS file. This short code (e.g.,
           ``TRT1``, ``TRT2``, ``TRT3``) identifies different treatments used
@@ -54,6 +66,7 @@ def overview(
           (e.g., ``!Anthesis_DAP_TRT1!``). This ensures that PEST can
           distinguish between variables from different treatments, as PEST does
           not allow variables with the same name.
+
         * **variables** (*list* or *str*): Variable(s) from the
           ``OVERVIEW.OUT`` file that PEST will extract in case the user does
           not want to use all the variables present in the DSSAT “A file” for
@@ -62,21 +75,23 @@ def overview(
           ``'Anthesis (DAP)'``) or multiple variables as a list (e.g.,
           ``['Anthesis (DAP)', 'Maturity (DAP)', 'Product wt (kg dm/ha;no loss)',``
           ``'Maximum leaf area index', 'Canopy (tops) wt (kg dm/ha)', 'Above-ground N (kg/ha)']``).
+
         * **variables_classification** (*dict*): Mapping of variable names to
           their respective categories. If provided, it is used directly to
           classify variables. If not provided, the function will attempt to
           load crop- and model-specific classification from a configuration
-          file located at ``dpest/<crop>/<model>/arguments.yml``. When
-          ``variables_classification`` is ``None``, both **crop** and
-          **model** become required arguments.
+          file located at ``dpest/<crop>/<model>/arguments.yml``.
+
         * **overview_ins_first_line** (*str*, *default: "pif"*): First line of
           the ``PEST instruction file (.INS)``. This is the PEST default value
           and is obtained from the package configuration file
           (``dpest/arguments.yml``) when not provided by the user.
+
         * **mrk** (*str*, *default: "~"*): Primary marker delimiter character
           for the instruction file. Must be a single character and cannot be
           A–Z, a–z, 0–9, ``!``, ``[``, ``]``, ``(``, ``)``, ``:``, space, tab,
           or ``&``.
+
         * **smk** (*str*, *default: "!"*): Secondary marker delimiter character
           for the instruction file. Must be a single character and cannot be
           A–Z, a–z, 0–9, ``[``, ``]``, ``(``, ``)``, ``:``, space, tab, or
@@ -183,10 +198,29 @@ def overview(
         # Validate overview_file_path using the validate_file() function
         validated_path = validate_file(overview_file_path, ".OUT")
 
-        # Read and parse the overview file
-        overview_df, header_line, crop_model = extract_simulation_data(validated_path)
+        # ------------------------------------------------------------------
+        # Resolve treatment block by experiment (same logic used in ts())
+        # ------------------------------------------------------------------
 
-        print('CROP MODEL: ', crop_model)
+        # Get treatment block ranges from the OVERVIEW.OUT file
+        treatment_dict = simulations_lines(validated_path)
+
+        # Resolve the correct block range and experiment code
+        (start_i, end_i), experiment_code = resolve_treatment_block_by_experiment(
+            file_path=validated_path,
+            treatment=treatment,
+            treatment_dict=treatment_dict,
+            experiment=experiment,
+        )
+
+        # Restrict downstream parsing to the selected block only
+        selected_treatment_dict = {treatment: (start_i, end_i)}
+
+        # Read and parse the overview file
+        overview_df, header_line, crop_model = extract_simulation_data(
+            validated_path,
+            treatment_dict=selected_treatment_dict
+        )
 
         # Load variables_classification:
         #   - use user-provided dict if given;
@@ -284,6 +318,7 @@ def overview(
         # Combine the content into the full .ins file structure
         ins_file_content = (
             f"{overview_ins_first_line} {mrk}\n"
+            f"{mrk}{experiment_code}{mrk}\n"
             f"{mrk}{treatment}{mrk}\n"
             f"{mrk}{header_line[1:].strip()}{mrk}\n"
             f"{output_text}"

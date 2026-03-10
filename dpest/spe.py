@@ -1,4 +1,5 @@
-import yaml
+# import os
+# import yaml
 from dpest.functions import *
 
 
@@ -247,6 +248,11 @@ def spe(
     yml_species_block = 'SPECIES_TPL_FILE'
     yaml_file_variables = 'FILE_VARIABLES'
 
+    # Fixed field width (characters per numeric entry in SPE lines)
+    FIELD_WIDTH = 6
+    # Fixed number of characters for the ID between markers: ~XXX~
+    ID_LEN = 3
+
     try:
         # Locate YAML configuration in the same directory as this module
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -288,7 +294,9 @@ def spe(
         # Normalised parameter definitions: [{'name','line','column','min','max','group'}, ...]
         normalized_parameters = []
 
+        # ------------------------------------------------------------------
         # Normalise user-provided parameter specifications
+        # ------------------------------------------------------------------
         for param_name, spec in parameters_grouped.items():
             full_name = str(param_name).strip()
 
@@ -344,63 +352,9 @@ def spe(
                 }
             )
 
-        # Helper: for a given line, compute token spans and field spans
-        def compute_token_and_field_spans(line_text):
-            """
-            For a given line, compute:
-              - token_spans: (start, end) positions of each non-space token,
-                             in the same order as line_text.split().
-              - field_spans: (start, end) positions of the column "fields"
-                             that hold those tokens.
-
-            Rules:
-              * token_spans follow Python's split() order and find() positions.
-              * Field 1 covers the first token plus all contiguous spaces
-                immediately to its left, leaving exactly one space margin
-                at the far left if possible.
-              * For fields i>1, the left boundary is at most one column to
-                the right of the previous field end, but never to the right
-                of the token start.
-            """
-
-            # Find all tokens in split() order
-            raw_tokens = line_text.split()
-            token_spans = []
-            search_pos = 0
-            for tok in raw_tokens:
-                idx = line_text.find(tok, search_pos)
-                if idx == -1:
-                    raise ValueError(f"Could not locate token '{tok}' in line: {line_text}")
-                token_spans.append((idx, idx + len(tok)))
-                search_pos = idx + len(tok)
-
-            if not token_spans:
-                return [], []
-
-            field_spans = []
-            prev_field_end = None
-
-            for i, (tok_start, tok_end) in enumerate(token_spans):
-                if i == 0:
-                    # First field: extend as far left as possible over spaces,
-                    # but always leave a one-column margin at the far left.
-                    left = tok_start
-                    while left > 1 and line_text[left - 1].isspace():
-                        left -= 1
-                    field_start = left
-                else:
-                    # Later fields: start at previous field_end + 1, but not
-                    # beyond the token's own start
-                    candidate_start = prev_field_end + 1
-                    field_start = min(tok_start, candidate_start)
-
-                field_end = tok_end
-                field_spans.append((field_start, field_end))
-                prev_field_end = field_end
-
-            return token_spans, field_spans
-
-        # First pass: assign truncated IDs based on field widths, enforce uniqueness
+        # ------------------------------------------------------------------
+        # First pass: assign truncated IDs based on fixed field widths, enforce uniqueness
+        # ------------------------------------------------------------------
         used_truncated_ids = set()
 
         for param_def in normalized_parameters:
@@ -417,22 +371,20 @@ def spe(
                 )
 
             line_text = lines[line_idx]
-            # Compute token spans and corresponding field spans once for this line
-            token_spans, field_spans = compute_token_and_field_spans(line_text)
 
-            # Validate column index relative to tokens
-            if column_index < 1 or column_index > len(token_spans):
-                raise ValueError(
-                    f"Column index {column_index} for parameter '{full_name}' is out of range "
-                    f"on line {line_number_user}."
-                )
+            # Fixed-width field for this column (6 characters wide)
+            col0 = column_index - 1  # 0-based column index
+            field_start = col0 * FIELD_WIDTH
+            field_end = field_start + FIELD_WIDTH
 
-            # Field span for this column gives the width available for the marker
-            field_start, field_end = field_spans[column_index - 1]
-            field_width = field_end - field_start
+            # Ensure line is long enough for this field
+            if field_end > len(line_text):
+                line_text = line_text.ljust(field_end)
+                lines[line_idx] = line_text
 
-            # Maximum length for the ID inside this field (two chars reserved for markers)
-            max_id_len = max(1, field_width - 2)
+            # We always have FIELD_WIDTH characters available for the marker
+            # We want 3 characters for the ID between markers: ~XXX~
+            max_id_len = ID_LEN
 
             # Start base_id from a short code (first 3 characters of the name)
             base_id = full_name.strip()
@@ -443,7 +395,7 @@ def spe(
             if len(base_id) > max_id_len:
                 base_id = base_id[:max_id_len]
 
-            # If there is still room, pad on the right to use full width
+            # If there is still room, pad on the right to use full ID length
             if len(base_id) < max_id_len:
                 base_id = base_id.ljust(max_id_len)
 
@@ -461,7 +413,9 @@ def spe(
             used_truncated_ids.add(truncated)
             parameter_name_truncated[full_name] = truncated
 
+        # ------------------------------------------------------------------
         # Second pass: build markers and modify lines
+        # ------------------------------------------------------------------
         # Work on a copy of lines so multiple parameters on the same line compose correctly
         line_buffer = list(lines)
 
@@ -475,16 +429,23 @@ def spe(
             line_idx = line_number_user - 1
             line_text = line_buffer[line_idx]
 
-            token_spans, field_spans = compute_token_and_field_spans(line_text)
+            # Fixed-width field for this column
+            col0 = column_index - 1
+            field_start = col0 * FIELD_WIDTH
+            field_end = field_start + FIELD_WIDTH
 
-            field_start, field_end = field_spans[column_index - 1]
-            token_start, token_end = token_spans[column_index - 1]
+            if field_end > len(line_text):
+                line_text = line_text.ljust(field_end)
+                line_buffer[line_idx] = line_text
 
-            field_width = field_end - field_start
-            token_str = line_text[token_start:token_end]
+            field_width = field_end - field_start  # should be FIELD_WIDTH
+
+            # Original numeric value for information (strip spaces)
+            field_str = line_text[field_start:field_end]
+            token_str = field_str.strip()
 
             # Store the original numeric value and bounds using the full parameter name
-            current_value = token_str.strip()
+            current_value = token_str
             current_parameter_values[full_name] = current_value
             minima_parameter_values[full_name] = p_min
             maxima_parameter_values[full_name] = p_max
@@ -492,13 +453,13 @@ def spe(
             # Build the marker using the precomputed truncated ID
             truncated_id = parameter_name_truncated[full_name]
 
-            # Available characters inside the field for the ID (excluding markers)
-            max_id_len = max(1, field_width - 2)
+            # Fixed: 3 characters for ID inside 6-char field: ~XXX~
+            max_id_len = ID_LEN
 
             # Start from the truncated ID, further limit to max_id_len and strip spaces
             base_core = truncated_id[:max_id_len].strip()
 
-            # Now always pad with '-' to exactly max_id_len
+            # Always pad with '-' to exactly max_id_len
             if len(base_core) > max_id_len:
                 base_core = base_core[:max_id_len]
             if len(base_core) < max_id_len:
@@ -506,11 +467,8 @@ def spe(
 
             id_for_marker = base_core
 
-            marker_core = f"{mrk}{id_for_marker}{mrk}"
-            # If marker is still too wide for the field, trim the ID further
-            while len(marker_core) > field_width and len(id_for_marker) > 1:
-                id_for_marker = id_for_marker[:-1]
-                marker_core = f"{mrk}{id_for_marker}{mrk}"
+            # Assemble the marker core with markers around the padded ID
+            marker_core = f"{mrk}{id_for_marker}{mrk}"  # e.g. ~PGE~ or ~h--~
 
             # Right-align marker inside the field, using spaces to the left if available
             marker = marker_core.rjust(field_width)
@@ -519,7 +477,9 @@ def spe(
             new_line = line_text[:field_start] + marker + line_text[field_end:]
             line_buffer[line_idx] = new_line
 
+        # ------------------------------------------------------------------
         # Insert PEST header, write TPL, and build return structures
+        # ------------------------------------------------------------------
         line_buffer.insert(0, f"{tpl_first_line} {mrk}")
 
         output_path = validate_output_path(output_path)

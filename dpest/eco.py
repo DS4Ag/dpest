@@ -1,17 +1,18 @@
 import yaml
 from dpest.functions import *
 
+
 def eco(
-    ecotype = None,
-    eco_file_path = None,
-    output_path = None,
-    new_template_file_extension = None,
-    header_start = None,
-    tpl_first_line = None,
-    minima = None,
-    maxima = None,
-    mrk = '~',
-    **parameters_grouped
+        ecotype=None,
+        eco_file_path=None,
+        output_path=None,
+        new_template_file_extension=None,
+        header_start=None,
+        tpl_first_line=None,
+        minima=None,
+        maxima=None,
+        mrk='~',
+        **parameters_grouped
 ):
     """
     Creates a ``PEST template file (.TPL)`` for CERES-Wheat ecotype parameters based on a ``DSSAT ecotype file (.ECO)``. This module is specific to the CERES-Wheat model and uses default values tailored for this model.
@@ -126,7 +127,7 @@ def eco(
 
         if maxima is None:
             maxima = str(function_arguments['maxima'])
-            
+
         if parameters_grouped == {}:
 
             # 1) Get the 5-char genotype key from the ECO filename (e.g. WHCER)
@@ -153,8 +154,6 @@ def eco(
                 crop=crop,
                 model=model,
             )
-
-            print('crop_model_arguments_file: ', crop_model_arguments_file)
 
             if not os.path.isfile(crop_model_arguments_file):
                 raise FileNotFoundError(
@@ -208,8 +207,8 @@ def eco(
         if isinstance(minima_line_number, str):  # Error message returned
             raise ValueError(minima_line_number)
         maxima_line_number = find_ecotype(file_content, header_start, maxima, validated_eco_file_path)
-        if isinstance( maxima_line_number, str):  # Error message returned
-            raise ValueError( maxima_line_number)
+        if isinstance(maxima_line_number, str):  # Error message returned
+            raise ValueError(maxima_line_number)
 
         # Extract parameter values for ecotype, minima, and maxima
         def extract_parameter_values(line_number):
@@ -220,7 +219,8 @@ def eco(
                     parameter_value = lines[line_number][par_position[0]:par_position[1] + 1].strip()
                     parameter_values[parameter] = parameter_value
                 except Exception:
-                    raise ValueError(f"Parameter '{parameter}' does not exist in the header line of {validated_eco_file_path}.")
+                    raise ValueError(
+                        f"Parameter '{parameter}' does not exist in the header line of {validated_eco_file_path}.")
             return parameter_values
 
         # Delete extra spaces on the parameter values
@@ -234,121 +234,158 @@ def eco(
             return cleaned_dict
 
         minima_parameter_values = clean_parameter_values(extract_parameter_values(minima_line_number))
-        maxima_parameter_values = clean_parameter_values(extract_parameter_values(maxima_line_number)) 
+        maxima_parameter_values = clean_parameter_values(extract_parameter_values(maxima_line_number))
 
         # Dictionary to store current parameter values
         current_parameter_values = {}
-    
+
         # Iterate each parameter in the list to generate the template
         parameter_par_truncated = {}
 
         count = 0
         for parameter in parameters:
 
-            # Get the parameter position on the line 
+            # Get the parameter position on the line
             par_position = find_parameter_position(header_line, parameter)
 
-                # Validate and adjust the starting position if necessary
+            # Validate and adjust the starting position if necessary
             if par_position[0] < len(ecotype):
                 par_position[0] = len(ecotype)
 
             # Extract the current value of the parameter from the line
-            parameter_value = lines[ecotype_line_number][par_position[0]:par_position[1]+1].strip()
+            parameter_value = lines[ecotype_line_number][par_position[0]:par_position[1] + 1].strip()
 
             # Extract the second element when two numbers where obtained instead of one
             if len(str(parameter_value).split()) > 1:
-
                 parameter_value = str(parameter_value).split()[-1]
 
             # Store the current value in the dictionary
             current_parameter_values[parameter] = parameter_value
-        
-            # Get the length of a parameter including empty spaces 
-            char_compl = header_line[par_position[0]+1:par_position[1]+1]
-        
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Enforce 3‑character for parameter keys
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            # Get the length of a parameter including empty spaces
+            char_compl = header_line[par_position[0] + 1:par_position[1] + 1]
+
             # Calculate the number of available characters for the parameter
             available_space = len(char_compl) - 2
-            
-            # Truncate or pad the parameter to fit within the available space
-            if len(parameter) > available_space:
 
-                truncated_parameter = parameter[:available_space]  # Truncate the parameter
+            # Build a 3-character base key for the parameter, padded with '-'
+            base_key = parameter.strip()
+            if len(base_key) > 3:
+                base_key = base_key[:3]
+            if len(base_key) < 3:
+                base_key = base_key.ljust(3, '-')
 
-                # Change the last character when the truncated parameter already exist in the dictionary 
-                counter = 1
-                while any(truncated_parameter.strip() == existing.strip() for existing in parameter_par_truncated.values()):
-                    suffix = str(counter)
-                    truncated_parameter = truncated_parameter[:-len(suffix)] + suffix
-                    
-                    counter += 1
+            truncated_parameter = base_key
 
-                # Save the parameter compleate name and truncated name into a dictionary
-                parameter_par_truncated[parameter] = truncated_parameter.strip()
+            # Ensure uniqueness: if this 3-char key already exists, add a numeric suffix
+            counter = 1
+            while any(truncated_parameter.strip() == existing.strip() for existing in parameter_par_truncated.values()):
+                suffix = str(counter)
+                core = base_key
+                # Trim core if needed so core+suffix stays within 3 characters
+                if len(core) + len(suffix) > 3:
+                    core = core[:3 - len(suffix)]
+                truncated_parameter = (core + suffix).ljust(3, '-')
+                counter += 1
 
+            # Save the parameter complete name and truncated name into a dictionary
+            parameter_par_truncated[parameter] = truncated_parameter.strip()
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # / Enforce 3‑character for parameter keys
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Avoid overflowing 3‑char fields
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            # Determine how wide the numeric field is in the ECO line
+            field_width = par_position[1] - par_position[0] + 1
+
+            # If the field is only 3 characters wide, we can only fit "~X~"
+            if field_width <= 3:
+                short_key = truncated_parameter.strip()
+                if not short_key:
+                    short_key = '0'
+                short_key = short_key[0]
+                variable_template = f"{mrk}{short_key}{mrk}"
+            elif field_width == 4:
+                # " ~X~" (still 4 chars, but only 1-char key)
+                short_key = truncated_parameter.strip()
+                if not short_key:
+                    short_key = '0'
+                short_key = short_key[0]
+                variable_template = f" {mrk}{short_key}{mrk}"
             else:
-                truncated_parameter = parameter.ljust(available_space)  # Add spaces to the parameter
+                # field_width >= 5: " ~XXX~" with full 3-char key
+                variable_template = f" {mrk}{truncated_parameter}{mrk}"
 
-                # Save the parameter compleate name and truncated name into a dictionary
-                parameter_par_truncated[parameter] = truncated_parameter.strip()            
-
-            # Construct the variable template
-            variable_template = f" ~{truncated_parameter}~"
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # / Avoid overflowing 3‑char fields
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             # Extract the ecotype line to modify parameters
             ecotype_line = lines[ecotype_line_number]
-        
+
             if count == 0:
                 # Replace the content at the specified position with adjusted_template
                 modified_line = (
-                    ecotype_line[:par_position[0]]  # Part of the line before the parameter
-                    + variable_template  # Insert the adjusted template
-                    + ecotype_line[par_position[1] + 1:]  # Part of the line after the parameter
+                        ecotype_line[:par_position[0]]  # Part of the line before the parameter
+                        + variable_template  # Insert the adjusted template
+                        + ecotype_line[par_position[1] + 1:]  # Part of the line after the parameter
                 )
-            else: 
+            else:
                 # Replace the content at the specified position with adjusted_template
                 modified_line = (
-                    modified_line[:par_position[0]]  # Part of the line before the parameter
-                    + variable_template  # Insert the adjusted template
-                    + modified_line[par_position[1] + 1:]  # Part of the line after the parameter
+                        modified_line[:par_position[0]]  # Part of the line before the parameter
+                        + variable_template  # Insert the adjusted template
+                        + modified_line[par_position[1] + 1:]  # Part of the line after the parameter
                 )
             count += 1
 
-        #     # Save the parameter compleate name and truncated name into a dictionary     
+        #     # Save the parameter compleate name and truncated name into a dictionary
         #     parameter_par_truncated[parameter] = truncated_parameter.strip()
-        
+
         # Insert the modified line back into the text
         lines[ecotype_line_number] = modified_line
-        
+
         # Insert 'ptf' and marker at the beginning of the file content
         lines.insert(0, f"{tpl_first_line} {mrk}")
-    
+
         # Validate output_path
         output_path = validate_output_path(output_path)
 
         # Add the file name and extension to the path for the new file
-        output_new_file_path = os.path.join(output_path, os.path.splitext(os.path.basename(validated_eco_file_path))[0] + '_ECO' + '.' + new_template_file_extension)
-        
+        output_new_file_path = os.path.join(output_path, os.path.splitext(os.path.basename(validated_eco_file_path))[
+            0] + '_ECO' + '.' + new_template_file_extension)
+
         # Save the updated text to a new .TPL file
         with open(output_new_file_path, 'w') as file:
             file.write("\n".join(lines))
-        
-        # Replace keys in current_parameter_values 
-        current_parameter_values = {parameter_par_truncated[key]: value for key, value in current_parameter_values.items() if key in parameter_par_truncated}
-        minima_parameter_values = {parameter_par_truncated[key]: value for key, value in minima_parameter_values.items() if key in parameter_par_truncated}
-        maxima_parameter_values = {parameter_par_truncated[key]: value for key, value in maxima_parameter_values.items() if key in parameter_par_truncated}
+
+        # Replace keys in current_parameter_values
+        current_parameter_values = {parameter_par_truncated[key]: value for key, value in
+                                    current_parameter_values.items() if key in parameter_par_truncated}
+        minima_parameter_values = {parameter_par_truncated[key]: value for key, value in minima_parameter_values.items()
+                                   if key in parameter_par_truncated}
+        maxima_parameter_values = {parameter_par_truncated[key]: value for key, value in maxima_parameter_values.items()
+                                   if key in parameter_par_truncated}
 
         # Update the values in parameters_grouped
         parameters_grouped = {
             key: ', '.join(parameter_par_truncated.get(param.strip(), param.strip()) for param in value.split(','))
             for key, value in parameters_grouped.items()
         }
-        
 
         print(f"Template file successfully created at: {output_new_file_path}")
-        
-        return {'parameters': current_parameter_values, 
-                'minima_parameters': minima_parameter_values, 
-                'maxima_parameters': maxima_parameter_values, 
+
+        return {'parameters': current_parameter_values,
+                'minima_parameters': minima_parameter_values,
+                'maxima_parameters': maxima_parameter_values,
                 'parameters_grouped': parameters_grouped}, output_new_file_path
 
     except ValueError as ve:

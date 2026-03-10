@@ -14,6 +14,7 @@ from .facorig import facorig
 from .phiredswh import phiredswh
 
 from .noptmax import noptmax
+from .noptswitch import noptswitch
 from .phiredstp import phiredstp
 from .nphistp import nphistp
 from .nphinored import nphinored

@@ -42,10 +42,7 @@ Import the required modules from the `dpest` package:
 
 .. code-block:: python
 
-    from dpest.wheat.ceres.cul import cul
-    from dpest.wheat.overview import overview
-    from dpest.wheat.plantgro import plantgro
-    from dpest.pst import pst
+    from dpest import cul, eco, overview, ts, uts, pst
 
 After running this code, you will have access to all necessary functions for creating template files, instruction files, and the PEST control file.
 
@@ -108,25 +105,25 @@ After running these functions:
 
 **PlantGro.OUT Instruction Files:**
 
-Use the `plantgro()` function to generate instruction files for each treatment to compare the time-series model simulations from the ``'./DSSAT48/Wheat/PlantGro.OUT'`` file with the time-series measured data from the ``T File``.
+Use the `ts()` function to generate instruction files for each treatment to compare the time-series model simulations from the ``'./DSSAT48/Wheat/PlantGro.OUT'`` file with the time-series measured data from the ``T File``.
 
 .. code-block:: python
 
-    plantgro_observations_trt1, plantgro_ins_path_trt1 = plantgro(
+    plantgro_observations_trt1, plantgro_ins_path_trt1 = ts(
         treatment='82.0 KG N/HA IRRIG',
         plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         variables=['LAID', 'CWAD', 'T#AD'],
         suffix='TRT1'
     )
 
-    plantgro_observations_trt2, plantgro_ins_path_trt2 = plantgro(
+    plantgro_observations_trt2, plantgro_ins_path_trt2 = ts(
         treatment='123.0 KG N/HA IRRIG',
         plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         variables=['LAID', 'CWAD', 'T#AD'],
         suffix='TRT2'
     )
 
-    plantgro_observations_trt3, plantgro_ins_path_trt3 = plantgro(
+    plantgro_observations_trt3, plantgro_ins_path_trt3 = ts(
         treatment='164.0 KG N/HA IRRIG',
         plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         variables=['LAID', 'CWAD', 'T#AD'],
@@ -135,7 +132,7 @@ Use the `plantgro()` function to generate instruction files for each treatment t
 
 After running these functions:
 - The `plantgro_observations_trtX` variables store DataFrames with time-series observations needed for creating the `.PST` file.
-- The `plantgro_ins_path_trtX` variables store paths to instruction files created by the `plantgro()` function.
+- The `plantgro_ins_path_trtX` variables store paths to instruction files created by the `ts()` function.
 - These instruction files will be used in matching original DSSAT output files (`PlantGro.OUT`) with time-series observations during calibration.
 
 Note that both instruction files (`OVERVIEW.INS` and `PlantGro.INS`) will be created in the current working directory.
@@ -175,21 +172,21 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
     result = subprocess.run(command_line, shell=True, check=True, capture_output=True, text=True)
     print(result.stdout)
 
-    # Use uplantgro from dpest.wheat.utils to extract and update data from PlantGro.OUT for each treatment if needed
+    # Use the uts function to extract and update data from PlantGro.OUT for each treatment if needed
     
-    uplantgro(
+    uts(
         plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         treatment='82.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
-    uplantgro(
+    uts(
         plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         treatment='123.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']
     )
 
-    uplantgro(
+    uts(
         plantgro_file_path='./DSSAT48/Wheat/PlantGro.OUT',
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']

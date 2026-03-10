@@ -3,9 +3,10 @@ from dpest.functions import *
 
 def ts(
     ts_file_path = None,
-    treatment = None, 
-    variables = None, 
+    treatment = None,
+    variables = None,
     output_path = None,
+    experiment=None,
     suffix = None,
     variables_classification = None,
     ts_ins_first_line = None,
@@ -22,7 +23,7 @@ def ts(
     measured values stored in the DSSAT T file.
 
     The time-series output files supported by this function share a common
-    tabular format where the first three columns are::
+    tabular format where the first three columns are:
 
         @YEAR DOY   DAS
 
@@ -71,6 +72,15 @@ def ts(
     * **output_path** (*str*, *default: current working directory*):
         Directory where the generated ``PEST instruction file (.INS)`` will be
         saved. If not provided, the current working directory is used.
+
+    * **experiment** (*str*, *optional*):
+      Experiment code as shown in the PlantGro.OUT header (e.g. ``"AZMC9311"``).
+      When the same treatment name appears in more than one experiment within
+      the same time-series file, this argument is used to select the correct
+      experiment block. If not provided and the treatment is unique in the file,
+      the function will use the unique experiment automatically. If the
+      treatment appears in multiple experiments and ``experiment`` is not
+      specified, a clear error is raised indicating the available experiments.
 
     * **suffix** (*str*, *default: ""*):
         Suffix to append to the output filename and variable names in the
@@ -150,7 +160,7 @@ def ts(
 
           plantgro_observations, plantgro_ins_path = ts(
               treatment='76 Equidist BRAGG',
-              pts_file_path='C:/DSSAT48/Soybean/PlantGro.OUT',
+              ts_file_path='C:/DSSAT48/Soybean/PlantGro.OUT',
               variables=['LWAD', 'SWAD', 'GWAD', 'RWAD', 'CWAD',
                          'HIAD', 'PWAD', 'LN%D', 'SH%D', 'HIPD', 'SLAD'],
           )
@@ -249,9 +259,20 @@ def ts(
         # Get treatment number
         treatment_dict = simulations_lines(validated_path)
 
+        # Resolve the correct DSSAT block when the same treatment appears in multiple experiments
+        selected_block, resolved_experiment_code = resolve_treatment_block_by_experiment(
+            file_path=validated_path,
+            treatment=treatment,
+            treatment_dict=treatment_dict,
+            experiment=experiment
+        )
+
+        # Use only the selected block from here on to avoid using the wrong duplicated treatment
+        selected_treatment_dict = {treatment: selected_block}
+
         # Get dictionaries with treatment name, treatement number, treatment and experiment code
         treatment_number_name, treatment_experiment_name, treatment_crop_name = \
-            extract_treatment_info_plantgrowth(validated_path, treatment_dict)
+            extract_treatment_info_plantgrowth(validated_path, selected_treatment_dict)
 
         crop_name_from_header = treatment_crop_name.get(treatment)
         if crop_name_from_header is None:
@@ -260,7 +281,7 @@ def ts(
         # Load simulation crop/model mappings
         sim_models = yaml_data.get(yaml_sim_models_key, {})
 
-        # Find the crop entry whose alias list (lower‑cased) contains crop_name_from_header
+        # Find the crop entry whose alias list (lower-cased) contains crop_name_from_header
         crop_code = None
         for crop_key, crop_info in sim_models.items():
             aliases = [a.lower() for a in crop_info.get('crop_aliases', [])]
@@ -274,17 +295,17 @@ def ts(
                 "Check SIMULATION_CROP_MODELS in arguments.yml."
             )
 
-        experiment_code = treatment_experiment_name.get(treatment)
+        # Use the resolved experiment code from the selected block
+        experiment_code = resolved_experiment_code
         if experiment_code is None:
             raise ValueError(f"Could not determine experiment code for treatment '{treatment}'.")
 
-        # Build T‑file name: <EXPCODE><CROPCODE>T, e.g. SWSW7501 + WH + T -> SWSW7501WHT
+        # Build T-file name: <EXPCODE><CROPCODE>T, e.g. SWSW7501 + WH + T -> SWSW7501WHT
         t_file_name = f"{experiment_code}.{crop_code.upper()}T"
         t_file_path = os.path.join(os.path.dirname(validated_path), t_file_name)
 
         # Get the dataframe from the T file data
         t_df = wht_filedata_to_dataframe(t_file_path)
-        t_df.to_csv('t_df.csv', index=False)
 
         # Load and filter data for all variables
         dates_variable_values_dict = filter_dataframe(t_df, treatment, treatment_number_name, variables)
@@ -294,7 +315,11 @@ def ts(
             raise ValueError(f"No valid data found for treatment '{treatment}' with variables {variables}")
 
         # Get the header and first simulation date
-        header_line, date_first_sim = get_header_and_first_sim(validated_path)
+        header_line, first_sim_line, date_first_sim = get_header_and_first_sim(
+            validated_path,
+            treatment,
+            treatment_dict=selected_treatment_dict
+        )
 
         # Calculate days dictionary days after first simulation
         days_dict = calculate_days_dict(dates_variable_values_dict, date_first_sim)
@@ -308,44 +333,38 @@ def ts(
                 raise ValueError("Suffix must only contain letters and numbers.")
             if len(suffix) > 4:
                 raise ValueError("Suffix must be at most 4 characters long.")
-            suffix = '_' + suffix
+            suffix = "_" + suffix
 
         # Process each variable and generate output text
         output_text = ""
 
-        if suffix is not None:
-            for date, (days, variables) in adjusted_days_dict.items():
-                positions = find_variable_position(header_line, variables)
-                line = f"l{days}"
-                current_position = 1  # Start at position 1 after 'l{days}'
+        for date, (days, vars_at_date) in adjusted_days_dict.items():
+            positions = find_variable_position(header_line, first_sim_line, vars_at_date)
 
-                for variable in sorted(positions, key=positions.get):
-                    position = positions[variable]
-                    w_count = position - current_position
-                    line += ' w' * w_count + f" {smk}{variable}_{date}{suffix}{smk}"
-                    current_position = position + 1  # Move to next position after this variable
+            line = f"l{days}"
+            current_pos = 0  # before first token on the line
 
-                output_text += line + "\n"
+            for var in sorted(positions, key=positions.get):
+                pos = positions[var]
 
-        else:
-            for date, (days, variables) in adjusted_days_dict.items():
-                positions = find_variable_position(header_line, variables)
-                line = f"l{days}"
-                current_position = 1  # Start at position 1 after 'l{days}'
+                # From start-of-line, reaching token `pos` requires `pos` times "w"
+                w_count = pos if current_pos == 0 else (pos - current_pos)
+                if w_count < 0:
+                    raise ValueError(
+                        f"Non-monotonic positions: {var} pos={pos}, current_pos={current_pos}"
+                    )
 
-                for variable in sorted(positions, key=positions.get):
-                    position = positions[variable]
-                    w_count = position - current_position
-                    line += ' w' * w_count + f" {smk}{variable}_{date}{smk}"
-                    current_position = position + 1  # Move to next position after this variable
+                line += " w" * w_count
+                line += f" {smk}{var}_{date}{suffix or ''}{smk}"
+                current_pos = pos
 
-                output_text += line + "\n"
+            output_text += line + "\n"
 
         # Validate output_path
         output_path = validate_output_path(output_path)
 
         # Determine and validate output_filename
-        if suffix:
+        if suffix is not None:
             # Extract the file name
             output_filename = os.path.basename(validated_path).replace('.OUT', f'{suffix}.ins')
 
@@ -360,7 +379,14 @@ def ts(
         ts_ins_file_path = os.path.join(output_path, output_filename)
 
         # Construct the content for the new .ins file
-        ins_file_content = f"{ts_ins_first_line} {mrk}\n{mrk}{treatment}{mrk}\n{mrk}{header_line[1:].strip()}{mrk}\n{output_text}"
+        # Include the experiment code as an anchor before the treatment (prevents wrong block when duplicated)
+        ins_file_content = (
+            f"{ts_ins_first_line} {mrk}\n"
+            f"{mrk}{experiment_code}{mrk}\n"
+            f"{mrk}{treatment}{mrk}\n"
+            f"{mrk}{header_line[1:].strip()}{mrk}\n"
+            f"{output_text}"
+        )
 
         #--------- GET THE GROUP NAME OF THE VARIABLES
         dates_variable_values_data = [

@@ -2,39 +2,60 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
     """
     Adds or updates the Singular Value Decomposition (SVD) section in a PEST control (.pst) file.
 
-    The SVD section configures truncated singular value decomposition for solving ill-posed inverse problems.
+    This function post-processes an existing ``PEST control file (.PST)`` to configure the
+    ``* singular value decomposition`` section, following the recommendations of the PEST manual
+    (Doherty 2015). It can be used to enable or disable SVD, or to adjust the truncation
+    behavior through ``maxsing`` and ``eigthresh``.
 
     **Required Arguments:**
     =======
+
         * **pst_path** (*str*):
-            Path to the .pst PEST control file to modify.
+            Path to the ``PEST control file (.PST)`` to modify.
 
     **Optional Arguments:**
     =======
-        * **svdmode** (*int*):
-            SVD activation (0=disable, 1=enable).
-            Default is 1 (enable SVD).
-        * **maxsing** (*int*):
-            Maximum singular values to retain (must be > 0).
-            Default is 10000000.
-        * **eigthresh** (*float*):
-            Eigenvalue ratio threshold (0 ≤ eigthresh < 1).
-            Default is 1e-6.
-        * **eigwrite** (*int*):
-            SVD output file control (0=no output, 1=write output).
-            Default is 0.
+
+        * **svdmode** (*int*, *optional*):
+            SVD activation flag (0 = disable SVD, 1 = enable SVD).
+            If not provided, the current value in the file is preserved.
+            If no SVD section exists, the default is 1 (enable SVD).
+
+        * **maxsing** (*int*, *optional*):
+            Maximum number of singular values to retain (must be > 0).
+            If not provided, the behavior is:
+              - If an SVD section already exists, use the existing ``MAXSING`` value.
+              - If no SVD section exists, automatically set ``MAXSING`` equal to the
+                number of adjustable parameters in the PST file (recommended: at least
+                the number of estimable parameters).
+
+        * **eigthresh** (*float*, *optional*):
+            Eigenvalue ratio threshold at which singular value truncation occurs,
+            with constraint ``0 <= eigthresh < 1``.
+            If not provided, the behavior is:
+              - If an SVD section already exists, use the existing ``EIGTHRESH`` value.
+              - If no SVD section exists, default to ``5e-7``, as recommended in the PEST manual
+                for ensuring numerical stability in most cases.
+
+        * **eigwrite** (*int*, *optional*):
+            SVD output file control flag (0 = write only singular values, 1 = write singular
+            values and eigenvectors) to the ``case.svd`` file.
+            If not provided, the behavior is:
+              - If an SVD section already exists, use the existing ``EIGWRITE`` value.
+              - If no SVD section exists, default to 0 (only singular values, smaller file).
 
     **Returns:**
     =======
+
         * ``None``
 
-    **Examples:**
-    =======
+        The function updates the ``PEST control file (.PST)`` in place. It will either modify
+        an existing ``* singular value decomposition`` section or insert a new one.
 
     **Examples:**
     =======
 
-    1. **Adding an SVD Section to a PEST Control File with Default Parameters:**
+    1. **Adding or Updating SVD Using Recommended Defaults:**
 
        .. code-block:: python
 
@@ -44,7 +65,11 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
               pst_path = "PEST_CONTROL.pst"
           )
 
-       This example demonstrates adding a new SVD section to a PEST control file using all default parameter values (svdmode=1, maxsing=10000000, eigthresh=1e-6, eigwrite=0). The function will insert the SVD section after any existing LSQR section or append it to the file.
+       This example adds (or updates) an SVD section using:
+       ``svdmode = 1`` (enable SVD),
+       ``maxsing = number_of_parameters_in_pst``,
+       ``eigthresh = 5e-7``,
+       ``eigwrite = 0``.
 
     2. **Customizing SVD Parameters in an Existing PEST Control File:**
 
@@ -53,15 +78,18 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
           from dpest.utils import svd
 
           svd(
-              pst_path = "PEST_CONTROL.pst",
-              maxsing = 500,
-              eigthresh = 0.01,
-              eigwrite = 1
+              pst_path  = "PEST_CONTROL.pst",
+              maxsing   = 500,
+              eigthresh = 1e-4,
+              eigwrite  = 1
           )
 
-       This example updates the specified SVD parameters (maxsing, eigthresh, and eigwrite) while preserving existing values for other SVD parameters. The function will modify the existing SVD section if present, or create a new one with default values for unspecified parameters.
+       This example updates the specified SVD parameters (``MAXSING``, ``EIGTHRESH``,
+       and ``EIGWRITE``) while preserving the existing or default value of ``SVDMODE``.
+       If no SVD section exists, one is created and non-specified parameters take
+       their recommended defaults.
 
-    3. **Disabling SVD Functionality While Maintaining Other Settings:**
+    3. **Disabling SVD While Keeping Other Settings:**
 
        .. code-block:: python
 
@@ -69,27 +97,31 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
 
           svd(
               pst_path = "PEST_CONTROL.pst",
-              svdmode = 0
+              svdmode  = 0
           )
 
-       This example disables SVD mode (svdmode=0) while keeping other SVD parameters at their current values. If no SVD section exists, it will be created with disabled mode and default values for other parameters.
+       This example disables SVD (``SVDMODE = 0``) while keeping current or default
+       values for ``MAXSING``, ``EIGTHRESH``, and ``EIGWRITE``. If no SVD section
+       exists, one is created with SVD disabled and other parameters set to their
+       recommended defaults (e.g. ``MAXSING = npar``, ``EIGTHRESH = 5e-7``, ``EIGWRITE = 0``).
     """
     try:
         import os
+        import pyemu
 
-        # Default values for SVD parameters
+        # Default values for SVD parameters (used only when no SVD section exists)
         defaults = {
-            "svdmode": 1,
-            "maxsing": 10000000,
-            "eigthresh": 1e-6,
-            "eigwrite": 0
+            "svdmode": 1,        # enable SVD by default
+            "maxsing": None,     # will be set to npar when needed
+            "eigthresh": 5e-7,   # PEST manual recommended default for most cases
+            "eigwrite": 0        # only singular values, smaller case.svd
         }
 
         # Verify file exists
         if not os.path.isfile(pst_path):
             raise FileNotFoundError(f"File not found: {pst_path}")
 
-        # Read the PST file
+        # Read the PST file as text
         with open(pst_path, 'r') as f:
             lines = f.readlines()
 
@@ -106,13 +138,21 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
         if control_data_end_idx is None:
             raise ValueError("Missing required '* control data' section")
 
-        # Check if SVD section exists and extract current values
-        existing_svd = {key: defaults[key] for key in defaults}
+        # Load PST with pyEMU to get number of parameters (npar)
+        try:
+            pst_obj = pyemu.Pst(pst_path)
+            npar = pst_obj.npar
+        except Exception as e:
+            raise RuntimeError(f"Unable to read PST with pyEMU to determine npar: {str(e)}")
+
+        # Initialize existing SVD values (from file or defaults)
+        existing_svd = {key: defaults.get(key) for key in defaults}
         svd_exists = False
         svd_start_idx = None
 
+        # If an SVD section exists, parse it
         for i, line in enumerate(lines):
-            if line.strip().startswith('* singular value decomposition'):
+            if line.strip().lower().startswith('* singular value decomposition'):
                 svd_exists = True
                 svd_start_idx = i
 
@@ -140,6 +180,17 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
 
                 break
 
+        # If no existing SVD section, set defaults that depend on npar
+        if not svd_exists:
+            if existing_svd["maxsing"] is None:
+                existing_svd["maxsing"] = npar  # recommended: >= number of estimable parameters
+            if existing_svd["eigthresh"] is None:
+                existing_svd["eigthresh"] = defaults["eigthresh"]
+            if existing_svd["svdmode"] is None:
+                existing_svd["svdmode"] = defaults["svdmode"]
+            if existing_svd["eigwrite"] is None:
+                existing_svd["eigwrite"] = defaults["eigwrite"]
+
         # Merge user inputs with existing/default values
         svd_values = {
             "svdmode": svdmode if svdmode is not None else existing_svd["svdmode"],
@@ -147,6 +198,10 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
             "eigthresh": eigthresh if eigthresh is not None else existing_svd["eigthresh"],
             "eigwrite": eigwrite if eigwrite is not None else existing_svd["eigwrite"]
         }
+
+        # If maxsing is still None for some reason, fall back to npar
+        if svd_values["maxsing"] is None:
+            svd_values["maxsing"] = npar
 
         # Validate values
         if svd_values["svdmode"] not in [0, 1]:
@@ -171,16 +226,16 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
 
         # Update or add section
         if svd_exists:
-            # Replace existing section
+            # Replace existing section (assumed 4 lines)
             lines[svd_start_idx:svd_start_idx + 4] = svd_section
         else:
             # Check for LSQR conflict
-            lsqr_exists = any(line.strip().startswith('* lsqr') for line in lines)
+            lsqr_exists = any(line.strip().lower().startswith('* lsqr') for line in lines)
             if svd_values["svdmode"] == 1 and lsqr_exists:
                 print("Warning: SVD and LSQR are mutually exclusive. Adding SVD will make LSQR inactive.")
 
             # Insert after control data section
-            lines[control_data_end_idx :control_data_end_idx ] = svd_section
+            lines[control_data_end_idx:control_data_end_idx] = svd_section
 
         # Write updated file
         with open(pst_path, 'w') as f:

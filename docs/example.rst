@@ -61,7 +61,7 @@ Note that the cultivar template file named ``WHCER048_CUL.TPL`` will be created 
 
 **2.3. Create Instructions Files**
 
-For this experiment, key end-of-season crop performance metrics and phenological observations were collected and recorded in the ``./DSSAT48/Wheat/SWSW7501.WHA`` file (referred to as the ``A File``). Additionally, time-series data were collected and recorded in the ``./DSSAT48/Wheat/SWSW7501.WHT`` file (referred to as the ``T File``). To create the PEST instruction files, we will use the ``overview()`` and ``plantgro()`` modules. The ``overview()`` module will create the instruction file to compare the model simulations from the ``'./DSSAT48/Wheat/OVERVIEW.OUT'`` file with the measured data from the ``A File``, while the ``plantgro()`` module will create the instruction file to compare the time-series model simulations from the ``'./DSSAT48/Wheat/PlantGro.OUT'`` file with the time-series measured data from the ``T File``.
+For this experiment, key end-of-season crop performance metrics and phenological observations were collected and recorded in the ``./DSSAT48/Wheat/SWSW7501.WHA`` file (referred to as the ``A File``). Additionally, time-series data were collected and recorded in the ``./DSSAT48/Wheat/SWSW7501.WHT`` file (referred to as the ``T File``). To create the PEST instruction files, we will use the ``overview()`` and ``ts()`` modules. The ``overview()`` module will create the instruction file to compare the model simulations from the ``'./DSSAT48/Wheat/OVERVIEW.OUT'`` file with the measured data from the ``A File``, while the ``ts()`` module will create the instruction file to compare the time-series model simulations from the ``'./DSSAT48/Wheat/PlantGro.OUT'`` file with the time-series measured data from the ``T File``.
 
 .. code-block:: python
 
@@ -99,7 +99,7 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
 
     import os
     import subprocess
-    from dpest.wheat.utils import uplantgro
+    from dpest import uts
 
     # User-editable section for system DSSAT installation
     dssat_install_dir = r'C:\DSSAT48'  # System DSSAT installation folder
@@ -121,8 +121,8 @@ The following Python script provides an example of how to run the ``DSSAT CERES-
     result = subprocess.run(command_line, shell=True, check=True, capture_output=True, text=True)
     print(result.stdout)
 
-    # Use uplantgro from dpest.wheat.utils to extract and update data from PlantGro.OUT if needed
-    uplantgro(
+    # Use uts to extract and update data from PlantGro.OUT if needed
+    uts(
         plantgro_file_path=os.path.join(output_dir, 'PlantGro.OUT'),
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD']

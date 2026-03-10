@@ -21,3 +21,6 @@ docs/conf_copy.py
 dpest/create_folders.py
 dpest/wheat/ceres/ceres.py
 dpest/test.py
+dpest/spe_old.py
+dpest/calibration_sb.py
+dpest/calibration_wh.py

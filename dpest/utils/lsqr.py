@@ -1,45 +1,88 @@
 def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
-          lsqr_conlim=None, lsqr_itnlim=None, lsqrwrite=None):
+         lsqr_conlim=None, lsqr_itnlim=None, lsqrwrite=None):
     """
     Adds or updates the LSQR section in a PEST control (.pst) file.
 
-    The LSQR section configures PEST to use the LSQR algorithm for solving the inverse problem.
-    This is especially useful for large models with many parameters.
+    The LSQR section configures PEST to use the LSQR algorithm for solving the inverse
+    problem. This is especially useful for large models with many parameters. Default
+    values follow the recommendations from the PEST manual (Doherty 2015) for finite-
+    difference derivatives and least-squares problems.
 
     **Required Arguments:**
     =======
+
         * **pst_path** (*str*):
-            Path to the .pst PEST control file to modify.
+            Path to the ``PEST control file (.PST)`` to modify.
 
     **Optional Arguments:**
     =======
-        * **lsqrmode** (*int*):
-            LSQR mode (must be 0 or 1).
-            Default is 1 (enable LSQR).
-        * **lsqr_atol** (*float*):
-            LSQR algorithm atol variable (must be ≥ 0).
-            Default is 1e-4.
-        * **lsqr_btol** (*float*):
-            LSQR algorithm btol variable (must be ≥ 0).
-            Default is 1e-4.
-        * **lsqr_conlim** (*float*):
-            LSQR algorithm conlim variable (must be ≥ 0).
-            Default is 28.0.
-        * **lsqr_itnlim** (*int*):
-            LSQR algorithm itnlim variable (must be > 0).
-            Default is 28.
-        * **lsqrwrite** (*int*):
-            Write LSQR file flag (must be 0 or 1).
-            Default is 0 (don't write LSQR file).
+
+        * **lsqrmode** (*int*, *optional*):
+            LSQR mode flag (0 = disable LSQR, 1 = enable LSQR).
+            If not provided, the current value in the file is preserved.
+            If no LSQR section exists, the default is 1 (enable LSQR).
+
+        * **lsqr_atol** (*float*, *optional*):
+            LSQR algorithm ``ATOL`` variable (must be ≥ 0).
+            This is an estimate of the relative error in the data defining the matrix A
+            (equivalent to Q^(1/2) J in PEST). For finite-difference derivatives, a value
+            of ``1e-4`` generally works well.
+            If not provided:
+              - Uses the current value if an LSQR section exists.
+              - Otherwise defaults to ``1e-4``.
+
+        * **lsqr_btol** (*float*, *optional*):
+            LSQR algorithm ``BTOL`` variable (must be ≥ 0).
+            This is an estimate of the relative error in the data defining the right-hand
+            side vector b. For PEST, a value of ``1e-4`` generally works well.
+            If not provided:
+              - Uses the current value if an LSQR section exists.
+              - Otherwise defaults to ``1e-4``.
+
+        * **lsqr_conlim** (*float*, *optional*):
+            LSQR algorithm ``CONLIM`` variable (must be ≥ 0).
+            This is an upper limit on the apparent condition number of A. Iterations are
+            terminated if the estimated condition number exceeds this value, to prevent
+            very small singular values from causing unwanted solution growth. The PEST
+            manual suggests values in the range 1000 to 1/relpr; for PEST applications,
+            ``1000.0`` generally works well.
+            If not provided:
+              - Uses the current value if an LSQR section exists.
+              - Otherwise defaults to ``1000.0``.
+
+        * **lsqr_itnlim** (*int*, *optional*):
+            LSQR algorithm ``ITNLIM`` variable (must be > 0).
+            This is an upper limit on the number of LSQR iterations. In LSQR documentation,
+            suggested values are:
+              - itnlim = m/2 for well-conditioned systems with clustered singular values;
+              - itnlim = 4*m otherwise,
+            where m is the number of columns of A. In the PEST context, m is the number
+            of adjustable parameters. The PEST manual therefore recommends setting
+            ``LSQR_ITNLIM = 4 * number_of_adjustable_parameters``.
+            If not provided:
+              - Uses the current value if an LSQR section exists.
+              - Otherwise defaults to ``4 * npar`` where npar is read from the PST file.
+
+        * **lsqrwrite** (*int*, *optional*):
+            Flag controlling LSQR output file (0 or 1).
+            If set to 1, LSQR output is written to ``case.lsq``; this file can become
+            large. If not desired, set to 0.
+            If not provided:
+              - Uses the current value if an LSQR section exists.
+              - Otherwise defaults to 0 (no LSQR output file).
 
     **Returns:**
     =======
+
         * ``None``
+
+        The function updates the ``PEST control file (.PST)`` in place, either modifying an
+        existing ``* lsqr`` section or inserting a new one.
 
     **Examples:**
     =======
 
-    1. **Adding an LSQR Section to a PEST Control File with Default Parameters:**
+    1. **Adding an LSQR Section Using Recommended Defaults:**
 
        .. code-block:: python
 
@@ -49,7 +92,14 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
               pst_path = "PEST_CONTROL.pst"
           )
 
-       This example demonstrates adding a new LSQR section to a PEST control file using all default parameter values (lsqrmode=1, lsqr_atol=1e-4, lsqr_btol=1e-4, lsqr_conlim=28.0, lsqr_itnlim=28, lsqrwrite=0). The function will insert the LSQR section after any existing SVD section or append it to the file.
+       This example adds an LSQR section using:
+       ``lsqrmode = 1``,
+       ``lsqr_atol = 1e-4``,
+       ``lsqr_btol = 1e-4``,
+       ``lsqr_conlim = 1000.0``,
+       ``lsqr_itnlim = 4 * npar``,
+       ``lsqrwrite = 0``,
+       where ``npar`` is the number of adjustable parameters in the PST file.
 
     2. **Updating Specific LSQR Parameters in an Existing PEST Control File:**
 
@@ -58,13 +108,16 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
           from dpest.utils import lsqr
 
           lsqr(
-              pst_path = "PEST_CONTROL.pst",
-              lsqr_atol = 1e-6,
-              lsqr_btol = 1e-6,
-              lsqr_itnlim = 50
+              pst_path   = "PEST_CONTROL.pst",
+              lsqr_atol  = 1e-6,
+              lsqr_btol  = 1e-6,
+              lsqr_conlim= 2000.0
           )
 
-       This example updates only the specified LSQR parameters (lsqr_atol, lsqr_btol, and lsqr_itnlim) while preserving existing values for other LSQR parameters. The function will modify the existing LSQR section if present, or create a new one with default values for unspecified parameters.
+       This example updates only the specified LSQR parameters (``LSQR_ATOL``,
+       ``LSQR_BTOL``, and ``LSQR_CONLIM``) while preserving existing values for
+       other LSQR parameters. The function modifies the existing LSQR section if
+       present, or creates a new one with appropriate defaults.
 
     3. **Disabling LSQR Mode While Maintaining Other Settings:**
 
@@ -73,23 +126,28 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
           from dpest.utils import lsqr
 
           lsqr(
-              pst_path = "PEST_CONTROL.pst",
-              lsqrmode = 0
+              pst_path  = "PEST_CONTROL.pst",
+              lsqrmode  = 0
           )
 
-       This example disables LSQR mode (lsqrmode=0) while keeping other LSQR parameters at their current values. If no LSQR section exists, it will be created with disabled mode and default values for other parameters.
+       This example disables LSQR mode (``LSQRMODE = 0``) while keeping other LSQR
+       parameters at their current or default values. If no LSQR section exists, it
+       will be created with LSQR disabled and recommended defaults for the other
+       parameters.
     """
     try:
         import os
+        import pyemu
+        import numbers
 
-        # Default values for LSQR parameters
+        # Default values for LSQR parameters (used only when no LSQR section exists)
         defaults = {
-            "lsqrmode": 1,
-            "lsqr_atol": 1e-4,
-            "lsqr_btol": 1e-4,
-            "lsqr_conlim": 28.0,
-            "lsqr_itnlim": 28,
-            "lsqrwrite": 0
+            "lsqrmode": 1,         # enable LSQR by default
+            "lsqr_atol": 1e-4,     # recommended for FD derivatives
+            "lsqr_btol": 1e-4,     # recommended for FD derivatives
+            "lsqr_conlim": 1000.0, # recommended "generally works well"
+            "lsqr_itnlim": None,   # will be set to 4 * npar when needed
+            "lsqrwrite": 0         # no LSQR output file by default
         }
 
         # Verify file exists
@@ -113,7 +171,15 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
 
         if control_data_end_idx is None:
             raise ValueError(
-                "This file does not contain a '* control data' section and is not a valid PEST control file.")
+                "This file does not contain a '* control data' section and is not a valid PEST control file."
+            )
+
+        # Load PST with pyEMU to get number of parameters for ITNLIM default
+        try:
+            pst_obj = pyemu.Pst(pst_path)
+            npar = pst_obj.npar
+        except Exception as e:
+            raise RuntimeError(f"Unable to read PST with pyEMU to determine npar: {str(e)}")
 
         # Check if LSQR section exists and extract current values
         existing_lsqr = {key: defaults[key] for key in defaults}
@@ -121,7 +187,7 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
         lsqr_start_idx = None
 
         for i, line in enumerate(lines):
-            if line.strip().startswith('* lsqr'):
+            if line.strip().lower().startswith('* lsqr'):
                 lsqr_exists = True
                 lsqr_start_idx = i
 
@@ -135,12 +201,12 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
 
                     # LSQR_ATOL, LSQR_BTOL, LSQR_CONLIM, LSQR_ITNLIM (3rd line)
                     if i + 2 < len(lines):
-                        atol_btol_conlim_itnlim_line = lines[i + 2].strip().split()
-                        if len(atol_btol_conlim_itnlim_line) >= 4:
-                            existing_lsqr["lsqr_atol"] = float(atol_btol_conlim_itnlim_line[0])
-                            existing_lsqr["lsqr_btol"] = float(atol_btol_conlim_itnlim_line[1])
-                            existing_lsqr["lsqr_conlim"] = float(atol_btol_conlim_itnlim_line[2])
-                            existing_lsqr["lsqr_itnlim"] = int(float(atol_btol_conlim_itnlim_line[3]))
+                        vals = lines[i + 2].strip().split()
+                        if len(vals) >= 4:
+                            existing_lsqr["lsqr_atol"] = float(vals[0])
+                            existing_lsqr["lsqr_btol"] = float(vals[1])
+                            existing_lsqr["lsqr_conlim"] = float(vals[2])
+                            existing_lsqr["lsqr_itnlim"] = int(float(vals[3]))
 
                     # LSQRWRITE (4th line)
                     if i + 3 < len(lines):
@@ -149,11 +215,15 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
                             existing_lsqr["lsqrwrite"] = int(lsqrwrite_line[0])
                 except Exception as e:
                     print(f"Warning: Error parsing existing LSQR values: {e}")
-                    # If parsing fails, we'll use defaults or user-provided values
+                    # If parsing fails, we'll rely on defaults or user-provided values
 
                 break
 
-        # Use provided values if present, otherwise use existing values
+        # If no existing LSQR section, set defaults that depend on npar
+        if not lsqr_exists and existing_lsqr["lsqr_itnlim"] is None:
+            existing_lsqr["lsqr_itnlim"] = 4 * npar
+
+        # Use provided values if present, otherwise use existing/default values
         lsqr_values = {
             "lsqrmode": lsqrmode if lsqrmode is not None else existing_lsqr["lsqrmode"],
             "lsqr_atol": lsqr_atol if lsqr_atol is not None else existing_lsqr["lsqr_atol"],
@@ -162,6 +232,14 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
             "lsqr_itnlim": lsqr_itnlim if lsqr_itnlim is not None else existing_lsqr["lsqr_itnlim"],
             "lsqrwrite": lsqrwrite if lsqrwrite is not None else existing_lsqr["lsqrwrite"]
         }
+
+        # If lsqr_itnlim is still None for some reason, fall back to 4 * npar
+        if lsqr_values["lsqr_itnlim"] is None:
+            lsqr_values["lsqr_itnlim"] = 4 * npar
+
+        # Convert numpy integer-like types to plain int, if needed
+        if isinstance(lsqr_values["lsqr_itnlim"], numbers.Integral):
+            lsqr_values["lsqr_itnlim"] = int(lsqr_values["lsqr_itnlim"])
 
         # Validate LSQR values
         if lsqr_values["lsqrmode"] not in [0, 1]:
@@ -176,7 +254,7 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
         if lsqr_values["lsqr_conlim"] < 0:
             raise ValueError("lsqr_conlim must be greater than or equal to 0")
 
-        if not isinstance(lsqr_values["lsqr_itnlim"], int) or lsqr_values["lsqr_itnlim"] <= 0:
+        if not isinstance(lsqr_values["lsqr_itnlim"], numbers.Integral) or lsqr_values["lsqr_itnlim"] <= 0:
             raise ValueError("lsqr_itnlim must be an integer greater than 0")
 
         if lsqr_values["lsqrwrite"] not in [0, 1]:
@@ -196,17 +274,12 @@ def lsqr(pst_path, lsqrmode=None, lsqr_atol=None, lsqr_btol=None,
             lines[lsqr_start_idx:lsqr_start_idx + 4] = lsqr_section
         else:
             # Check for existing SVD section
-            svd_exists = False
-            for i, line in enumerate(lines):
-                if line.strip().startswith('* singular value decomposition'):
-                    svd_exists = True
-                    # If user is enabling LSQR (mode=1), warn about SVD incompatibility
-                    if lsqr_values["lsqrmode"] == 1:
-                        print("Warning: LSQR and SVD cannot be used together. Adding LSQR will make SVD inactive.")
-                    break
+            svd_exists = any(line.strip().lower().startswith('* singular value decomposition') for line in lines)
+            if lsqr_values["lsqrmode"] == 1 and svd_exists:
+                print("Warning: LSQR and SVD cannot both be active. Enabling LSQR will require SVDMODE = 0 in the SVD section.")
 
             # Insert LSQR section after control data section
-            lines[control_data_end_idx :control_data_end_idx ] = lsqr_section
+            lines[control_data_end_idx:control_data_end_idx] = lsqr_section
 
         # Write updated file
         with open(pst_path, 'w') as f:
