@@ -646,116 +646,227 @@ def extract_treatment_info_plantgrowth(file_path, treatment_dict):
 #     df = pd.DataFrame(data, columns=columns)
 #     return df
 
+# def wht_filedata_to_dataframe(file_path):
+#     """
+#     Parses a DSSAT-style TXT file and returns a DataFrame.
+#
+#     Parameters:
+#         file_path (str): The path to the TXT file.
+#
+#     Returns:
+#         pd.DataFrame: A DataFrame containing the data from the TXT file.
+#
+#     Notes:
+#         DSSAT T files can contain one or more tables starting with a header line
+#         beginning with ``@TRNO   DATE``. When multiple tables are present, this
+#         function merges them by ``TRNO`` and ``DATE`` so that each pair of
+#         ``TRNO`` and ``DATE`` appears in a single row. Columns from subsequent
+#         tables are added to the existing rows as new variables. If a given
+#         ``TRNO``–``DATE`` combination is not present in a later table, the
+#         corresponding variables are filled with ``-99`` in the merged DataFrame.
+#     """
+#     with open(file_path, 'r') as file:
+#         lines = file.readlines()
+#
+#     # Find all header lines that start with '@TRNO' (each defines a table)
+#     header_indices = [i for i, line in enumerate(lines) if line.startswith('@TRNO')]
+#
+#     if not header_indices:
+#         raise ValueError("No header line starting with '@TRNO' found in the file.")
+#
+#     # Build table blocks: (header_line_index, data_start_index, data_end_index)
+#     table_blocks = []
+#     for idx, h_idx in enumerate(header_indices):
+#         # Find the first data line after the header (non-empty, not *, !, or @)
+#         data_start = None
+#         for j in range(h_idx + 1, len(lines)):
+#             if lines[j].strip() and not lines[j].startswith(('*', '!', '@')):
+#                 data_start = j
+#                 break
+#         if data_start is None:
+#             continue
+#
+#         # Data end is just before the next header or end of file
+#         if idx < len(header_indices) - 1:
+#             next_header = header_indices[idx + 1]
+#             data_end = next_header
+#         else:
+#             data_end = len(lines)
+#
+#         table_blocks.append((h_idx, data_start, data_end))
+#
+#     if not table_blocks:
+#         raise ValueError("No data rows found after '@TRNO' header(s).")
+#
+#     # Parse each table block into a separate DataFrame
+#     dfs = []
+#     for h_idx, data_start, data_end in table_blocks:
+#         # Find the line with column headers (starts with '@')
+#         header_line = lines[h_idx].strip()
+#
+#         # Extract column names from the header line
+#         columns = header_line[1:].split()
+#
+#         # Find the data lines (non-comment and numeric)
+#         data_lines = [
+#             line.strip() for line in lines[data_start:data_end]
+#             if line.strip() and not line.startswith(('*', '!', '@'))
+#         ]
+#
+#         # Parse data lines into a list of lists for the DataFrame
+#         data = []
+#         for line in data_lines:
+#             # Split on whitespace and ensure consistency with the number of columns
+#             values = line.split()
+#             if len(values) == len(columns):
+#                 data.append(values)
+#             else:
+#                 raise ValueError(f"Data row has inconsistent column count: {line}")
+#
+#         if not data:
+#             continue
+#
+#         # Create the DataFrame for this block
+#         df_block = pd.DataFrame(data, columns=columns)
+#
+#         # Ensure TRNO and DATE exist and can be used as merge keys
+#         if 'TRNO' not in df_block.columns or 'DATE' not in df_block.columns:
+#             raise ValueError("Each table must contain 'TRNO' and 'DATE' columns to be merged.")
+#
+#         dfs.append(df_block)
+#
+#     if not dfs:
+#         raise ValueError("No valid data tables could be parsed from the file.")
+#
+#     # Merge all tables on TRNO and DATE
+#     merged_df = dfs[0]
+#     for df_block in dfs[1:]:
+#         # Identify non-key columns and avoid duplicating columns already present
+#         non_key_cols = [c for c in df_block.columns if c not in ['TRNO', 'DATE']]
+#         new_cols = [c for c in non_key_cols if c not in merged_df.columns]
+#         cols_to_merge = ['TRNO', 'DATE'] + new_cols
+#
+#         merged_df = merged_df.merge(
+#             df_block[cols_to_merge],
+#             on=['TRNO', 'DATE'],
+#             how='outer',
+#         )
+#
+#     # Fill missing values with -99 (string, consistent with DSSAT conventions)
+#     merged_df = merged_df.fillna('-99')
+#
+#     return merged_df
+
+
 def wht_filedata_to_dataframe(file_path):
     """
-    Parses a DSSAT-style TXT file and returns a DataFrame.
+    Parses a DSSAT-style TXT/T file and returns a DataFrame containing all
+    data present in the file, regardless of whether the data are stored in
+    one block or multiple @TRNO DATE blocks.
 
-    Parameters:
-        file_path (str): The path to the TXT file.
+    Parameters
+    ----------
+    file_path : str
+        Path to the DSSAT T/WHT/SBT file.
 
-    Returns:
-        pd.DataFrame: A DataFrame containing the data from the TXT file.
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with one row per TRNO-DATE combination and all variables
+        found across all blocks.
 
-    Notes:
-        DSSAT T files can contain one or more tables starting with a header line
-        beginning with ``@TRNO   DATE``. When multiple tables are present, this
-        function merges them by ``TRNO`` and ``DATE`` so that each pair of
-        ``TRNO`` and ``DATE`` appears in a single row. Columns from subsequent
-        tables are added to the existing rows as new variables. If a given
-        ``TRNO``–``DATE`` combination is not present in a later table, the
-        corresponding variables are filled with ``-99`` in the merged DataFrame.
+    Notes
+    -----
+    - DSSAT T files may contain one or more tables beginning with a header
+      line like '@TRNO DATE ...'.
+    - This function parses every table block, concatenates them, and then
+      collapses rows with the same TRNO-DATE combination by taking the first
+      non-missing value for each variable.
+    - Missing values are filled with '-99' at the end.
     """
-    with open(file_path, 'r') as file:
+
+    with open(file_path, "r") as file:
         lines = file.readlines()
 
-    # Find all header lines that start with '@TRNO' (each defines a table)
-    header_indices = [i for i, line in enumerate(lines) if line.startswith('@TRNO')]
+    # Find all table headers
+    header_indices = [i for i, line in enumerate(lines) if line.startswith("@TRNO")]
 
     if not header_indices:
         raise ValueError("No header line starting with '@TRNO' found in the file.")
 
-    # Build table blocks: (header_line_index, data_start_index, data_end_index)
-    table_blocks = []
-    for idx, h_idx in enumerate(header_indices):
-        # Find the first data line after the header (non-empty, not *, !, or @)
-        data_start = None
-        for j in range(h_idx + 1, len(lines)):
-            if lines[j].strip() and not lines[j].startswith(('*', '!', '@')):
-                data_start = j
-                break
-        if data_start is None:
-            continue
-
-        # Data end is just before the next header or end of file
-        if idx < len(header_indices) - 1:
-            next_header = header_indices[idx + 1]
-            data_end = next_header
-        else:
-            data_end = len(lines)
-
-        table_blocks.append((h_idx, data_start, data_end))
-
-    if not table_blocks:
-        raise ValueError("No data rows found after '@TRNO' header(s).")
-
-    # Parse each table block into a separate DataFrame
     dfs = []
-    for h_idx, data_start, data_end in table_blocks:
-        # Find the line with column headers (starts with '@')
-        header_line = lines[h_idx].strip()
 
-        # Extract column names from the header line
+    for idx, h_idx in enumerate(header_indices):
+        header_line = lines[h_idx].strip()
         columns = header_line[1:].split()
 
-        # Find the data lines (non-comment and numeric)
-        data_lines = [
-            line.strip() for line in lines[data_start:data_end]
-            if line.strip() and not line.startswith(('*', '!', '@'))
-        ]
+        # End of this block = next header or end of file
+        if idx < len(header_indices) - 1:
+            end_idx = header_indices[idx + 1]
+        else:
+            end_idx = len(lines)
 
-        # Parse data lines into a list of lists for the DataFrame
-        data = []
-        for line in data_lines:
-            # Split on whitespace and ensure consistency with the number of columns
-            values = line.split()
-            if len(values) == len(columns):
-                data.append(values)
-            else:
-                raise ValueError(f"Data row has inconsistent column count: {line}")
+        # Collect valid data lines
+        data_lines = []
+        for line in lines[h_idx + 1:end_idx]:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if stripped.startswith(("*", "!", "@")):
+                continue
+            data_lines.append(stripped)
 
-        if not data:
+        if not data_lines:
             continue
 
-        # Create the DataFrame for this block
+        data = []
+        for line in data_lines:
+            values = line.split()
+            if len(values) != len(columns):
+                raise ValueError(
+                    f"Data row has inconsistent column count.\n"
+                    f"Header columns ({len(columns)}): {columns}\n"
+                    f"Row values    ({len(values)}): {values}\n"
+                    f"Offending row: {line}"
+                )
+            data.append(values)
+
         df_block = pd.DataFrame(data, columns=columns)
 
-        # Ensure TRNO and DATE exist and can be used as merge keys
-        if 'TRNO' not in df_block.columns or 'DATE' not in df_block.columns:
-            raise ValueError("Each table must contain 'TRNO' and 'DATE' columns to be merged.")
+        if "TRNO" not in df_block.columns or "DATE" not in df_block.columns:
+            raise ValueError(
+                "Each table block must contain 'TRNO' and 'DATE' columns."
+            )
+
+        # Standardize keys as strings
+        df_block["TRNO"] = df_block["TRNO"].astype(str).str.strip()
+        df_block["DATE"] = df_block["DATE"].astype(str).str.strip()
+
+        # Replace DSSAT missing marker with pandas missing for proper coalescing
+        df_block = df_block.replace("-99", pd.NA)
 
         dfs.append(df_block)
 
     if not dfs:
         raise ValueError("No valid data tables could be parsed from the file.")
 
-    # Merge all tables on TRNO and DATE
-    merged_df = dfs[0]
-    for df_block in dfs[1:]:
-        # Identify non-key columns and avoid duplicating columns already present
-        non_key_cols = [c for c in df_block.columns if c not in ['TRNO', 'DATE']]
-        new_cols = [c for c in non_key_cols if c not in merged_df.columns]
-        cols_to_merge = ['TRNO', 'DATE'] + new_cols
+    # Concatenate all blocks vertically
+    combined_df = pd.concat(dfs, ignore_index=True, sort=False)
 
-        merged_df = merged_df.merge(
-            df_block[cols_to_merge],
-            on=['TRNO', 'DATE'],
-            how='left',
-        )
+    # Collapse duplicate TRNO-DATE rows by taking first non-missing value per column
+    combined_df = (
+        combined_df
+        .groupby(["TRNO", "DATE"], as_index=False, sort=False)
+        .first()
+    )
 
-    # Fill missing values with -99 (string, consistent with DSSAT conventions)
-    merged_df = merged_df.fillna('-99')
+    # Fill remaining missing values back with DSSAT-style missing value
+    combined_df = combined_df.fillna("-99")
 
-    return merged_df
+    # Optional sorting
+    combined_df = combined_df.sort_values(["TRNO", "DATE"]).reset_index(drop=True)
+
+    return combined_df
 
 
 def get_header_and_first_sim(file_path, treatment, treatment_dict=None):
@@ -809,58 +920,67 @@ def get_header_and_first_sim(file_path, treatment, treatment_dict=None):
     return header_line, first_sim_line, date_first_sim
 
 
+from datetime import datetime, timedelta
+
 def calculate_days_dict(dates_dict, date_first_sim):
     """
     Calculates a dictionary of days from the first simulation date to each date in the dictionary.
 
     Parameters:
-    dates_dict (dict): Dictionary mapping DOY values to variable names.
+    dates_dict (dict): Dictionary mapping YYDOY/YYYYDOY values to variable names.
     date_first_sim (datetime): The first simulation date.
 
     Returns:
-    dict: A dictionary mapping each date to its adjusted day count.
+    dict: A dictionary mapping each date string to:
+          [days_from_start, list_of_variables]
     """
 
     days_dict = {}
+
     for date_str, variables in dates_dict.items():
-        # Handle four-digit year format (e.g., 2023012)
+
+        # YYYYDOY
         if len(date_str) == 7:
             year_var = int(date_str[:4])
             day_var = int(date_str[4:])
 
-        # Handle two-digit year format (e.g., 75167)
+            if not (1 <= day_var <= 366):
+                raise ValueError(f"Invalid day-of-year in date: {date_str}")
+
+            date_var = datetime(year_var, 1, 1) + timedelta(days=day_var - 1)
+
+        # YYDOY
         elif len(date_str) == 5:
-            year_var = int(date_str[:2])
+            yy = int(date_str[:2])
             day_var = int(date_str[2:])
 
-            # Complex year determination logic
-            if year_var < date_first_sim.year % 100:
-                # If year is less, assume it's in the next century
-                year_var += 2000
-            elif year_var == date_first_sim.year % 100:
-                # If year is same, check day of year
-                if day_var < date_first_sim.timetuple().tm_yday:
-                    year_var += 2000  # Earlier in the year, next century
-                else:
-                    year_var += 1900  # Later in the year, same century
-            else:
-                # If year is greater, assume previous century
-                year_var += 1900
+            if not (1 <= day_var <= 366):
+                raise ValueError(f"Invalid day-of-year in date: {date_str}")
+
+            # Use the simulation year century as anchor and test nearby centuries
+            base_century = (date_first_sim.year // 100) * 100
+            candidate_years = [
+                base_century - 100 + yy,
+                base_century + yy,
+                base_century + 100 + yy,
+            ]
+
+            candidate_dates = [
+                datetime(year, 1, 1) + timedelta(days=day_var - 1)
+                for year in candidate_years
+            ]
+
+            # Choose the candidate closest to the first simulation date
+            date_var = min(
+                candidate_dates,
+                key=lambda d: abs((d - date_first_sim).days)
+            )
 
         else:
             raise ValueError(f"Invalid date format: {date_str}")
 
-        # Convert to actual date
-        date_var = datetime(year_var, 1, 1) + timedelta(days=day_var - 1)
-
-        # Calculate days from first simulation date
         days_from_start = (date_var - date_first_sim).days
-        # days_dict[date_str] = [(date_var - date_first_sim).days, variable[0]]
-
-        # Store all variables along with the day count
-        # Calculate days from first simulation date and use the first variable
-        first_variable = next(iter(variables))
-        days_dict[date_str] = [(date_var - date_first_sim).days, list(variables.keys())]
+        days_dict[date_str] = [days_from_start, list(variables.keys())]
 
     return days_dict
 
@@ -933,6 +1053,71 @@ def find_variable_position(header_line, data_line, variables):
     return positions
 
 
+# def filter_dataframe(dataframe, treatment, treatment_number_name, variables):
+#     """
+#     Filters a DataFrame based on the treatment and returns a dictionary of DATE
+#     and variables where values are not -99.
+#
+#     Parameters:
+#     dataframe (pd.DataFrame): Input DataFrame.
+#     treatment (str): Treatment name to filter by.
+#     treatment_number_name (dict): Mapping of treatments to their corresponding TRNO values.
+#     variables (list): List of variable names to check in the dataset.
+#
+#     Returns:
+#     dict: A dictionary containing filtered data with DATE as keys and variables as values.
+#     """
+#     # Check critical columns (if-else for missing columns)
+#     critical_columns = {'TRNO', 'DATE'}
+#     missing_critical = critical_columns - set(dataframe.columns)
+#
+#     if missing_critical:
+#         print(f"Error: Missing critical columns {missing_critical}. Exiting.")
+#         return {}
+#
+#     # Check if the treatment exists
+#     elif treatment not in treatment_number_name:
+#         print(f"Error: Treatment '{treatment}' not found. Exiting.")
+#         return {}
+#
+#     elif set(variables).issubset(dataframe.columns):
+#
+#         # Get the TRNO value for the treatment
+#         trno_value = treatment_number_name[treatment]
+#
+#         # Initialize date and variable and value result dictionary
+#         variable_value = {}
+#
+#         # Filter data with if-else for missing variables
+#         for variable in variables:
+#
+#             if variable not in dataframe.columns:
+#                 print(f"Warning: Column '{variable}' is missing. Skipping.")
+#             else:
+#                 # Filter DataFrame for valid rows
+#                 filtered_df = dataframe[
+#                     (dataframe['TRNO'] == trno_value) &
+#                     (dataframe[variable] != '-99') &
+#                     (dataframe[variable] != -99) &
+#                     (dataframe[variable] != 0) &
+#                     (dataframe[variable] != '0')
+#                     ]
+#
+#                 # Populate results
+#                 for _, row in filtered_df.iterrows():
+#                     date = row['DATE']
+#                     if date not in variable_value:
+#                         variable_value[date] = {}
+#                     variable_value[date][variable] = row[variable]
+#
+#         # Return sorted results
+#         return dict(sorted(variable_value.items()))
+#
+#     else:
+#         # Notify if required columns are missing
+#         print(f"One or more required columns are missing: {set(variables) - set(dataframe.columns)}")
+#         return {}
+
 def filter_dataframe(dataframe, treatment, treatment_number_name, variables):
     """
     Filters a DataFrame based on the treatment and returns a dictionary of DATE
@@ -947,56 +1132,59 @@ def filter_dataframe(dataframe, treatment, treatment_number_name, variables):
     Returns:
     dict: A dictionary containing filtered data with DATE as keys and variables as values.
     """
-    # Check critical columns (if-else for missing columns)
+
+    # Check critical columns
     critical_columns = {'TRNO', 'DATE'}
     missing_critical = critical_columns - set(dataframe.columns)
 
     if missing_critical:
-        print(f"Error: Missing critical columns {missing_critical}. Exiting.")
-        return {}
+        raise ValueError(f"Missing critical columns: {missing_critical}")
 
     # Check if the treatment exists
-    elif treatment not in treatment_number_name:
-        print(f"Error: Treatment '{treatment}' not found. Exiting.")
-        return {}
+    if treatment not in treatment_number_name:
+        raise ValueError(f"Treatment '{treatment}' not found.")
 
-    elif set(variables).issubset(dataframe.columns):
+    # Identify present and missing variables
+    present_variables = [var for var in variables if var in dataframe.columns]
+    missing_variables = [var for var in variables if var not in dataframe.columns]
 
-        # Get the TRNO value for the treatment
-        trno_value = treatment_number_name[treatment]
+    if missing_variables:
+        print(f"Warning: The following variables are missing and will be skipped: {missing_variables}")
 
-        # Initialize date and variable and value result dictionary
-        variable_value = {}
+    if not present_variables:
+        raise ValueError(
+            f"None of the requested variables are present in the dataframe. "
+            f"Requested: {variables}"
+        )
 
-        # Filter data with if-else for missing variables
-        for variable in variables:
+    # Get the TRNO value for the treatment
+    trno_value = str(treatment_number_name[treatment]).strip()
 
-            if variable not in dataframe.columns:
-                print(f"Warning: Column '{variable}' is missing. Skipping.")
-            else:
-                # Filter DataFrame for valid rows
-                filtered_df = dataframe[
-                    (dataframe['TRNO'] == trno_value) &
-                    (dataframe[variable] != '-99') &
-                    (dataframe[variable] != -99) &
-                    (dataframe[variable] != 0) &
-                    (dataframe[variable] != '0')
-                    ]
+    # Make sure TRNO is comparable as string
+    df = dataframe.copy()
+    df['TRNO'] = df['TRNO'].astype(str).str.strip()
+    df['DATE'] = df['DATE'].astype(str).str.strip()
 
-                # Populate results
-                for _, row in filtered_df.iterrows():
-                    date = row['DATE']
-                    if date not in variable_value:
-                        variable_value[date] = {}
-                    variable_value[date][variable] = row[variable]
+    # Initialize result dictionary
+    variable_value = {}
 
-        # Return sorted results
-        return dict(sorted(variable_value.items()))
+    for variable in present_variables:
+        filtered_df = df[
+            (df['TRNO'] == trno_value) &
+            (df[variable].notna()) &
+            (df[variable] != '-99') &
+            (df[variable] != -99) &
+            (df[variable] != 0) &
+            (df[variable] != '0')
+        ]
 
-    else:
-        # Notify if required columns are missing
-        print(f"One or more required columns are missing: {set(variables) - set(dataframe.columns)}")
-        return {}
+        for _, row in filtered_df.iterrows():
+            date = row['DATE']
+            if date not in variable_value:
+                variable_value[date] = {}
+            variable_value[date][variable] = row[variable]
+
+    return dict(sorted(variable_value.items()))
 
 
 def validate_marker(marker, marker_name):

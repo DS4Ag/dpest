@@ -49,11 +49,11 @@ def overview(
         * **experiment** (*str*, *optional*):
           Experiment code as shown in the PlantGro.OUT header (e.g. ``"AZMC9311"``).
           When the same treatment name appears in more than one experiment within
-          the same time-series file, this argument is used to select the correct
+          the same OVERVIEW.OUT file, this argument is used to select the correct
           experiment block. If not provided and the treatment is unique in the file,
           the function will use the unique experiment automatically. If the
           treatment appears in multiple experiments and ``experiment`` is not
-          specified, a clear error is raised indicating the available experiments.
+          specified, it will the variables for that treatment that appear in the last part of the file.
 
         * **suffix** (*str*, *default: ""*): Suffix to append to the output
           filename and variable names in the .INS file. This short code (e.g.,

@@ -27,3 +27,6 @@ from .lsqr import lsqr
 from .svd import svd
 from .rmv_lsqr import rmv_lsqr
 from .rmv_svd import rmv_svd
+
+from .parg_derinc import parg_derinc
+from .parg_inctyp import parg_inctyp

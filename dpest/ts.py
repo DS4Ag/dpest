@@ -80,7 +80,7 @@ def ts(
       experiment block. If not provided and the treatment is unique in the file,
       the function will use the unique experiment automatically. If the
       treatment appears in multiple experiments and ``experiment`` is not
-      specified, a clear error is raised indicating the available experiments.
+      specified, it will the variables for that treatment that appear in the last part of the file.
 
     * **suffix** (*str*, *default: ""*):
         Suffix to append to the output filename and variable names in the

@@ -262,8 +262,45 @@ def eco(
             # Store the current value in the dictionary
             current_parameter_values[parameter] = parameter_value
 
+            # # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # # Enforce 3‑character for parameter keys OLD VERSION
+            # # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            #
+            # # Get the length of a parameter including empty spaces
+            # char_compl = header_line[par_position[0] + 1:par_position[1] + 1]
+            #
+            # # Calculate the number of available characters for the parameter
+            # available_space = len(char_compl) - 2
+            #
+            # # Build a 3-character base key for the parameter, padded with '-'
+            # base_key = parameter.strip()
+            # if len(base_key) > 3:
+            #     base_key = base_key[:3]
+            # if len(base_key) < 3:
+            #     base_key = base_key.ljust(3, '-')
+            #
+            # truncated_parameter = base_key
+            #
+            # # Ensure uniqueness: if this 3-char key already exists, add a numeric suffix
+            # counter = 1
+            # while any(truncated_parameter.strip() == existing.strip() for existing in parameter_par_truncated.values()):
+            #     suffix = str(counter)
+            #     core = base_key
+            #     # Trim core if needed so core+suffix stays within 3 characters
+            #     if len(core) + len(suffix) > 3:
+            #         core = core[:3 - len(suffix)]
+            #     truncated_parameter = (core + suffix).ljust(3, '-')
+            #     counter += 1
+            #
+            # # Save the parameter complete name and truncated name into a dictionary
+            # parameter_par_truncated[parameter] = truncated_parameter.strip()
+            #
+            # # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # # / Enforce 3‑character for parameter keys OLD VERSION
+            # # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # Enforce 3‑character for parameter keys
+            # Enforce 3-character parameter keys for ecotype parameters
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             # Get the length of a parameter including empty spaces
@@ -272,23 +309,33 @@ def eco(
             # Calculate the number of available characters for the parameter
             available_space = len(char_compl) - 2
 
-            # Build a 3-character base key for the parameter, padded with '-'
-            base_key = parameter.strip()
-            if len(base_key) > 3:
-                base_key = base_key[:3]
-            if len(base_key) < 3:
-                base_key = base_key.ljust(3, '-')
+            # Build a 3-character base key:
+            #   - first character identifies parameter source
+            #   - remaining two characters come from the parameter name
+            # For ecotype parameters, reserve "2" as the first character.
+            parameter_clean = parameter.strip()
+            source_code = '2'
+
+            if len(parameter_clean) >= 2:
+                base_key = source_code + parameter_clean[:2]
+            elif len(parameter_clean) == 1:
+                base_key = (source_code + parameter_clean).ljust(3, '-')
+            else:
+                base_key = source_code.ljust(3, '-')
 
             truncated_parameter = base_key
 
-            # Ensure uniqueness: if this 3-char key already exists, add a numeric suffix
+            # Ensure uniqueness within this ECO file only
+            # If the 3-char key already exists, replace the last character(s)
+            # with a counter while keeping the source code prefix.
             counter = 1
             while any(truncated_parameter.strip() == existing.strip() for existing in parameter_par_truncated.values()):
                 suffix = str(counter)
-                core = base_key
-                # Trim core if needed so core+suffix stays within 3 characters
-                if len(core) + len(suffix) > 3:
-                    core = core[:3 - len(suffix)]
+
+                # Keep the source code in the first position and use as much
+                # of the parameter-derived part as possible before appending
+                # the numeric suffix.
+                core = base_key[:3 - len(suffix)]
                 truncated_parameter = (core + suffix).ljust(3, '-')
                 counter += 1
 
@@ -296,8 +343,9 @@ def eco(
             parameter_par_truncated[parameter] = truncated_parameter.strip()
 
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            # / Enforce 3‑character for parameter keys
+            # / Enforce 3-character parameter keys for ecotype parameters
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # Avoid overflowing 3‑char fields

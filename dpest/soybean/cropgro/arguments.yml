@@ -32,36 +32,38 @@ CULTIVAR_TPL_FILE:
             - SDPRO
             - SDLIP
 
-# Arguments for the CROPGRO Cabbage ECOTYPE template file function
+# Arguments for the CROPGRO Soybean ECOTYPE template file function
 ECOTYPE_TPL_FILE:
 
     # Casification into groups of ECOTYPE parameters
     PARAMETERS:
         # Parameter_group:
         # - Values
-        MG_TEMP:    # Maturity group and temperature adaptation
-            - MG
-            - TM
+
         EARLY_PHEN: # Early vegetative and juvenile development
-            - PP-SS
             - PL-EM
             - EM-V1
             - V1-JU
             - JU-R0
+
         REPRO_TIMING: # Pod and shell development timing
+            - THVAR
             - PM06
             - PM09
-            - LNHSH
+            - LNGSH
             - R7-R8
             - FL-VS
+
         LEAF_APP:   # Leaf appearance rate
             - TRIFL
+
         CANOPY_FORM: # Relative canopy size and shape
-            - RWIDTH
+            - RWDTH
             - RHGHT
-            - SIZELF
-        POST_R1_PHOTO: # Post-flowering photoperiod sensitivity
+
+        POST_R1_PHOT: # Post-flowering photoperiod sensitivity
             - R1PPO
+
         LOWT_FLO:   # Low-temperature effect on flowering
             - OPTBI
             - SLOBI
@@ -79,22 +81,28 @@ OVERVIEW_FILE:
         First seed day (dap): phenology
         Physiological maturity day (dap): phenology
         Harvest maturity day (dap): phenology
+
         Yield at harvest maturity (kg [dm]/ha): yield
         Pod/Ear/Panicle weight at maturity (kg [dm]/ha): yield
-        Tops weight at anthesis (kg [dm]/ha): biomass
-        Tops weight at maturity (kg [dm]/ha): biomass
-        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
         Number at maturity (no/m2): yield
         Unit wt at maturity (g [dm]/unit): yield
         Number at maturity (no/unit): yield
         Harvest index at maturity: yield
         Threshing % at maturity: yield
+
+        Tops weight at anthesis (kg [dm]/ha): biomass
+        Tops weight at maturity (kg [dm]/ha): biomass
+        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
+
         Leaf area index, maximum: lai
-        Leaf number per stem at maturity: yield
-        Canopy height (m): biomass
+
+        Leaf number per stem at maturity: phenology
+        Canopy height (m): morphology
+
         Tops N at anthesis (kg/ha): nitrogen
         Tops N at maturity (kg/ha): nitrogen
         Stem N at maturity (kg/ha): nitrogen
         Grain N at maturity (kg/ha): nitrogen
         Grain N at maturity (%): nitrogen
-        Grain oil at maturity (%): yield
+
+        Grain oil at maturity (%): quality
