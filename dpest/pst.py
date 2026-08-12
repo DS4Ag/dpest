@@ -357,10 +357,11 @@ def pst(
         # Merge parameter groups without overwriting shared group names
         combined_parameters_grouped = {}
 
-        # Loop through cultivar and ecotype group definitions
+        # Loop through cultivar, ecotype, and species group definitions
         for source in [
             cultivar_parameters.get('parameters_grouped', {}) if cultivar_parameters else {},
-            ecotype_parameters.get('parameters_grouped', {}) if ecotype_parameters else {}
+            ecotype_parameters.get('parameters_grouped', {}) if ecotype_parameters else {},
+            species_parameters.get('parameters_grouped', {}) if species_parameters else {}
         ]:
             for group_name, group_params in source.items():
 
@@ -375,6 +376,7 @@ def pst(
                     for p in new_params:
                         if p not in combined_parameters_grouped[group_name]:
                             combined_parameters_grouped[group_name].append(p)
+
 
         # Convert lists back to comma-separated strings
         parameters['parameters_grouped'] = {
