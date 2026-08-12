@@ -12,6 +12,7 @@ def ts(
     ts_ins_first_line = None,
     mrk = '~',
     smk = '!',
+    drop_missing_simulated=False,
 ):
 
     """
@@ -99,7 +100,7 @@ def ts(
 
             {"LAID": "lai", "CWAD": "biomass", ...}
 
-        When ``variables_classification`` is ``None``, the function loads a
+        When ``variables_classification`` isn't provided, the function loads a
         global classification from the package configuration file
         (``dpest/arguments.yml``, key ``VARIABLES_CLASSIFICATION_GLOBAL``),
         and maps each variable code to its group from that dictionary.
@@ -118,6 +119,19 @@ def ts(
         Secondary marker delimiter character for the instruction file. Must be
         a single character and cannot be A–Z, a–z, 0–9, ``[``, ``]``, ``(``,
         ``)``, ``:``, space, tab, or ``&``.
+
+    * **drop_missing_simulated** (*bool*, *default: False*):
+        Controls how measured observations beyond the last simulated
+        ``YEAR/DOY`` are handled.
+
+        - If ``False`` (default), the function raises a ``ValueError`` when
+          measured observations occur after the last simulated date.
+        - If ``True``, only measured observations with dates up to the last
+          simulated ``YEAR/DOY`` are used, and later observations are dropped.
+          A warning message is printed listing the excluded dates.
+
+        This provides an alternative to extending the simulation output using
+        ``uts()``.
 
     **Internal behaviour**
     ======================
@@ -314,15 +328,81 @@ def ts(
         if not dates_variable_values_dict:
             raise ValueError(f"No valid data found for treatment '{treatment}' with variables {variables}")
 
-        # Get the header and first simulation date
-        header_line, first_sim_line, date_first_sim = get_header_and_first_sim(
+        #`````````````````` Old version that does not include the option "drop_missing_simulated=False," that
+        # # Get the header and first simulation date
+        # header_line, first_sim_line, date_first_sim = get_header_and_first_sim(
+        #     validated_path,
+        #     treatment,
+        #     treatment_dict=selected_treatment_dict
+        # )
+        #
+        # # Calculate days dictionary days after first simulation
+        # days_dict = calculate_days_dict(dates_variable_values_dict, date_first_sim)
+
+        #`````````````````` / Old version that does not include the option "drop_missing_simulated=False," that
+
+
+        #`````````````````` New version to include the function argument "drop_missing_simulated=False," that
+        # Get header, first simulated date, and last simulated date
+        # This defines the valid simulation window for the selected treatment
+        header_line, first_sim_line, date_first_sim, date_last_sim = get_header_first_and_last_sim(
             validated_path,
             treatment,
             treatment_dict=selected_treatment_dict
         )
 
-        # Calculate days dictionary days after first simulation
+        # Split measured observations into:
+        # - those inside the simulation window (kept)
+        # - those beyond the last simulated date (dropped)
+        kept_dates_dict, dropped_dates_dict = filter_dates_to_simulation_window(
+            dates_variable_values_dict,
+            date_first_sim,
+            date_last_sim
+        )
+
+        # If any measured observations are beyond the simulation period, handle them
+        if dropped_dates_dict:
+
+            # Format last simulated date as YYYYDOY for reporting
+            last_sim_yyyydoy = f"{date_last_sim.year}{date_last_sim.timetuple().tm_yday:03d}"
+
+            # List of dropped measured dates (sorted for readability)
+            dropped_dates = sorted(dropped_dates_dict.keys())
+
+            # Default behavior: stop execution and inform the user
+            if not drop_missing_simulated:
+                raise ValueError(
+                    f"Some measured observations occur after the last simulated date for "
+                    f"treatment '{treatment}' in experiment '{experiment_code}'.\n"
+                    f"Last simulated YEAR/DOY: {last_sim_yyyydoy}\n"
+                    f"Dropped candidate dates: {dropped_dates}\n\n"
+                    f"Re-run ts(..., drop_missing_simulated=True) to keep only observations "
+                    f"up to the last simulated date, or use uts() if you intentionally want "
+                    f"to extend the .OUT file with artificial rows."
+                )
+
+            # Optional behavior: continue but warn the user that some observations were ignored
+            print(
+                f"Warning: {len(dropped_dates_dict)} measured date(s) were ignored because "
+                f"they occur after the last simulated YEAR/DOY ({last_sim_yyyydoy}) "
+                f"for treatment '{treatment}' in experiment '{experiment_code}'.\n"
+                f"Dropped dates: {dropped_dates}"
+            )
+
+        # Replace original dictionary with only valid (kept) observations
+        dates_variable_values_dict = kept_dates_dict
+
+        # Safety check: ensure at least one observation remains after filtering
+        if not dates_variable_values_dict:
+            raise ValueError(
+                f"After filtering to the simulation window, no valid measured observations "
+                f"remain for treatment '{treatment}'."
+            )
+
+        # Convert remaining dates to days-after-first-simulation (used to build INS instructions)
         days_dict = calculate_days_dict(dates_variable_values_dict, date_first_sim)
+
+        #``````````````````/ New version to include the function argument "drop_missing_simulated=False," that
 
         # adjust the days after first simulation
         adjusted_days_dict = adjust_days_dict(days_dict)
@@ -405,6 +485,21 @@ def ts(
 
         # Map variables to their respective groups
         dates_variable_values_df['group'] = dates_variable_values_df['variable'].map(variables_classification)
+
+        # Validate that all variables were assigned to a group
+        missing_group_rows = dates_variable_values_df[
+            dates_variable_values_df["group"].isna()
+        ].copy()
+
+        if not missing_group_rows.empty:
+            missing_variables = sorted(missing_group_rows["variable"].dropna().unique())
+
+            raise ValueError(
+                "The following time-series variables were not assigned to any group in "
+                "'variables_classification':\n"
+                f"  {missing_variables}\n\n"
+                "Please update the 'variables_classification' dictionary to include them."
+            )
 
         # Convert 'value_measured' column to float
         dates_variable_values_df['value_measured'] = dates_variable_values_df['value_measured'].astype(float)

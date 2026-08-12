@@ -77,10 +77,12 @@ def overview(
           ``'Maximum leaf area index', 'Canopy (tops) wt (kg dm/ha)', 'Above-ground N (kg/ha)']``).
 
         * **variables_classification** (*dict*): Mapping of variable names to
-          their respective categories. If provided, it is used directly to
-          classify variables. If not provided, the function will attempt to
+          their respective categories. If not provided, the function will attempt to
           load crop- and model-specific classification from a configuration
-          file located at ``dpest/<crop>/<model>/arguments.yml``.
+          file located at ``dpest/<crop>/<model>/arguments.yml``. Users can override this by providing their
+          own dictionary to define the variables from the *MAIN GROWTH AND DEVELOPMENT VARIABLES section of the
+          ``OVERVIEW.OUT`` DSSAT file, using the format ``{variable: variable_group, …}``.
+           Variables group names should be less than 12 characters.
 
         * **overview_ins_first_line** (*str*, *default: "pif"*): First line of
           the ``PEST instruction file (.INS)``. This is the PEST default value
@@ -217,7 +219,7 @@ def overview(
         selected_treatment_dict = {treatment: (start_i, end_i)}
 
         # Read and parse the overview file
-        overview_df, header_line, crop_model = extract_simulation_data(
+        overview_df, header_line, crop_model = extract_overview_data(
             validated_path,
             treatment_dict=selected_treatment_dict
         )
@@ -265,15 +267,28 @@ def overview(
                 "Please check if the treatment exists in the OVERVIEW.OUT file."
             )
 
-        # Map variables to their respective groups
-        filtered_df["group"] = filtered_df["variable"].map(variables_classification)
-
         # Remove rows where 'value_measured' column contains NaN values
         filtered_df = filtered_df.dropna(subset=["value_measured"])
 
         # Filter variables if a list of variables was provided by the user
         if variables is not None:
             filtered_df = filtered_df[filtered_df["variable"].isin(variables)]
+
+        # Map variables to their respective groups
+        filtered_df["group"] = filtered_df["variable"].map(variables_classification)
+
+        # Validate that all selected variables were assigned to a group
+        missing_group_rows = filtered_df[filtered_df["group"].isna()].copy()
+
+        if not missing_group_rows.empty:
+            missing_variables = sorted(missing_group_rows["variable"].dropna().unique())
+
+            raise ValueError(
+                "The following selected OVERVIEW observations were not assigned to any group in "
+                "'variables_classification':\n"
+                f"  {missing_variables}\n\n"
+                "Please update the 'variables_classification' dictionary to include them."
+            )
 
         # Adjust the 'position' column to create 'position_adjusted'
         filtered_df["position_adjusted"] = (

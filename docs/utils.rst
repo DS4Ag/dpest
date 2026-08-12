@@ -31,3 +31,4 @@ This subpackage contains utility functions to modify the control data section of
    dpest.utils.rmv_lsqr
    dpest.utils.rmv_svd
    dpest.utils.rmv_splitcols
+   dpest.utils.jacupdate

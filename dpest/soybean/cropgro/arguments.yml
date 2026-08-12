@@ -72,37 +72,38 @@ ECOTYPE_TPL_FILE:
 #~~~~~~ OVERVIEW
 OVERVIEW_FILE:
 
-    # Classification into groups of the OVERVIEW file variables
+    # Classification into groups of the OVERVIEW file variables. Seas = seasonal
     VARIABLES_CLASSIFICATION:
         # Variable: group
-        Emergence day (dap): phenology
-        Anthesis day (dap): phenology
-        First pod day (dap): phenology
-        First seed day (dap): phenology
-        Physiological maturity day (dap): phenology
-        Harvest maturity day (dap): phenology
+    VARIABLES_CLASSIFICATION:
+        Emergence day (dap): pheno_seas
+        Anthesis day (dap): pheno_seas
+        First pod day (dap): pheno_seas
+        First seed day (dap): pheno_seas
+        Physiological maturity day (dap): pheno_seas
+        Harvest maturity day (dap): pheno_seas
 
-        Yield at harvest maturity (kg [dm]/ha): yield
-        Pod/Ear/Panicle weight at maturity (kg [dm]/ha): yield
-        Number at maturity (no/m2): yield
-        Unit wt at maturity (g [dm]/unit): yield
-        Number at maturity (no/unit): yield
-        Harvest index at maturity: yield
-        Threshing % at maturity: yield
+        Yield at harvest maturity (kg [dm]/ha): yield_seas
+        Pod/Ear/Panicle weight at maturity (kg [dm]/ha): yield_seas
+        Number at maturity (no/m2): yield_seas
+        Unit wt at maturity (g [dm]/unit): yield_seas
+        Number at maturity (no/unit): yield_seas
+        Harvest index at maturity: yield_seas
+        Threshing % at maturity: yield_seas
 
-        Tops weight at anthesis (kg [dm]/ha): biomass
-        Tops weight at maturity (kg [dm]/ha): biomass
-        By-product produced (stalk) at maturity (kg[dm]/ha: biomass
+        Tops weight at anthesis (kg [dm]/ha): biom_seas
+        Tops weight at maturity (kg [dm]/ha): biom_seas
+        By-product produced (stalk) at maturity (kg[dm]/ha): biom_seas
 
-        Leaf area index, maximum: lai
+        Leaf area index, maximum: lai_seas
 
-        Leaf number per stem at maturity: phenology
-        Canopy height (m): morphology
+        Leaf number per stem at maturity: pheno_seas
+        Canopy height (m): morph_seas
 
-        Tops N at anthesis (kg/ha): nitrogen
-        Tops N at maturity (kg/ha): nitrogen
-        Stem N at maturity (kg/ha): nitrogen
-        Grain N at maturity (kg/ha): nitrogen
-        Grain N at maturity (%): nitrogen
+        Tops N at anthesis (kg/ha): nitro_seas
+        Tops N at maturity (kg/ha): nitro_seas
+        Stem N at maturity (kg/ha): nitro_seas
+        Grain N at maturity (kg/ha): nitro_seas
+        Grain N at maturity (%): nitro_seas
 
-        Grain oil at maturity (%): quality
+        Grain oil at maturity (%): qual_seas

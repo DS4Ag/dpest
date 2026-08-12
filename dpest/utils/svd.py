@@ -1,3 +1,6 @@
+import os
+import pyemu
+
 def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
     """
     Adds or updates the Singular Value Decomposition (SVD) section in a PEST control (.pst) file.
@@ -110,8 +113,6 @@ def svd(pst_path, svdmode=None, maxsing=None, eigthresh=None, eigwrite=None):
        left unchanged because SVD is not being activated.
     """
     try:
-        import os
-        import pyemu
 
         # Default values for SVD parameters (used only when no SVD section exists)
         defaults = {

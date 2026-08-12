@@ -1,3 +1,4 @@
+import re
 from dpest.functions import *
 
 def uts(
@@ -275,17 +276,64 @@ def uts(
             # Extract column headers to maintain correct order
             headers = header_line.strip().split()
 
+            # # Convert each dictionary into a formatted row string
+            # new_rows_dic = []
+            # for row_data in new_rows:
+            #     row = (
+            #             str(row_data.get('@YEAR', 0)).rjust(nspaces_year_header) +
+            #             str(row_data.get('DOY', 0)).rjust(nspaces_doy_header) +
+            #             ''.join(str(row_data.get(col, 0)).rjust(nspaces_columns_header) for col in headers if
+            #                     col not in ['@YEAR', 'DOY']) +
+            #             '\n'
+            #     )
+            #     new_rows_dic.append(row)
+
+            # Use the last real simulated row as formatting template
+            last_line_index = treatment_range[1] - 1
+            template_line = lines[last_line_index].rstrip('\n')
+
+            # Split template into whitespace and tokens, keeping whitespace
+            parts = re.split(r'(\s+)', template_line)
+
+            # Tokens only
+            template_tokens = template_line.split()
+
             # Convert each dictionary into a formatted row string
             new_rows_dic = []
             for row_data in new_rows:
-                row = (
-                        str(row_data.get('@YEAR', 0)).rjust(nspaces_year_header) +
-                        str(row_data.get('DOY', 0)).rjust(nspaces_doy_header) +
-                        ''.join(str(row_data.get(col, 0)).rjust(nspaces_columns_header) for col in headers if
-                                col not in ['@YEAR', 'DOY']) +
-                        '\n'
-                )
-                new_rows_dic.append(row)
+                formatted_tokens = []
+
+                for i, col in enumerate(headers):
+                    value = row_data.get(col, 0)
+                    template_token = template_tokens[i]
+
+                    # Keep same numeric style as template
+                    if col in ['@YEAR', 'DOY', 'DAS', 'DAP']:
+                        value_str = str(int(value))
+                    else:
+                        if '.' in template_token:
+                            decimals = len(template_token.split('.')[-1])
+                            value_str = f"{float(value):.{decimals}f}"
+                        else:
+                            value_str = str(int(float(value)))
+
+                    # Match width of original token
+                    formatted_tokens.append(value_str.rjust(len(template_token)))
+
+                # Rebuild line preserving original whitespace
+                rebuilt = []
+                token_idx = 0
+
+                for part in parts:
+                    if part == '':
+                        continue
+                    if part.isspace():
+                        rebuilt.append(part)
+                    else:
+                        rebuilt.append(formatted_tokens[token_idx])
+                        token_idx += 1
+
+                new_rows_dic.append(''.join(rebuilt) + '\n')
 
             # Add new rows to the lines list
             lines[treatment_range[1]:treatment_range[1]] = new_rows_dic

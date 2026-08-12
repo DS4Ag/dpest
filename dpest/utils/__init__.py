@@ -30,3 +30,7 @@ from .rmv_svd import rmv_svd
 
 from .parg_derinc import parg_derinc
 from .parg_inctyp import parg_inctyp
+
+from .regularisation import regularisation
+
+from .jacupdate import jacupdate

@@ -200,10 +200,10 @@ def find_parameter_position(line, parameter=None):
 
 def simulations_lines(file_path):
     """
-    Identifies and extracts the line ranges associated with specific treatments in the OVERVIEW output file.
+    Identifies and extracts the line ranges associated with specific treatments in the OVERVIEW and TS (PlantGro.OUT, PlantN.OUT, etc.) output files.
 
     Parameters:
-    file_path (str): The path to the text file containing the OVERVIEW output file.
+    file_path (str): The path to the text file containing the .OUT file.
 
     Returns:
     dict: A dictionary where the keys are TREATMENT names and the values are
@@ -349,9 +349,9 @@ def extract_experiment_code_from_range(file_path, start_i, end_i):
     return experiment_info
 
 
-def extract_simulation_data(file_path, treatment_dict=None):
+def extract_overview_data(file_path, treatment_dict=None):
     """
-    Extracts simulation data for each cultivar, including the experiment information,
+    Extracts simulation data from the OVERVIEW.OUT file for each cultivar, including the experiment information,
     and returns a DataFrame with all the data.
 
     Parameters:
@@ -919,8 +919,145 @@ def get_header_and_first_sim(file_path, treatment, treatment_dict=None):
 
     return header_line, first_sim_line, date_first_sim
 
-
 from datetime import datetime, timedelta
+import re
+
+
+def get_header_first_and_last_sim(file_path, treatment, treatment_dict=None):
+    """
+    Read the header line and determine the first and last simulated dates
+    for a specific treatment block inside a DSSAT time-series .OUT file.
+
+    Returns
+    -------
+    header_line : str
+        The '@YEAR ...' header line.
+    first_sim_line : str
+        The first simulated data row within the treatment block.
+    date_first_sim : datetime
+        Datetime corresponding to the first simulated row.
+    date_last_sim : datetime
+        Datetime corresponding to the last simulated row.
+    """
+
+    # Read all lines from file
+    with open(file_path, "r") as f:
+        lines = f.readlines()
+
+    # If treatment ranges were not provided, build them
+    if treatment_dict is None:
+        treatment_dict = simulations_lines(file_path)
+
+    # Ensure the treatment exists in the file
+    if treatment not in treatment_dict:
+        raise ValueError(f"No data found for treatment '{treatment}' in: {file_path}")
+
+    # Get the line range corresponding to this treatment block
+    start_i, end_i = treatment_dict[treatment]
+
+    # Find the header line (contains '@YEAR DOY DAS ...')
+    header_idx = next(i for i, line in enumerate(lines) if "@YEAR" in line)
+    header_line = lines[header_idx]
+
+    # Regex to identify simulation data rows (start with YEAR DOY)
+    data_line_re = re.compile(r"^\s*\d{4}\s+\d{1,3}\b")
+
+    # Collect all simulation lines within the treatment block
+    sim_lines = []
+    for i in range(start_i, min(end_i, len(lines))):
+        if data_line_re.match(lines[i]):
+            sim_lines.append(lines[i])
+
+    # Safety check: ensure we found simulation data
+    if not sim_lines:
+        raise ValueError(f"Could not find simulation data lines for '{treatment}'")
+
+    # First and last simulated rows
+    first_sim_line = sim_lines[0]
+    last_sim_line = sim_lines[-1]
+
+    # --- Parse first simulated date ---
+    first_parts = first_sim_line.split()
+    first_year = int(first_parts[0])
+    first_doy = int(first_parts[1])
+
+    # Convert YEAR + DOY to datetime
+    date_first_sim = datetime(first_year, 1, 1) + timedelta(days=first_doy - 1)
+
+    # --- Parse last simulated date ---
+    last_parts = last_sim_line.split()
+    last_year = int(last_parts[0])
+    last_doy = int(last_parts[1])
+
+    # Convert YEAR + DOY to datetime
+    date_last_sim = datetime(last_year, 1, 1) + timedelta(days=last_doy - 1)
+
+    return header_line, first_sim_line, date_first_sim, date_last_sim
+
+def filter_dates_to_simulation_window(dates_variable_values_dict, date_first_sim, date_last_sim):
+    """
+    Split measured observations into those inside and beyond the simulation window.
+
+    Returns
+    -------
+    kept_dict : dict
+        Observations whose date is between date_first_sim and date_last_sim.
+    dropped_dict : dict
+        Observations whose date is after date_last_sim.
+    """
+    # Dictionaries to store valid and out-of-range observations
+    kept_dict = {}
+    dropped_dict = {}
+
+    # Loop through each measured date and its variables
+    for date_str, variables in dates_variable_values_dict.items():
+
+        # Case 1: YYYYDOY format (e.g. 2022249)
+        if len(date_str) == 7:
+            year_var = int(date_str[:4])
+            day_var = int(date_str[4:])
+
+            # Convert YEAR + DOY to datetime
+            date_var = datetime(year_var, 1, 1) + timedelta(days=day_var - 1)
+
+        # Case 2: YYDOY format (e.g. 22249)
+        elif len(date_str) == 5:
+            yy = int(date_str[:2])
+            day_var = int(date_str[2:])
+
+            # Use simulation start year to infer correct century
+            base_century = (date_first_sim.year // 100) * 100
+
+            # Build candidate years around simulation period
+            candidate_years = [
+                base_century - 100 + yy,
+                base_century + yy,
+                base_century + 100 + yy,
+            ]
+
+            # Convert candidates to datetime objects
+            candidate_dates = [
+                datetime(year, 1, 1) + timedelta(days=day_var - 1)
+                for year in candidate_years
+            ]
+
+            # Select the date closest to the first simulation date
+            date_var = min(candidate_dates, key=lambda d: abs((d - date_first_sim).days))
+
+        # Invalid date format
+        else:
+            raise ValueError(f"Invalid date format: {date_str}")
+
+        # Compare measured date with last simulated date
+        if date_var <= date_last_sim:
+            # Keep observations within simulation window
+            kept_dict[date_str] = variables
+        else:
+            # Store observations beyond simulation window
+            dropped_dict[date_str] = variables
+
+    return kept_dict, dropped_dict
+
 
 def calculate_days_dict(dates_dict, date_first_sim):
     """
@@ -1052,71 +1189,6 @@ def find_variable_position(header_line, data_line, variables):
 
     return positions
 
-
-# def filter_dataframe(dataframe, treatment, treatment_number_name, variables):
-#     """
-#     Filters a DataFrame based on the treatment and returns a dictionary of DATE
-#     and variables where values are not -99.
-#
-#     Parameters:
-#     dataframe (pd.DataFrame): Input DataFrame.
-#     treatment (str): Treatment name to filter by.
-#     treatment_number_name (dict): Mapping of treatments to their corresponding TRNO values.
-#     variables (list): List of variable names to check in the dataset.
-#
-#     Returns:
-#     dict: A dictionary containing filtered data with DATE as keys and variables as values.
-#     """
-#     # Check critical columns (if-else for missing columns)
-#     critical_columns = {'TRNO', 'DATE'}
-#     missing_critical = critical_columns - set(dataframe.columns)
-#
-#     if missing_critical:
-#         print(f"Error: Missing critical columns {missing_critical}. Exiting.")
-#         return {}
-#
-#     # Check if the treatment exists
-#     elif treatment not in treatment_number_name:
-#         print(f"Error: Treatment '{treatment}' not found. Exiting.")
-#         return {}
-#
-#     elif set(variables).issubset(dataframe.columns):
-#
-#         # Get the TRNO value for the treatment
-#         trno_value = treatment_number_name[treatment]
-#
-#         # Initialize date and variable and value result dictionary
-#         variable_value = {}
-#
-#         # Filter data with if-else for missing variables
-#         for variable in variables:
-#
-#             if variable not in dataframe.columns:
-#                 print(f"Warning: Column '{variable}' is missing. Skipping.")
-#             else:
-#                 # Filter DataFrame for valid rows
-#                 filtered_df = dataframe[
-#                     (dataframe['TRNO'] == trno_value) &
-#                     (dataframe[variable] != '-99') &
-#                     (dataframe[variable] != -99) &
-#                     (dataframe[variable] != 0) &
-#                     (dataframe[variable] != '0')
-#                     ]
-#
-#                 # Populate results
-#                 for _, row in filtered_df.iterrows():
-#                     date = row['DATE']
-#                     if date not in variable_value:
-#                         variable_value[date] = {}
-#                     variable_value[date][variable] = row[variable]
-#
-#         # Return sorted results
-#         return dict(sorted(variable_value.items()))
-#
-#     else:
-#         # Notify if required columns are missing
-#         print(f"One or more required columns are missing: {set(variables) - set(dataframe.columns)}")
-#         return {}
 
 def filter_dataframe(dataframe, treatment, treatment_number_name, variables):
     """
@@ -1312,7 +1384,58 @@ def read_growth_file(file_path, treatment_range):
 
     return df
 
+#### Old version add 0 on the new rows, can fail if it a new year
+# def new_rows_add(PlantGro, rows_add):
+#     # Get the last values from the relevant columns
+#     last_row = PlantGro.iloc[-1]
+#     last_das = int(last_row['DAS'])
+#     last_dap = int(last_row['DAP'])
+#     last_doy = int(last_row['DOY'])
+#     start_year = int(last_row['@YEAR'])
+#
+#     new_rows = []
+#
+#     for i in range(1, rows_add + 1):
+#         # Calculate the new values
+#         new_das = last_das + i
+#         new_dap = last_dap + i
+#         new_doy = last_doy + i
+#
+#         def is_leap_year(year):
+#             """Check if a year is a leap year."""
+#             return (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)
+#
+#         # Determine the number of days in the current year
+#         days_in_year = 366 if is_leap_year(start_year) else 365
+#
+#         # If DOY exceeds the number of days in the year, increment the year and reset DOY
+#         if new_doy > days_in_year:
+#             new_doy = 1
+#             start_year += 1
+#
+#         # Create the new row with 0 for all other columns
+#         new_row = {
+#             '@YEAR': start_year,
+#             'DOY': new_doy,
+#             'DAS': new_das,
+#             'DAP': new_dap,
+#         }
+#
+#         # Add 0 for all other columns
+#         for col in PlantGro.columns.difference(['@YEAR', 'DOY', 'DAS', 'DAP']):
+#             new_row[col] = 0
+#
+#         # Ensure new values are integers
+#         new_row['@YEAR'] = int(new_row['@YEAR'])
+#         new_row['DOY'] = int(new_row['DOY'])
+#         new_row['DAS'] = int(new_row['DAS'])
+#         new_row['DAP'] = int(new_row['DAP'])
+#
+#         new_rows.append(new_row)
+#
+#     return new_rows
 
+# New version, replicates last simulated row, handles change of year
 def new_rows_add(PlantGro, rows_add):
     # Get the last values from the relevant columns
     last_row = PlantGro.iloc[-1]
@@ -1323,35 +1446,38 @@ def new_rows_add(PlantGro, rows_add):
 
     new_rows = []
 
+    def is_leap_year(year):
+        """Check if a year is a leap year."""
+        return (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)
+
+    current_year = start_year
+    current_doy = last_doy
+
     for i in range(1, rows_add + 1):
         # Calculate the new values
         new_das = last_das + i
         new_dap = last_dap + i
-        new_doy = last_doy + i
-
-        def is_leap_year(year):
-            """Check if a year is a leap year."""
-            return (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)
+        current_doy += 1
 
         # Determine the number of days in the current year
-        days_in_year = 366 if is_leap_year(start_year) else 365
+        days_in_year = 366 if is_leap_year(current_year) else 365
 
         # If DOY exceeds the number of days in the year, increment the year and reset DOY
-        if new_doy > days_in_year:
-            new_doy = 1
-            start_year += 1
+        if current_doy > days_in_year:
+            current_doy = 1
+            current_year += 1
 
-        # Create the new row with 0 for all other columns
+        # Create the new row
         new_row = {
-            '@YEAR': start_year,
-            'DOY': new_doy,
+            '@YEAR': current_year,
+            'DOY': current_doy,
             'DAS': new_das,
             'DAP': new_dap,
         }
 
-        # Add 0 for all other columns
+        # Repeat the last simulated value for all other columns
         for col in PlantGro.columns.difference(['@YEAR', 'DOY', 'DAS', 'DAP']):
-            new_row[col] = 0
+            new_row[col] = last_row[col]
 
         # Ensure new values are integers
         new_row['@YEAR'] = int(new_row['@YEAR'])
