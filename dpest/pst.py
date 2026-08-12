@@ -6,6 +6,7 @@ from dpest.functions import *
 def pst(
         cultivar_parameters=None,
         ecotype_parameters=None,
+        species_parameters=None,
         dataframe_observations=None,
         output_path=None,
         model_comand_line=None,
@@ -13,108 +14,245 @@ def pst(
         pst_filename='PEST_CONTROL.pst',
         input_output_file_pairs=None
 ):
+
     """
-    Creates a ``PEST control file (.PST)`` for DSSAT crop models calibration. This file guides the model calibration process by specifying input and output files, parameter bounds, and directions for PEST to extract and compare model-generated observations with experimental data. The module takes model parameters (with their values, groupings, and bounds) and observation DataFrames as inputs.
+    Creates a ``PEST control file (.PST)`` for calibration of DSSAT crop models.
+
+    The generated control file defines adjustable model parameters, parameter
+    bounds and groups, observations and their weights, PEST template and
+    instruction files, and the command used to execute DSSAT. It can incorporate
+    parameters from cultivar (``.CUL``), ecotype (``.ECO``), and species
+    (``.SPE``) files in a single calibration.
 
     **Conditionally Required Arguments:**
     =======
 
-    To properly create the ``PEST control file (.PST)``, the user must specify at least one of the following arguments:
+    At least one parameter dictionary must be supplied through
+    ``cultivar_parameters``, ``ecotype_parameters``, or ``species_parameters``.
+    Multiple parameter dictionaries may be supplied together.
 
-        * **cultivar_parameters** (*dict*, *optional, but required if ``ecotype_parameters`` is not specified*): Dictionary containing cultivar model parameters with their values, bounds, and groupings. It is obtained from the ``cul`` module (see ``dpest.wheat.ceres.cul``).
+        * **cultivar_parameters** (*dict*, *optional*):
+          Dictionary containing cultivar-level parameter values, lower bounds,
+          upper bounds, and parameter-group definitions. This dictionary is
+          returned by the ``cul`` module.
 
-        * **ecotype_parameters** (*dict*, *optional, but required if ``cultivar_parameters`` is not specified*): Dictionary containing ecotype model parameters with their values, bounds, and groupings. This dictionary is obtained from the ``eco`` module (see ``dpest.wheat.ceres.eco``).
+          It is required only when no ``ecotype_parameters`` or
+          ``species_parameters`` dictionary is supplied.
+
+        * **ecotype_parameters** (*dict*, *optional*):
+          Dictionary containing ecotype-level parameter values, lower bounds,
+          upper bounds, and parameter-group definitions. This dictionary is
+          returned by the ``eco`` module.
+
+          It is required only when no ``cultivar_parameters`` or
+          ``species_parameters`` dictionary is supplied.
+
+        * **species_parameters** (*dict*, *optional*):
+          Dictionary containing species-level parameter values, lower bounds,
+          upper bounds, and parameter-group definitions. This dictionary is
+          returned by the ``spe`` module.
+
+          Species parameters can represent values stored in DSSAT species files
+          such as ``SBGRO048.SPE`` or ``WHCER048.SPE``. It is required only when
+          no ``cultivar_parameters`` or ``ecotype_parameters`` dictionary is
+          supplied.
 
     **Required Arguments:**
     =======
 
-        * **dataframe_observations** (``pd.DataFrame`` or ``list``): DataFrame or list of DataFrames containing observations to be used during model calibration and included in the ``PEST control file (.PST)``. It can be a single dataframe as ``dataframe_observations = dataframe``, or a list of dataframes as ``dataframe_observations = [dataframe1, dataframe2]``. These DataFrames are created by the ``dpest.wheat.overview`` and ``dpest.wheat.plantgro`` modules, and each DataFrame *must* contain columns named ``'variable_name'``, ``'value_measured'``, and ``'group'``.
+        * **dataframe_observations** (``pd.DataFrame`` or ``list``):
+          A DataFrame or list of DataFrames containing observations to be used in
+          calibration and written to the ``* observation data`` section of the
+          PEST control file.
 
-        * **model_comand_line** (*str*): Command line used to run the DSSAT model executable.
+          A single DataFrame may be supplied as:
 
-        * **input_output_file_pairs** (``list``): List of tuples where each tuple contains an input and output file pair. The required tuples depend on the other arguments passed to this module:
+          ``dataframe_observations = dataframe``
 
-            * If ``cultivar_parameters`` is specified, this list *must* contain a tuple with the ``PEST template file (.TPL)`` for the cultivar and the corresponding ``DSSAT cultivar file (.CUL)``.
+          Multiple DataFrames may be supplied as:
 
-            * If ``ecotype_parameters`` is specified, this list *must* contain a tuple with the ``PEST template file (.TPL)`` for the ecotype and the corresponding ``DSSAT ecotype file (.ECO)``.
+          ``dataframe_observations = [dataframe1, dataframe2]``
 
-            * For *each* DataFrame specified in ``dataframe_observations``, this list *must* contain a tuple with the ``PEST instruction file (.INS)`` created by the ``overview`` or ``plantgro`` module and the corresponding ``OVERVIEW.OUT`` or ``PlantGro.OUT`` file.
+          Each DataFrame must contain the following columns:
 
-            Each element on the list follows this structure: ``[(input_file1, output_file1), (input_file2, output_file2)]``. The first element of each tuple is the path to either a ``PEST template file (.TPL)`` or a ``PEST instruction file (.INS)``, and the second element is the path to the corresponding DSSAT input or output file.
+          * ``'variable_name'``: Unique PEST observation identifier.
+          * ``'value_measured'``: Measured value used as the PEST observation.
+          * ``'group'``: PEST observation-group name.
+
+          Observation DataFrames can be created using modules such as
+          ``overview`` and ``plantgro``.
+
+        * **model_comand_line** (*str*):
+          Command line used by PEST to execute the DSSAT model. The command must
+          generate all model output files referenced by the instruction-file
+          entries in ``input_output_file_pairs``.
+
+        * **input_output_file_pairs** (``list``):
+          List of tuples defining PEST template/instruction files and their
+          associated DSSAT input/output files. Each tuple follows the form:
+
+          ``(pest_file, model_file)``
+
+          where ``pest_file`` is a PEST template file (``.TPL``) or instruction
+          file (``.INS``), and ``model_file`` is the corresponding DSSAT input or
+          model-output file.
+
+          The required template-file pairs depend on the parameter dictionaries
+          supplied:
+
+          * If ``cultivar_parameters`` is specified, the list must include a
+            ``.TPL`` file paired with its corresponding DSSAT cultivar file
+            (``.CUL``).
+
+          * If ``ecotype_parameters`` is specified, the list must include a
+            ``.TPL`` file paired with its corresponding DSSAT ecotype file
+            (``.ECO``).
+
+          * If ``species_parameters`` is specified, the list must include a
+            ``.TPL`` file paired with its corresponding DSSAT species file
+            (``.SPE``).
+
+          * For each DataFrame in ``dataframe_observations``, the list must
+            include an ``.INS`` file paired with the associated DSSAT output file,
+            such as ``OVERVIEW.OUT`` or ``PlantGro.OUT``.
+
+          Example structure:
+
+          ``[(input_file1, output_file1), (input_file2, output_file2)]``
 
     **Optional Arguments:**
     =======
 
-        * **output_path** (*str*, *default: current working directory*): Directory to save the ``PEST control file (.PST)``. By default, the file is created in the same directory where the script is located.
-        * **noptmax** (*int*, *default: 1000*): Maximum number of iterations for the optimization process.
-        * **pst_filename** (*str*, *default: "PEST_CONTROL.pst"*): File name for the ``PEST control file (.PST)`` to be created.
+        * **output_path** (*str*, *default: current working directory*):
+          Directory in which the ``.PST`` file is written.
+
+        * **noptmax** (*int*, *default: 1000*):
+          Maximum number of PEST optimization iterations.
+
+          Set ``noptmax=-1`` to perform a Jacobian-based sensitivity run without
+          conducting iterative parameter optimization.
+
+        * **pst_filename** (*str*, *default: ``"PEST_CONTROL.pst"``*):
+          File name assigned to the generated PEST control file.
 
     **Returns:**
     =======
 
-        * ``None``: This module creates the ``PEST control file (.PST)`` at the specified ``output_path`` (or in the script's directory by default) with the provided ``pst_filename``. It validates inputs, processes observation data, sets up parameters, and writes the resulting ``PEST control file (.PST)``.
+        * ``None``:
+          Creates the PEST control file at ``output_path`` using
+          ``pst_filename``. The function validates supplied parameter
+          dictionaries, observations, and template/instruction file pairs; merges
+          parameter data from the supplied DSSAT file levels; sets parameter
+          bounds and groups; and writes the completed ``.PST`` file.
 
     **Examples:**
     =======
 
-    1. **Creating a PEST Control File with Cultivar and Ecotype Parameters, End-of-Season Crop Performance Metrics, and Plant Growth Dynamics:**
+    1. **Creating a PEST Control File with Cultivar and Ecotype Parameters**
 
        .. code-block:: python
 
           from dpest import pst
 
           pst(
-              cultivar_parameters = cultivar_parameters,
-              ecotype_parameters = ecotype_parameters,
-              dataframe_observations = [overview_observations, plantgro_observations],
-              model_comand_line = r'py "C:/pest18/run-dssat.py"',
-              input_output_file_pairs = [
-                  (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
-                  (ecotype_tpl_path, 'C://DSSAT48/Genotype/WHCER048.ECO'),
-                  (overview_ins_path, 'C://DSSAT48/Wheat/OVERVIEW.OUT'),
-                  (plantgro_ins_path, 'C://DSSAT48/Wheat/PlantGro.OUT')
-              ]
-          )
-
-       This example shows how to create a ``PEST control file (.PST)`` using both cultivar and ecotype parameters. The ``dataframe_observations`` argument is assigned a list of two DataFrames: (1) end-of-season crop performance metrics created using the ``dpest.wheat.overview`` module, and (2) plant growth dynamics data created using the ``dpest.wheat.plantgro`` module. The example specifies the model command line and lists the required input and output file pairs.
-
-    2. **Creating a PEST Control File with Only Cultivar Parameters, Model Performance Metrics, and Plant Growth Data:**
-
-       .. code-block:: python
-
-          from dpest import pst
-
-          pst(
-              cultivar_parameters = cultivar_parameters,
-              dataframe_observations = [overview_observations, plantgro_observations],
-              model_comand_line = r'py "C:/pest18/run-dssat.py"',
-              input_output_file_pairs = [
-                  (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
-                  (overview_ins_path, 'C://DSSAT48/Wheat/OVERVIEW.OUT'),
-                  (plantgro_ins_path, 'C://DSSAT48/Wheat/PlantGro.OUT')
-              ]
-          )
-
-       This example demonstrates how to create a ``PEST control file (.PST)`` using only cultivar parameters. The ``dataframe_observations`` argument uses a list of two DataFrames: one representing model performance data created by the ``dpest.wheat.overview`` module, and another containing plant growth data created by the ``dpest.wheat.plantgro`` module.
-
-    3. **Creating a PEST Control File with Cultivar Parameters and Just Plant Growth Data:**
-
-       .. code-block:: python
-
-          from dpest import pst
-
-          pst(
-              cultivar_parameters = cultivar_parameters,
-              dataframe_observations = plantgro_observations,
+              cultivar_parameters=cultivar_parameters,
+              ecotype_parameters=ecotype_parameters,
+              dataframe_observations=[
+                  overview_observations,
+                  plantgro_observations,
+              ],
               model_comand_line=r'py "C:/pest18/run-dssat.py"',
-              input_output_file_pairs = [
-                  (cultivar_tpl_path, 'C://DSSAT48/Genotype/WHCER048.CUL'),
-                  (plantgro_ins_path, 'C://DSSAT48/Wheat/PlantGro.OUT')
-              ]
+              input_output_file_pairs=[
+                  (cultivar_tpl_path, r'C:/DSSAT48/Genotype/WHCER048.CUL'),
+                  (ecotype_tpl_path, r'C:/DSSAT48/Genotype/WHCER048.ECO'),
+                  (overview_ins_path, r'C:/DSSAT48/Wheat/OVERVIEW.OUT'),
+                  (plantgro_ins_path, r'C:/DSSAT48/Wheat/PlantGro.OUT'),
+              ],
           )
 
-       This example shows the use of a single ``dataframe_observations`` argument containing plant growth dynamics metrics created with the ``dpest.wheat.plantgro`` module, along with the cultivar parameters and the appropriate input and output file pairs.
+       This example calibrates cultivar and ecotype parameters using end-of-season
+       crop-performance observations and plant-growth observations.
+
+    2. **Creating a PEST Control File with Cultivar Parameters Only**
+
+       .. code-block:: python
+
+          from dpest import pst
+
+          pst(
+              cultivar_parameters=cultivar_parameters,
+              dataframe_observations=[
+                  overview_observations,
+                  plantgro_observations,
+              ],
+              model_comand_line=r'py "C:/pest18/run-dssat.py"',
+              input_output_file_pairs=[
+                  (cultivar_tpl_path, r'C:/DSSAT48/Genotype/WHCER048.CUL'),
+                  (overview_ins_path, r'C:/DSSAT48/Wheat/OVERVIEW.OUT'),
+                  (plantgro_ins_path, r'C:/DSSAT48/Wheat/PlantGro.OUT'),
+              ],
+          )
+
+       This example calibrates cultivar parameters using both end-of-season and
+       time-series plant-growth observations.
+
+    3. **Creating a PEST Control File with Species Parameters Only**
+
+       .. code-block:: python
+
+          from dpest import pst
+
+          pst(
+              species_parameters=species_parameters,
+              dataframe_observations=[
+                  overview_observations,
+                  plantgro_observations,
+              ],
+              model_comand_line=r'py "C:/pest18/run-dssat.py"',
+              input_output_file_pairs=[
+                  (species_tpl_path, r'C:/DSSAT48/Genotype/SBGRO048.SPE'),
+                  (overview_ins_path, r'C:/DSSAT48/Soybean/OVERVIEW.OUT'),
+                  (plantgro_ins_path, r'C:/DSSAT48/Soybean/PlantGro.OUT'),
+              ],
+          )
+
+       This example calibrates species-level soybean parameters defined in
+       ``SBGRO048.SPE``, such as photosynthesis, nitrogen fixation, temperature
+       response, root-growth, or other CROPGRO species coefficients.
+
+    4. **Creating a Combined Cultivar, Ecotype, and Species Calibration**
+
+       .. code-block:: python
+
+          from dpest import pst
+
+          pst(
+              cultivar_parameters=cultivar_parameters,
+              ecotype_parameters=ecotype_parameters,
+              species_parameters=species_parameters,
+              dataframe_observations=[
+                  overview_observations,
+                  plantgro_observations,
+              ],
+              model_comand_line=r'py "C:/pest18/run-dssat.py"',
+              input_output_file_pairs=[
+                  (cultivar_tpl_path, r'C:/DSSAT48/Genotype/SBGRO048.CUL'),
+                  (ecotype_tpl_path, r'C:/DSSAT48/Genotype/SBGRO048.ECO'),
+                  (species_tpl_path, r'C:/DSSAT48/Genotype/SBGRO048.SPE'),
+                  (overview_ins_path, r'C:/DSSAT48/Soybean/OVERVIEW.OUT'),
+                  (plantgro_ins_path, r'C:/DSSAT48/Soybean/PlantGro.OUT'),
+              ],
+              noptmax=-1,
+              pst_filename='SBGRO_NFIX_SENSITIVITY.pst',
+          )
+
+       This example creates a Jacobian-only sensitivity-analysis control file for
+       a combined calibration involving cultivar, ecotype, and species
+       parameters. The ``noptmax=-1`` setting calculates parameter sensitivities
+       without performing iterative optimization.
     """
+
+
     # Define default variables
     yml_pst_file_block = 'PST_FILE'
     yml_file_observation_groups = 'OBSERVATION_GROUPS_SPECIFICATIONS'
@@ -177,17 +315,73 @@ def pst(
         # Get Parameter Group Variables
         observation_groups = yaml_data[yml_pst_file_block][yml_file_observation_groups]
 
-        # Merge dictionaries if both are provided, or use the one that exists
+        # ~~~~~~~~~~~~~~~~~~~~~~~ Old version
+        # # Merge dictionaries if both are provided, or use the one that exists
+        # parameters = {
+        #     'parameters': {**(cultivar_parameters.get('parameters', {}) if cultivar_parameters else {}),
+        #                    **(ecotype_parameters.get('parameters', {}) if ecotype_parameters else {})},
+        #     'minima_parameters': {**(cultivar_parameters.get('minima_parameters', {}) if cultivar_parameters else {}),
+        #                           **(ecotype_parameters.get('minima_parameters', {}) if ecotype_parameters else {})},
+        #     'maxima_parameters': {**(cultivar_parameters.get('maxima_parameters', {}) if cultivar_parameters else {}),
+        #                           **(ecotype_parameters.get('maxima_parameters', {}) if ecotype_parameters else {})},
+        #     'parameters_grouped': {**(cultivar_parameters.get('parameters_grouped', {}) if cultivar_parameters else {}),
+        #                            **(ecotype_parameters.get('parameters_grouped', {}) if ecotype_parameters else {})}
+        # }
+        # ~~~~~~~~~~~~~~~~~~~~~~~ / Old version
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~ New version
+        # Merge parameter values (parameter names are unique, safe to merge directly)
         parameters = {
-            'parameters': {**(cultivar_parameters.get('parameters', {}) if cultivar_parameters else {}),
-                           **(ecotype_parameters.get('parameters', {}) if ecotype_parameters else {})},
-            'minima_parameters': {**(cultivar_parameters.get('minima_parameters', {}) if cultivar_parameters else {}),
-                                  **(ecotype_parameters.get('minima_parameters', {}) if ecotype_parameters else {})},
-            'maxima_parameters': {**(cultivar_parameters.get('maxima_parameters', {}) if cultivar_parameters else {}),
-                                  **(ecotype_parameters.get('maxima_parameters', {}) if ecotype_parameters else {})},
-            'parameters_grouped': {**(cultivar_parameters.get('parameters_grouped', {}) if cultivar_parameters else {}),
-                                   **(ecotype_parameters.get('parameters_grouped', {}) if ecotype_parameters else {})}
+            'parameters': {
+                **(cultivar_parameters.get('parameters', {}) if cultivar_parameters else {}),
+                **(ecotype_parameters.get('parameters', {}) if ecotype_parameters else {}),
+                **(species_parameters.get('parameters', {}) if species_parameters else {}),
+            },
+            'minima_parameters': {
+                **(cultivar_parameters.get('minima_parameters', {}) if cultivar_parameters else {}),
+                **(ecotype_parameters.get('minima_parameters', {}) if ecotype_parameters else {}),
+                **(species_parameters.get('minima_parameters', {}) if species_parameters else {}),
+            },
+            'maxima_parameters': {
+                **(cultivar_parameters.get('maxima_parameters', {}) if cultivar_parameters else {}),
+                **(ecotype_parameters.get('maxima_parameters', {}) if ecotype_parameters else {}),
+                **(species_parameters.get('maxima_parameters', {}) if species_parameters else {}),
+            },
+            'parameters_grouped': {
+                **(cultivar_parameters.get('parameters_grouped', {}) if cultivar_parameters else {}),
+                **(ecotype_parameters.get('parameters_grouped', {}) if ecotype_parameters else {}),
+                **(species_parameters.get('parameters_grouped', {}) if species_parameters else {}),
+            }
         }
+
+        # Merge parameter groups without overwriting shared group names
+        combined_parameters_grouped = {}
+
+        # Loop through cultivar and ecotype group definitions
+        for source in [
+            cultivar_parameters.get('parameters_grouped', {}) if cultivar_parameters else {},
+            ecotype_parameters.get('parameters_grouped', {}) if ecotype_parameters else {}
+        ]:
+            for group_name, group_params in source.items():
+
+                # Split group string into individual parameters
+                new_params = [p.strip() for p in group_params.split(',') if p.strip()]
+
+                if group_name not in combined_parameters_grouped:
+                    # Initialize group
+                    combined_parameters_grouped[group_name] = new_params
+                else:
+                    # Add parameters not already included
+                    for p in new_params:
+                        if p not in combined_parameters_grouped[group_name]:
+                            combined_parameters_grouped[group_name].append(p)
+
+        # Convert lists back to comma-separated strings
+        parameters['parameters_grouped'] = {
+            group_name: ', '.join(param_list)
+            for group_name, param_list in combined_parameters_grouped.items()
+        }
+        # ~~~~~~~~~~~~~~~~~~~~~~~ / New version
 
         # Extract cultivar_parameters
         all_params = [
