@@ -59,7 +59,8 @@ def test_pst(tmp_path):
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD'],
         ts_file_path=plantgro_file,
-        output_path=output_dir_str
+        output_path=output_dir_str,
+        drop_missing_simulated=True
     )
 
     # Step 3: Define model command and file pairs

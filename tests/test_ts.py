@@ -25,7 +25,8 @@ def test_ts(tmp_path):
         treatment='164.0 KG N/HA IRRIG',
         variables=['LAID', 'CWAD', 'T#AD'],
         ts_file_path=plantgro_file,
-        output_path=str(output_dir)
+        output_path=str(output_dir),
+        drop_missing_simulated=True
     )
 
     # 1. Validate result is not None
@@ -71,7 +72,8 @@ def test_ts_with_optional_parameters(tmp_path):
         },
         ts_ins_first_line="pif #",
         mrk='@',
-        smk='#'
+        smk='#',
+        drop_missing_simulated=True
     )
 
     df, ins_path = result
@@ -91,7 +93,8 @@ def test_ts_variable_filtering(tmp_path):
         treatment='164.0 KG N/HA IRRIG',
         ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
-        variables=test_vars
+        variables=test_vars,
+        drop_missing_simulated=True
     )
 
     df, _ = result
@@ -163,7 +166,8 @@ def test_ts_invalid_suffix(tmp_path, suffix_value, error_msg, capsys):
         ts_file_path=str(plantgro_file),
         output_path=str(tmp_path),
         variables=['LAID'],
-        suffix=suffix_value
+        suffix=suffix_value,
+        drop_missing_simulated=True
     )
     captured = capsys.readouterr()
     assert error_msg in captured.out
@@ -300,7 +304,8 @@ def test_ts_different_output_formats(tmp_path):
             output_path=str(tmp_path),
             variables=['LAID'],
             mrk=mrk,
-            smk=smk
+            smk=smk,
+            drop_missing_simulated=True
         )
         df, ins_path = result
         assert Path(ins_path).exists()
