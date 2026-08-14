@@ -387,9 +387,15 @@ def spe(
             max_id_len = ID_LEN
 
             # Start base_id from a short code (first 3 characters of the name)
-            base_id = full_name.strip()
-            if len(base_id) > 3:
-                base_id = base_id[:3]
+            parameter_clean = full_name.strip()
+            source_code = '1'
+
+            if len(parameter_clean) >= 2:
+                base_id = source_code + parameter_clean[:2]
+            elif len(parameter_clean) == 1:
+                base_id = (source_code + parameter_clean).ljust(3, '-')
+            else:
+                base_id = source_code.ljust(3, '-')
 
             # Enforce maximum length inside the field
             if len(base_id) > max_id_len:
