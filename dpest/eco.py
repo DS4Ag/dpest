@@ -21,7 +21,7 @@ def eco(
     =======
 
         * **ecotype** (*str*): Ecotype ID to modify. This should match the ``ECO#`` (ecotype ID) column in the ``DSSAT ecotype file (.ECO)``
-        * **eco_file_path** (*str*): Full path to the ``DSSAT ecotype (.ECO)`` file. Typically, this is the path to the ``WHCER048.ECO`` file, usually located at ``C:\DSSAT48\Genotype\WHCER048.ECO``.
+        * **eco_file_path** (*str*): Full path to the ``DSSAT ecotype (.ECO)`` file. Typically, this is the path to the ``WHCER048.ECO`` file, usually located at ``C:/DSSAT48/Genotype/WHCER048.ECO``.
 
     **Optional Arguments:**
     =======
@@ -58,7 +58,7 @@ def eco(
           # Call the module with only the required arguments
           ecotype_parameters, ecotype_tpl_path = eco(
               ecotype = 'CAWH01',
-              eco_file_path = 'C:/DSSAT48/Genotype/WHCER048.ECO'
+              eco_file_path = 'C:\\DSSAT48\\Genotype\\WHCER048.ECO'
           )
 
           # The returned tuple and path are saved in the variables, can be used with any name that the user prefer, to call them later

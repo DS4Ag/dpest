@@ -25,7 +25,7 @@ def cul(
     =======
 
         * **cultivar** (*str*): Name or ID of the cultivar to modify. This should match either the ``VAR#`` (cultivar ID) or ``VAR-NAM`` (cultivar name) column in the ``DSSAT cultivar file (.CUL)``.
-        * **cul_file_path** (*str*): Full path to the ``DSSAT cultivar file (.CUL)``. Typically, this is the path to the ``WHCER048.CUL`` file, usually located at ``C:\DSSAT48\Genotype\WHCER048.CUL``.
+        * **cul_file_path** (*str*): Full path to the ``DSSAT cultivar file (.CUL)``. Typically, this is the path to the ``WHCER048.CUL`` file, usually located at ``C:\\DSSAT48\\Genotype\\WHCER048.CUL``.
 
     **Optional Arguments:**
     =======

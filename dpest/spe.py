@@ -77,8 +77,8 @@ def spe(
         * **species_file_path** (*str*):
             Full path to the ``DSSAT species file (.SPE)``. For example:
 
-            - ``C:/DSSAT48/Genotype/WHCER048.SPE``
-            - ``C:/DSSAT48/Genotype/SBGRO048.SPE``
+            - ``C:\\DSSAT48\\Genotype\\WHCER048.SPE``
+            - ``C:\\DSSAT48\\Genotype\\SBGRO048.SPE``
 
     **Optional Arguments:**
     =======
