@@ -271,7 +271,7 @@ def pst(
             yaml_data = yaml.safe_load(yml_file)
 
         # Validate inputs
-        if not (cultivar_parameters or ecotype_parameters):
+        if not (cultivar_parameters or ecotype_parameters or species_parameters):
             raise ValueError(
                 "At least one of `cultivar_parameters` or `ecotype_parameters` must be provided and non-empty.")
 
@@ -280,6 +280,9 @@ def pst(
 
         if ecotype_parameters and not isinstance(ecotype_parameters, dict):
             raise ValueError("`ecotype_parameters`, if provided, must be a dictionary.")
+
+        if species_parameters and not isinstance(species_parameters, dict):
+            raise ValueError("`species_parameters`, if provided, must be a dictionary.")
 
         # Additional validation for file extensions based on parameters
         if cultivar_parameters:
@@ -290,6 +293,11 @@ def pst(
             if not any(pair[1].lower().endswith('.eco') for pair in input_output_file_pairs):
                 raise ValueError(
                     "If `ecotype_parameters` is provided, at least one file in `input_output_file_pairs` must have a '.ECO' extension.")
+
+        if species_parameters:
+            if not any(pair[1].lower().endswith('.spe') for pair in input_output_file_pairs):
+                raise ValueError(
+                    "If `species_parameters` is provided, at least one file in `input_output_file_pairs` must have a '.SPE' extension.")
 
         # Validate that at least one file has a '.OUT' extension
         if not any(pair[1].lower().endswith('.out') for pair in input_output_file_pairs):

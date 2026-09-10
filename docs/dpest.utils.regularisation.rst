@@ -1,7 +1,7 @@
-dpest.utils.jacupdate.rst
+dpest.utils.regularisation.rst
 =====================
 
-.. automodule:: dpest.utils.jacupdate
+.. automodule:: dpest.utils.regularisation
    :members:
    :undoc-members:
    :show-inheritance:

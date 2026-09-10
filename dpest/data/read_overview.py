@@ -354,9 +354,9 @@ def read_overview(
 
     # Check treatment_name
     if treatments_name is not None:
-        tnames_in_data = set(overview_df["treatments_name"].astype(str).unique())
+        tnames_in_data = set(overview_df["treatment_name"].astype(str).unique())
         missing_tnames = [tn for tn in treatments_name if tn not in tnames_in_data]
-        if missing_tnums:
+        if missing_tnames:
             raise ValueError(
                 f"The following treatments_name were not found: {missing_tnames}.\n"
                 f"Please check spelling and that they exist in the file: {validated_path}."
